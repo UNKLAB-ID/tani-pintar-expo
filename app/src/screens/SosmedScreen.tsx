@@ -5,10 +5,10 @@ import {
     Image,
     FlatList,
     TouchableOpacity,
+    TextInput,
     StyleSheet,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
 const posts = [
     {
@@ -40,6 +40,48 @@ const posts = [
 const SocialScreen = () => {
     return (
         <View style={styles.container}>
+            {/* HEADER */}
+            <View style={styles.header}>
+                <Image
+                    source={{
+                        uri: "https://randomuser.me/api/portraits/men/3.jpg",
+                    }}
+                    style={styles.profilePicSmall}
+                />
+                <View style={styles.headerText}>
+                    <Text style={styles.greeting}>Good Morning.</Text>
+                    <Text style={styles.name}>Mambaus Baus</Text>
+                </View>
+                <View style={styles.headerIcons}>
+                    <TouchableOpacity style={styles.iconButton}>
+                        <Ionicons
+                            name="notifications-outline"
+                            size={24}
+                            color="white"
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.iconButton}>
+                        <Ionicons
+                            name="chatbubble-outline"
+                            size={24}
+                            color="white"
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            {/* SEARCH BAR */}
+            <View style={styles.searchContainer}>
+                <TextInput
+                    style={styles.searchInput}
+                    placeholder="Find what you're looking for..."
+                />
+                <TouchableOpacity style={styles.addButton}>
+                    <Ionicons name="add" size={24} color="white" />
+                </TouchableOpacity>
+            </View>
+
+            {/* POSTS LIST */}
             <FlatList
                 data={posts}
                 keyExtractor={(item) => item.id}
@@ -68,7 +110,7 @@ const SocialScreen = () => {
                         <Text style={styles.postText}>{item.text}</Text>
                         <Image source={item.image} style={styles.postImage} />
 
-                        {/* Footer - Like, Comment, View, Share */}
+                        {/* Footer */}
                         <View style={styles.footer}>
                             <TouchableOpacity style={styles.iconContainer}>
                                 <FontAwesome
@@ -80,7 +122,6 @@ const SocialScreen = () => {
                                     {item.likes}
                                 </Text>
                             </TouchableOpacity>
-
                             <TouchableOpacity style={styles.iconContainer}>
                                 <FontAwesome
                                     name="comment"
@@ -91,7 +132,6 @@ const SocialScreen = () => {
                                     {item.comments}
                                 </Text>
                             </TouchableOpacity>
-
                             <TouchableOpacity style={styles.iconContainer}>
                                 <FontAwesome
                                     name="eye"
@@ -102,7 +142,6 @@ const SocialScreen = () => {
                                     {item.views}
                                 </Text>
                             </TouchableOpacity>
-
                             <TouchableOpacity style={styles.iconContainer}>
                                 <FontAwesome
                                     name="share"
@@ -125,13 +164,72 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#fff",
-        top: 20,
+        paddingTop: 20,
     },
+
+    /** HEADER **/
+    header: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        backgroundColor: "#fff",
+    },
+    profilePicSmall: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+    },
+    headerText: {
+        flex: 1,
+        marginLeft: 10,
+    },
+    greeting: {
+        fontSize: 14,
+        color: "gray",
+    },
+    name: {
+        fontSize: 18,
+        fontWeight: "bold",
+    },
+    headerIcons: {
+        flexDirection: "row",
+    },
+    iconButton: {
+        backgroundColor: "#28a745",
+        borderRadius: 10,
+        padding: 8,
+        marginLeft: 8,
+    },
+
+    /** SEARCH BAR **/
+    searchContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: 20,
+        marginBottom: 10,
+    },
+    searchInput: {
+        flex: 1,
+        backgroundColor: "#f0f0f0",
+        padding: 10,
+        borderRadius: 10,
+        fontSize: 14,
+    },
+    addButton: {
+        backgroundColor: "#28a745",
+        borderRadius: 10,
+        padding: 10,
+        marginLeft: 10,
+    },
+
+    /** POST STYLES **/
     postContainer: {
         backgroundColor: "#fff",
-        padding: 20, // Increased padding
-        marginVertical: 12, // Increased margin
-        marginHorizontal: 20, // Increased margin
+        padding: 20,
+        marginVertical: 12,
+        marginHorizontal: 20,
         borderRadius: 10,
         shadowColor: "#000",
         shadowOpacity: 0.1,
@@ -141,38 +239,34 @@ const styles = StyleSheet.create({
     postHeader: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 15, // Increased margin
+        marginBottom: 15,
     },
     profilePic: {
-        width: 50, // Increased size
-        height: 50, // Increased size
-        borderRadius: 25, // Adjusted for new size
-    },
-    headerText: {
-        marginLeft: 15, // Increased margin
-        flex: 1,
+        width: 50,
+        height: 50,
+        borderRadius: 25,
     },
     username: {
-        fontSize: 18, // Increased font size
+        fontSize: 18,
         fontWeight: "bold",
     },
     time: {
-        fontSize: 14, // Increased font size
+        fontSize: 14,
         color: "gray",
     },
     postText: {
-        fontSize: 16, // Increased font size
-        marginBottom: 15, // Increased margin
+        fontSize: 16,
+        marginBottom: 15,
     },
     postImage: {
         width: "100%",
-        height: 250, // Increased height
+        height: 250,
         borderRadius: 10,
     },
     footer: {
         flexDirection: "row",
         justifyContent: "space-between",
-        marginTop: 15, // Increased margin
+        marginTop: 15,
     },
     iconContainer: {
         flexDirection: "row",
@@ -180,7 +274,7 @@ const styles = StyleSheet.create({
     },
     iconText: {
         marginLeft: 5,
-        fontSize: 16, // Increased font size
+        fontSize: 16,
         color: "gray",
     },
 });
