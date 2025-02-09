@@ -7,8 +7,7 @@ export default function Layout() {
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ color, size }) => {
                     let iconName = "";
-                    if (route.name === "sosmed")
-                        iconName = "home"; // Sosmed jadi Home
+                    if (route.name === "sosmed") iconName = "home";
                     else if (route.name === "ecommerce") iconName = "cart";
                     else if (route.name === "ai") iconName = "bulb";
                     else if (route.name === "export") iconName = "cube";

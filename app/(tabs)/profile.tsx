@@ -58,7 +58,6 @@ const ProfileScreen = () => {
                 <Ionicons name="search" size={24} color="black" />
             </View>
 
-            {/* 🖼️ Banner */}
             <TouchableOpacity onPress={() => pickImage(setBannerImage)}>
                 <Image source={{ uri: bannerImage }} style={styles.banner} />
                 <Ionicons
@@ -69,7 +68,6 @@ const ProfileScreen = () => {
                 />
             </TouchableOpacity>
 
-            {/* 🏞️ Profile Section */}
             <View style={styles.profileSection}>
                 <TouchableOpacity onPress={() => pickImage(setProfileImage)}>
                     <Image
@@ -100,7 +98,6 @@ const ProfileScreen = () => {
                 </View>
             </View>
 
-            {/* ℹ️ About Section */}
             <View style={styles.aboutSection}>
                 <Text style={styles.aboutTitle}>About</Text>
                 <Text style={styles.aboutText}>
@@ -174,7 +171,6 @@ const ProfileScreen = () => {
                 scrollEnabled={false}
             />
 
-            {/* 🔽 Tombol "All Posts" */}
             <TouchableOpacity style={styles.allPostsButton}>
                 <Text style={styles.allPostsText}>View All Post </Text>
             </TouchableOpacity>

@@ -10,7 +10,7 @@ import {
 import { useRouter } from "expo-router";
 
 const LoginScreen = () => {
-    const router = useRouter(); // Gunakan router dari expo-router
+    const router = useRouter();
     const [phoneNumber, setPhoneNumber] = useState("");
     const [error, setError] = useState("");
 
@@ -20,11 +20,11 @@ const LoginScreen = () => {
             return;
         }
         console.log("Logging in with:", phoneNumber);
-        router.replace("/(tabs)/sosmed"); // Arahkan ke halaman home
+        router.replace("/(tabs)/sosmed");
     };
 
     const handleRegister = () => {
-        router.push("/register"); // Arahkan ke halaman register
+        router.push("/register");
     };
 
     return (

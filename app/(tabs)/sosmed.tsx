@@ -97,7 +97,6 @@ const SocialScreen = () => {
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <View style={styles.postContainer}>
-                        {/* Header */}
                         <View style={styles.postHeader}>
                             <Image
                                 source={{ uri: item.profilePic }}

@@ -10,7 +10,7 @@ import {
 
 const VerificationScreen = ({ navigation }: any) => {
     const [code, setCode] = useState(["", "", "", ""]);
-    const [timer, setTimer] = useState(60); // Timer for resending code
+    const [timer, setTimer] = useState(60);
     const [error, setError] = useState("");
     const [isResendEnabled, setIsResendEnabled] = useState(false);
 
@@ -20,7 +20,7 @@ const VerificationScreen = ({ navigation }: any) => {
                 if (prev > 0) {
                     return prev - 1;
                 } else {
-                    setIsResendEnabled(true); // Enable resend after timer reaches 0
+                    setIsResendEnabled(true);
                     clearInterval(intervalId);
                     return 0;
                 }
@@ -43,9 +43,8 @@ const VerificationScreen = ({ navigation }: any) => {
 
     const handleResendCode = () => {
         if (isResendEnabled) {
-            setTimer(60); // Reset the timer
+            setTimer(60);
             setIsResendEnabled(false);
-            // Logic to resend the code (e.g., API call)
             console.log("Resending verification code...");
         } else {
             setError("You can only resend the code after the timer runs out.");
@@ -54,10 +53,9 @@ const VerificationScreen = ({ navigation }: any) => {
 
     const handleChange = (text: string, index: number) => {
         const newCode = [...code];
-        newCode[index] = text.slice(0, 1); // Only allow one digit per box
+        newCode[index] = text.slice(0, 1);
         setCode(newCode);
 
-        // Move focus to the next input field
         if (text && index < 3) {
             const nextInput = index + 1;
             (nextInput as any).focus();

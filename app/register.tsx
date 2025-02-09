@@ -12,7 +12,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 const RegisterScreen = ({ navigation }: any) => {
-    const router = useRouter(); // Gunakan router dari expo-router
+    const router = useRouter();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -20,7 +20,6 @@ const RegisterScreen = ({ navigation }: any) => {
     const [ktpPhoto, setKtpPhoto] = useState<any>(null);
 
     const handleRegister = () => {
-        // Basic validation for required fields
         if (!name || !email || !phoneNumber) {
             setError("All fields are required!");
             return;
