@@ -9,8 +9,10 @@ import {
     ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 const ProfileScreen = () => {
+    const router = useRouter();
     const [bannerImage, setBannerImage] = useState(
         "https://picsum.photos/seed/picsum/200/300"
     );
@@ -21,7 +23,6 @@ const ProfileScreen = () => {
     const pickImage = (
         setImage: React.Dispatch<React.SetStateAction<string>>
     ) => {
-        // nanti buat ambil image di sini
         setImage("https://picsum.photos/seed/picsum/200/300");
     };
     const [posts, setPosts] = useState([
@@ -49,9 +50,10 @@ const ProfileScreen = () => {
 
     return (
         <ScrollView style={styles.container}>
-            {/* 🔝 Header */}
             <View style={styles.header}>
-                <Ionicons name="arrow-back" size={24} color="black" />
+                <TouchableOpacity onPress={() => router.push("/sosmed")}>
+                    <Ionicons name="arrow-back" size={24} color="black" />
+                </TouchableOpacity>
                 <Text style={styles.headerTitle}>Mambaus Baus</Text>
                 <Ionicons name="search" size={24} color="black" />
             </View>
@@ -108,15 +110,16 @@ const ProfileScreen = () => {
                 </Text>
             </View>
 
-            {/* 📝 Posts Section */}
             <View style={styles.postSection}>
                 <Text style={styles.postTitle}>Post</Text>
-                <TouchableOpacity style={styles.writePostButton}>
+                <TouchableOpacity
+                    style={styles.writePostButton}
+                    onPress={() => router.push("/newpost")}
+                >
                     <Text style={styles.writePostText}>Write a post</Text>
                 </TouchableOpacity>
             </View>
 
-            {/* 📜 Daftar Postingan */}
             <FlatList
                 data={posts}
                 keyExtractor={(item) => item.id}

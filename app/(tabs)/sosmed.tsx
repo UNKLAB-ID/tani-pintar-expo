@@ -38,12 +38,18 @@ const posts = [
     },
 ];
 
+const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 18) return "Good Afternoon";
+    return "Good Evening";
+};
+
 const SocialScreen = () => {
-    const router = useRouter(); // ✅ Gunakan useRouter untuk navigasi
+    const router = useRouter();
 
     return (
         <View style={styles.container}>
-            {/* HEADER */}
             <View style={styles.header}>
                 <Image
                     source={{
@@ -52,7 +58,7 @@ const SocialScreen = () => {
                     style={styles.profilePicSmall}
                 />
                 <View style={styles.headerText}>
-                    <Text style={styles.greeting}>Good Morning.</Text>
+                    <Text style={styles.greeting}>{getGreeting()}</Text>
                     <Text style={styles.name}>Mambaus Baus</Text>
                 </View>
                 <View style={styles.headerIcons}>
@@ -73,7 +79,6 @@ const SocialScreen = () => {
                 </View>
             </View>
 
-            {/* SEARCH BAR */}
             <View style={styles.searchContainer}>
                 <TextInput
                     style={styles.searchInput}
@@ -87,7 +92,6 @@ const SocialScreen = () => {
                 </TouchableOpacity>
             </View>
 
-            {/* POSTS LIST */}
             <FlatList
                 data={posts}
                 keyExtractor={(item) => item.id}
@@ -112,11 +116,9 @@ const SocialScreen = () => {
                             </TouchableOpacity>
                         </View>
 
-                        {/* Post Content */}
                         <Text style={styles.postText}>{item.text}</Text>
                         <Image source={item.image} style={styles.postImage} />
 
-                        {/* Footer */}
                         <View style={styles.footer}>
                             <TouchableOpacity style={styles.iconContainer}>
                                 <FontAwesome
