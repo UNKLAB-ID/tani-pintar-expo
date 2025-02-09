@@ -6,12 +6,13 @@ import {
     TouchableOpacity,
     StyleSheet,
     SafeAreaView,
-    Image,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 const RegisterScreen = ({ navigation }: any) => {
+    const router = useRouter(); // Gunakan router dari expo-router
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -20,7 +21,7 @@ const RegisterScreen = ({ navigation }: any) => {
 
     const handleRegister = () => {
         // Basic validation for required fields
-        if (!name || !email || !phoneNumber || !ktpPhoto) {
+        if (!name || !email || !phoneNumber) {
             setError("All fields are required!");
             return;
         }
@@ -30,7 +31,7 @@ const RegisterScreen = ({ navigation }: any) => {
             phoneNumber,
             ktpPhoto,
         });
-        navigation.navigate("Home");
+        router.push("/login");
     };
 
     const handleImagePicker = async () => {
@@ -53,7 +54,7 @@ const RegisterScreen = ({ navigation }: any) => {
     };
 
     const handleLogin = () => {
-        navigation.navigate("Login");
+        router.push("/login");
     };
 
     return (
@@ -89,7 +90,7 @@ const RegisterScreen = ({ navigation }: any) => {
                     <Text style={styles.photoButtonText}>
                         {ktpPhoto
                             ? "KTP Photo Selected"
-                            : "Select KTP Photo (Max 2Mb)"}
+                            : "Select KTP Photo (Optional)"}
                     </Text>
                 </View>
             </TouchableOpacity>
@@ -101,10 +102,6 @@ const RegisterScreen = ({ navigation }: any) => {
                 onChangeText={setPhoneNumber}
                 keyboardType="phone-pad"
             />
-
-            {ktpPhoto && (
-                <Image source={{ uri: ktpPhoto }} style={styles.imagePreview} />
-            )}
 
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
@@ -173,12 +170,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-    },
-    imagePreview: {
-        width: "100%",
-        height: 500, // Adjusted height for larger preview
-        borderRadius: 8,
-        marginTop: 12,
     },
     errorText: {
         color: "red",

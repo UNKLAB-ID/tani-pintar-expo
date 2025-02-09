@@ -1,4 +1,3 @@
-// src/screens/LoginScreen.tsx
 import React, { useState } from "react";
 import {
     View,
@@ -8,8 +7,10 @@ import {
     StyleSheet,
     SafeAreaView,
 } from "react-native";
+import { useRouter } from "expo-router";
 
-const LoginScreen = ({ navigation }: any) => {
+const LoginScreen = () => {
+    const router = useRouter(); // Gunakan router dari expo-router
     const [phoneNumber, setPhoneNumber] = useState("");
     const [error, setError] = useState("");
 
@@ -19,11 +20,11 @@ const LoginScreen = ({ navigation }: any) => {
             return;
         }
         console.log("Logging in with:", phoneNumber);
-        navigation.navigate("Home");
+        router.replace("/(tabs)/sosmed"); // Arahkan ke halaman home
     };
 
     const handleRegister = () => {
-        navigation.navigate("Register");
+        router.push("/register"); // Arahkan ke halaman register
     };
 
     return (
@@ -124,12 +125,12 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     dontHaveAccountText: {
-        fontSize: 20, // Increased font size
+        fontSize: 20,
         color: "#888",
     },
     registerText: {
         color: "#166953",
-        fontSize: 20, // Increased font size
+        fontSize: 20,
         textDecorationLine: "underline",
     },
 });

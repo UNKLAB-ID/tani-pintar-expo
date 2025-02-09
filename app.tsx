@@ -1,9 +1,10 @@
-// App.tsx
-import React from 'react';
-import AppNavigator from './app/src/navigation/AppNavigator';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Slot } from "expo-router";
 
-const App = () => {
-  return <AppNavigator />;
-};
-
-export default App;
+export default function App() {
+    return (
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <Slot />
+        </GestureHandlerRootView>
+    );
+}
