@@ -7,7 +7,7 @@ const SplashScreen = () => {
 
     useEffect(() => {
         setTimeout(() => {
-            router.replace("/login"); // Auto-pindah ke Login setelah 2 detik
+            router.replace("/login");
         }, 2000);
     }, []);
 
@@ -17,7 +17,7 @@ const SplashScreen = () => {
                 <Image
                     source={require("../assets/LOGO ICON white.png")}
                     style={styles.logo}
-                    resizeMode="contain" // Pastikan logo tidak terpotong
+                    resizeMode="contain"
                 />
                 <Text style={styles.title}>TANI PINTAR</Text>
             </View>
@@ -35,11 +35,11 @@ const styles = StyleSheet.create({
     innerContainer: {
         justifyContent: "center",
         alignItems: "center",
-        width: "80%", // Pastikan logo tidak terlalu melebar
+        width: "80%",
     },
     logo: {
-        width: 200, // Sesuaikan ukuran agar tetap proporsional
-        height: 273, // Menjaga rasio aspek 401x547
+        width: 200,
+        height: 273,
     },
     title: {
         color: "#fff",
