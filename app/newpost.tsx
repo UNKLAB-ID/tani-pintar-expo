@@ -19,7 +19,6 @@ const NewPostScreen = () => {
     const [audience, setAudience] = useState("Public");
     const [modalVisible, setModalVisible] = useState(false);
 
-    // 📸 Pilih gambar
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -33,7 +32,6 @@ const NewPostScreen = () => {
 
     return (
         <View style={styles.container}>
-            {/* 🔝 Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.back()}>
                     <Ionicons name="close" size={24} color="black" />
@@ -48,7 +46,6 @@ const NewPostScreen = () => {
                 </TouchableOpacity>
             </View>
 
-            {/* 📸 Area Foto */}
             <TouchableOpacity style={styles.imageUpload} onPress={pickImage}>
                 {image ? (
                     <Image source={{ uri: image }} style={styles.image} />
@@ -57,7 +54,6 @@ const NewPostScreen = () => {
                 )}
             </TouchableOpacity>
 
-            {/* ✏️ Caption */}
             <Text style={styles.captionLabel}>Caption</Text>
             <TextInput
                 style={styles.input}
@@ -68,12 +64,10 @@ const NewPostScreen = () => {
                 multiline
             />
 
-            {/* 🚀 Tombol Post */}
             <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText}>Post Now</Text>
             </TouchableOpacity>
 
-            {/* 🔽 MODAL: Pilihan Audience */}
             <Modal visible={modalVisible} animationType="slide" transparent>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
