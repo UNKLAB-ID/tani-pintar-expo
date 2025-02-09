@@ -9,6 +9,7 @@ import {
     StyleSheet,
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 const posts = [
     {
@@ -38,6 +39,8 @@ const posts = [
 ];
 
 const SocialScreen = () => {
+    const router = useRouter(); // ✅ Gunakan useRouter untuk navigasi
+
     return (
         <View style={styles.container}>
             {/* HEADER */}
@@ -76,7 +79,10 @@ const SocialScreen = () => {
                     style={styles.searchInput}
                     placeholder="Find what you're looking for..."
                 />
-                <TouchableOpacity style={styles.addButton}>
+                <TouchableOpacity
+                    style={styles.addButton}
+                    onPress={() => router.push("/newpost")}
+                >
                     <Ionicons name="add" size={24} color="white" />
                 </TouchableOpacity>
             </View>
