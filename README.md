@@ -58,5 +58,3 @@ Connect with developers building with Expo:
 
 -   💻 [Expo on GitHub](https://github.com/expo/expo) – Contribute to the open-source project.
 -   💬 [Expo Discord Community](https://chat.expo.dev) – Ask questions and collaborate with other developers.
-
-Happy coding! 🎉
