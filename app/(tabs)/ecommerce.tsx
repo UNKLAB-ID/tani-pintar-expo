@@ -2,93 +2,117 @@ import React from "react";
 import {
     View,
     Text,
-    StyleSheet,
-    FlatList,
+    TextInput,
+    ScrollView,
     Image,
-    TouchableOpacity,
+    FlatList,
 } from "react-native";
+import "nativewind";
 
 const products = [
     {
         id: "1",
-        name: "Product 1",
-        price: "$10",
-        image: "https://via.placeholder.com/150",
+        name: "Simodis 100EC",
+        price: "Rp152.000",
+        discount: "5%",
+        image: "https://via.placeholder.com/100",
     },
     {
         id: "2",
-        name: "Product 2",
-        price: "$20",
-        image: "https://via.placeholder.com/150",
+        name: "Insektisida",
+        price: "Rp32.200",
+        discount: "8%",
+        image: "https://via.placeholder.com/100",
     },
     {
         id: "3",
-        name: "Product 3",
-        price: "$30",
+        name: "Bottle Sprayer",
+        price: "Rp23.000",
+        discount: "6%",
+        image: "https://via.placeholder.com/100",
+    },
+];
+
+const recommended = [
+    {
+        id: "4",
+        name: "INSEKTISIDA GRACIA",
+        price: "Rp269.000",
+        image: "https://via.placeholder.com/150",
+    },
+    {
+        id: "5",
+        name: "H&L Sprayer Manual",
+        price: "Rp36.000",
+        discount: "20%",
         image: "https://via.placeholder.com/150",
     },
 ];
 
 const EcommerceScreen = () => {
-    const renderItem = ({
-        item,
-    }: {
-        item: { id: string; name: string; price: string; image: string };
-    }) => (
-        <TouchableOpacity style={styles.productContainer}>
-            <Image source={{ uri: item.image }} style={styles.productImage} />
-            <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.productPrice}>{item.price}</Text>
-        </TouchableOpacity>
-    );
-
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Ecommerce Screen</Text>
-            <FlatList
-                data={products}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                contentContainerStyle={styles.list}
-            />
-        </View>
+        <ScrollView className="flex-1 bg-white">
+            {/* Search Bar */}
+            <View className="p-4 flex-row items-center">
+                <TextInput
+                    className="flex-1 bg-gray-200 p-3 rounded-lg"
+                    placeholder="Find what you needed..."
+                />
+            </View>
+
+            {/* Flash Sale */}
+            <View className="p-4">
+                <Text className="text-lg font-bold">Flash Sale</Text>
+                <FlatList
+                    horizontal
+                    data={products}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <View className="m-2 p-2 bg-white shadow-md rounded-lg">
+                            <Image
+                                source={{ uri: item.image }}
+                                className="w-24 h-24"
+                            />
+                            <Text className="text-sm font-bold">
+                                {item.name}
+                            </Text>
+                            <Text className="text-red-500">
+                                {item.discount} OFF
+                            </Text>
+                            <Text className="text-green-500">{item.price}</Text>
+                        </View>
+                    )}
+                />
+            </View>
+
+            {/* For You */}
+            <View className="p-4">
+                <Text className="text-lg font-bold">For You</Text>
+                <FlatList
+                    numColumns={2}
+                    data={recommended}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <View className="m-2 p-2 w-40 bg-white shadow-md rounded-lg">
+                            <Image
+                                source={{ uri: item.image }}
+                                className="w-full h-24"
+                            />
+                            <Text className="text-sm font-bold">
+                                {item.name}
+                            </Text>
+                            {item.discount && (
+                                <Text className="text-red-500">
+                                    {item.discount} OFF
+                                </Text>
+                            )}
+                            <Text className="text-green-500">{item.price}</Text>
+                        </View>
+                    )}
+                />
+            </View>
+        </ScrollView>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-        backgroundColor: "#fff",
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: "bold",
-        marginBottom: 16,
-    },
-    list: {
-        paddingBottom: 16,
-    },
-    productContainer: {
-        marginBottom: 16,
-        padding: 16,
-        backgroundColor: "#f9f9f9",
-        borderRadius: 8,
-        alignItems: "center",
-    },
-    productImage: {
-        width: 150,
-        height: 150,
-        marginBottom: 8,
-    },
-    productName: {
-        fontSize: 18,
-        fontWeight: "bold",
-    },
-    productPrice: {
-        fontSize: 16,
-        color: "#888",
-    },
-});
 
 export default EcommerceScreen;
