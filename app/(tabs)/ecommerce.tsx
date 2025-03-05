@@ -1,13 +1,5 @@
-import React from "react";
-import {
-    View,
-    Text,
-    TextInput,
-    ScrollView,
-    Image,
-    FlatList,
-} from "react-native";
-import "nativewind";
+import { View, Text, TextInput, Image, FlatList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const products = [
     {
@@ -51,67 +43,73 @@ const recommended = [
 
 const EcommerceScreen = () => {
     return (
-        <ScrollView className="flex-1 bg-white">
-            {/* Search Bar */}
-            <View className="p-4 flex-row items-center">
-                <TextInput
-                    className="flex-1 bg-gray-200 p-3 rounded-lg"
-                    placeholder="Find what you needed..."
-                />
-            </View>
+        <SafeAreaView className="flex-1 bg-white">
+            <FlatList
+                ListHeaderComponent={
+                    <View className="p-4">
+                        {/* Search Bar */}
+                        <TextInput
+                            className="bg-gray-200 p-3 rounded-lg mt-2 border border-gray-300"
+                            placeholder="Find what you needed..."
+                        />
 
-            {/* Flash Sale */}
-            <View className="p-4">
-                <Text className="text-lg font-bold">Flash Sale</Text>
-                <FlatList
-                    horizontal
-                    data={products}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <View className="m-2 p-2 bg-white shadow-md rounded-lg">
-                            <Image
-                                source={{ uri: item.image }}
-                                className="w-24 h-24"
-                            />
-                            <Text className="text-sm font-bold">
-                                {item.name}
-                            </Text>
-                            <Text className="text-red-500">
+                        {/* Flash Sale */}
+                        <Text className="text-lg font-bold mt-4">
+                            Flash Sale
+                        </Text>
+                        <FlatList
+                            horizontal
+                            data={products}
+                            keyExtractor={(item) => item.id}
+                            showsHorizontalScrollIndicator={false}
+                            nestedScrollEnabled={true}
+                            renderItem={({ item }) => (
+                                <View className="m-2 p-2 bg-white shadow-lg rounded-lg w-36">
+                                    <Image
+                                        source={{ uri: item.image }}
+                                        className="w-28 h-28 rounded-md"
+                                    />
+                                    <Text className="text-sm font-bold mt-2">
+                                        {item.name}
+                                    </Text>
+                                    <Text className="text-red-500 font-semibold">
+                                        {item.discount} OFF
+                                    </Text>
+                                    <Text className="text-green-600 font-bold">
+                                        {item.price}
+                                    </Text>
+                                </View>
+                            )}
+                        />
+
+                        {/* For You */}
+                        <Text className="text-lg font-bold mt-4">For You</Text>
+                    </View>
+                }
+                data={recommended}
+                keyExtractor={(item) => item.id}
+                numColumns={2}
+                renderItem={({ item }) => (
+                    <View className="m-2 p-2 w-44 bg-white shadow-md rounded-lg">
+                        <Image
+                            source={{ uri: item.image }}
+                            className="w-full h-28 rounded-md"
+                        />
+                        <Text className="text-sm font-bold mt-2">
+                            {item.name}
+                        </Text>
+                        {item.discount && (
+                            <Text className="text-red-500 font-semibold">
                                 {item.discount} OFF
                             </Text>
-                            <Text className="text-green-500">{item.price}</Text>
-                        </View>
-                    )}
-                />
-            </View>
-
-            {/* For You */}
-            <View className="p-4">
-                <Text className="text-lg font-bold">For You</Text>
-                <FlatList
-                    numColumns={2}
-                    data={recommended}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <View className="m-2 p-2 w-40 bg-white shadow-md rounded-lg">
-                            <Image
-                                source={{ uri: item.image }}
-                                className="w-full h-24"
-                            />
-                            <Text className="text-sm font-bold">
-                                {item.name}
-                            </Text>
-                            {item.discount && (
-                                <Text className="text-red-500">
-                                    {item.discount} OFF
-                                </Text>
-                            )}
-                            <Text className="text-green-500">{item.price}</Text>
-                        </View>
-                    )}
-                />
-            </View>
-        </ScrollView>
+                        )}
+                        <Text className="text-green-600 font-bold">
+                            {item.price}
+                        </Text>
+                    </View>
+                )}
+            />
+        </SafeAreaView>
     );
 };
 
