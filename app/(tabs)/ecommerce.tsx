@@ -251,11 +251,11 @@ const EcommerceScreen = () => {
                 }
                 data={recommended}
                 keyExtractor={(item) => item.id}
-                numColumns={2} // 2 kolom per baris
+                numColumns={2}
                 columnWrapperStyle={{
                     justifyContent: "space-between",
-                    paddingHorizontal: 6, // Diperkecil dari 8 agar lebih rapat
-                    gap: 6, // Menambahkan gap kecil untuk memperkecil jarak antar card
+                    paddingHorizontal: 6,
+                    gap: 6,
                 }}
                 renderItem={({ item }) => (
                     <View className="p-2 w-[48%] bg-white shadow-md rounded-lg">
