@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 const products = [
     {
@@ -69,7 +70,8 @@ const categories = [
 ];
 
 const EcommerceScreen = () => {
-    const [timeLeft, setTimeLeft] = useState(3600); // 1 hour in seconds
+    const [timeLeft, setTimeLeft] = useState(3600);
+    const router = useRouter();
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -213,9 +215,13 @@ const EcommerceScreen = () => {
                                 </View>
                             </View>
                             <TouchableOpacity className="ml-2">
-                                <Text className="text-gray-600 font-semibold">
-                                    See All
-                                </Text>
+                                <TouchableOpacity
+                                    onPress={() => router.push("/flashsale")}
+                                >
+                                    <Text className="text-gray-600 font-semibold">
+                                        See All
+                                    </Text>
+                                </TouchableOpacity>
                             </TouchableOpacity>
                         </View>
                         <FlatList
