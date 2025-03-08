@@ -85,22 +85,22 @@ const ProfileScreen = () => {
                 <Text className="text-green-600 font-bold text-sm">
                     Komunitas Pertanian Surabaya
                 </Text>
+            </View>
 
-                {/* Buttons */}
-                <View className="flex-row space-x-3 mt-3">
-                    <TouchableOpacity className="bg-green-500 px-5 py-2 rounded-lg">
-                        <Text className="text-white font-semibold">
-                            Edit Profile
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity className="bg-gray-300 px-4 py-2 rounded-lg">
-                        <Ionicons
-                            name="ellipsis-horizontal"
-                            size={24}
-                            color="black"
-                        />
-                    </TouchableOpacity>
-                </View>
+            {/* Buttons */}
+            <View className="flex-row items-center px-4 mt-3">
+                <TouchableOpacity className="bg-green-500 flex-1 px-5 py-2 rounded-lg">
+                    <Text className="text-white font-semibold text-center">
+                        Edit Profile
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity className="ml-3 p-2">
+                    <Ionicons
+                        name="ellipsis-horizontal"
+                        size={24}
+                        color="black"
+                    />
+                </TouchableOpacity>
             </View>
 
             {/* About Section */}
