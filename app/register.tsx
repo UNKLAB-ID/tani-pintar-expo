@@ -4,14 +4,13 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet,
     SafeAreaView,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
-const RegisterScreen = ({ navigation }: any) => {
+const RegisterScreen = () => {
     const router = useRouter();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -57,19 +56,23 @@ const RegisterScreen = ({ navigation }: any) => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Register</Text>
-            <Text style={styles.subtitle}>Create an account to continue!</Text>
+        <SafeAreaView className="flex-1 bg-white px-5 pt-16">
+            <Text className="text-5xl font-bold text-[#166953] mb-4">
+                Register
+            </Text>
+            <Text className="text-2xl text-gray-500 mb-10">
+                Create an account to continue!
+            </Text>
 
             <TextInput
-                style={styles.input}
+                className="w-full p-5 text-xl border-2 border-[#166953] rounded-lg bg-white mb-5"
                 placeholder="Input your full name"
                 value={name}
                 onChangeText={setName}
             />
 
             <TextInput
-                style={styles.input}
+                className="w-full p-5 text-xl border-2 border-[#166953] rounded-lg bg-white mb-5"
                 placeholder="Input your active email"
                 value={email}
                 onChangeText={setEmail}
@@ -77,131 +80,52 @@ const RegisterScreen = ({ navigation }: any) => {
             />
 
             <TouchableOpacity
-                style={styles.photoButton}
+                className="w-full p-16 border-2 border-[#166953] bg-white rounded-lg mb-6 flex-row items-center justify-center"
                 onPress={handleImagePicker}
             >
-                <View style={styles.iconContainer}>
-                    <MaterialCommunityIcons
-                        name="file-image"
-                        size={24}
-                        color="#166953"
-                    />
-                    <Text style={styles.photoButtonText}>
-                        {ktpPhoto
-                            ? "KTP Photo Selected"
-                            : "Select KTP Photo (Optional)"}
-                    </Text>
-                </View>
+                <MaterialCommunityIcons
+                    name="file-image"
+                    size={28}
+                    color="#166953"
+                />
+                <Text className="text-[#166953] text-lg font-bold ml-4">
+                    {ktpPhoto
+                        ? "KTP Photo Selected"
+                        : "Select KTP Photo (Optional)"}
+                </Text>
             </TouchableOpacity>
 
             <TextInput
-                style={styles.input}
+                className="w-full p-5 text-xl border-2 border-[#166953] rounded-lg bg-white mb-5"
                 placeholder="+62 Input your phone number"
                 value={phoneNumber}
                 onChangeText={setPhoneNumber}
                 keyboardType="phone-pad"
             />
 
-            {error ? <Text style={styles.errorText}>{error}</Text> : null}
+            {error ? (
+                <Text className="text-red-500 text-lg mb-4">{error}</Text>
+            ) : null}
 
-            <TouchableOpacity style={styles.button} onPress={handleRegister}>
-                <Text style={styles.buttonText}>Register</Text>
+            <TouchableOpacity
+                className="w-full bg-[#166953] p-6 rounded-lg items-center mb-5"
+                onPress={handleRegister}
+            >
+                <Text className="text-white text-2xl font-bold">Register</Text>
             </TouchableOpacity>
 
-            <View style={styles.footerContainer}>
-                <Text style={styles.footerText}>Already have an account? </Text>
+            <View className="flex-row justify-center mt-8">
+                <Text className="text-xl text-gray-500">
+                    Already have an account?{" "}
+                </Text>
                 <TouchableOpacity onPress={handleLogin}>
-                    <Text style={styles.loginText}>Log In</Text>
+                    <Text className="text-xl text-[#166953] underline">
+                        Log In
+                    </Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        padding: 20,
-        top: 80,
-    },
-    title: {
-        fontSize: 36,
-        fontWeight: "bold",
-        color: "#166953",
-        marginBottom: 10,
-    },
-    subtitle: {
-        fontSize: 18,
-        color: "#888",
-        marginBottom: 35,
-    },
-    input: {
-        width: "100%",
-        padding: 14,
-        borderRadius: 8,
-        backgroundColor: "#fff",
-        marginBottom: 14,
-        fontSize: 18,
-        borderWidth: 2,
-        borderColor: "#166953",
-    },
-    photoButton: {
-        width: "100%",
-        padding: 50, // Increase padding for larger button
-        borderRadius: 8,
-        backgroundColor: "#fff",
-        borderWidth: 2,
-        borderColor: "#166953",
-        marginBottom: 20, // More space below the button
-        alignItems: "center",
-        flexDirection: "row",
-        justifyContent: "center",
-    },
-    photoButtonText: {
-        color: "#166953",
-        fontSize: 15, // Increase font size for better readability
-        fontWeight: "bold",
-        marginLeft: 12,
-    },
-
-    iconContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    errorText: {
-        color: "red",
-        fontSize: 16,
-        marginBottom: 12,
-    },
-    button: {
-        width: "100%",
-        backgroundColor: "#166953",
-        padding: 18,
-        borderRadius: 8,
-        alignItems: "center",
-        marginBottom: 12,
-    },
-    buttonText: {
-        color: "#fff",
-        fontSize: 20,
-        fontWeight: "bold",
-    },
-    footerContainer: {
-        flexDirection: "row",
-        justifyContent: "center",
-        marginTop: 22,
-    },
-    footerText: {
-        fontSize: 18,
-        color: "#888",
-    },
-    loginText: {
-        color: "#166953",
-        fontSize: 18,
-        textDecorationLine: "underline",
-    },
-});
 
 export default RegisterScreen;
