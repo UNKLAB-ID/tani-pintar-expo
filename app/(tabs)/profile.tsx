@@ -4,7 +4,6 @@ import {
     Text,
     Image,
     TouchableOpacity,
-    StyleSheet,
     FlatList,
     ScrollView,
 } from "react-native";
@@ -14,24 +13,22 @@ import { useRouter } from "expo-router";
 const ProfileScreen = () => {
     const router = useRouter();
     const [bannerImage, setBannerImage] = useState(
-        "https://picsum.photos/seed/picsum/200/300"
+        "https://picsum.photos/800/300"
     );
     const [profileImage, setProfileImage] = useState(
         "https://randomuser.me/api/portraits/men/3.jpg"
     );
 
-    const pickImage = (
-        setImage: React.Dispatch<React.SetStateAction<string>>
-    ) => {
-        setImage("https://picsum.photos/seed/picsum/200/300");
+    const pickImage = (setImage: (image: string) => void) => {
+        setImage("https://picsum.photos/800/300");
     };
+
     const [posts, setPosts] = useState([
         {
             id: "1",
             username: "Mambaus Baus",
             time: "30 min ago",
-            content:
-                "Apakah ada yang tau untuk pertanian guys? ada yang punya saran kah?",
+            content: "Ada yang punya saran untuk pertanian, guys?",
             likes: 50,
             comments: 100,
             shares: 20,
@@ -41,7 +38,7 @@ const ProfileScreen = () => {
             username: "Mambaus Baus",
             time: "20 min ago",
             content: "Menurut kalian ini bagus ga si guys?? mau coba hmmm...",
-            image: "https://picsum.photos/seed/picsum/200/300",
+            image: "https://picsum.photos/800/400",
             likes: 100,
             comments: 250,
             shares: 40,
@@ -49,46 +46,54 @@ const ProfileScreen = () => {
     ]);
 
     return (
-        <ScrollView style={styles.container}>
-            <View style={styles.header}>
+        <ScrollView className="flex-1 bg-gray-100">
+            {/* Header */}
+            <View className="flex-row items-center justify-between px-4 py-3 bg-white shadow-md">
                 <TouchableOpacity onPress={() => router.push("/sosmed")}>
                     <Ionicons name="arrow-back" size={24} color="black" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Mambaus Baus</Text>
+                <Text className="text-lg font-bold">Mambaus Baus</Text>
                 <Ionicons name="search" size={24} color="black" />
             </View>
 
+            {/* Banner */}
             <TouchableOpacity onPress={() => pickImage(setBannerImage)}>
-                <Image source={{ uri: bannerImage }} style={styles.banner} />
+                <Image source={{ uri: bannerImage }} className="w-full h-36" />
                 <Ionicons
                     name="pencil"
                     size={24}
-                    color="black"
-                    style={styles.editIconBanner}
+                    color="white"
+                    className="absolute top-3 right-3"
                 />
             </TouchableOpacity>
 
-            <View style={styles.profileSection}>
+            {/* Profile Section */}
+            <View className="items-center -mt-12">
                 <TouchableOpacity onPress={() => pickImage(setProfileImage)}>
                     <Image
                         source={{ uri: profileImage }}
-                        style={styles.profileImage}
+                        className="w-24 h-24 rounded-full border-4 border-white shadow-lg"
                     />
                 </TouchableOpacity>
-                <Text style={styles.name}>Mambaus Baus</Text>
-                <Text style={styles.stats}>150 Followers • 50 Following</Text>
-                <Text style={styles.location}>
+                <Text className="text-xl font-semibold mt-2">Mambaus Baus</Text>
+                <Text className="text-gray-600">
+                    150 Followers • 50 Following
+                </Text>
+                <Text className="text-gray-500 text-sm">
                     Surabaya - Jakarta • Petani Indonesia
                 </Text>
-                <Text style={styles.community}>
+                <Text className="text-green-600 font-bold text-sm">
                     Komunitas Pertanian Surabaya
                 </Text>
 
-                <View style={styles.profileActions}>
-                    <TouchableOpacity style={styles.editProfileButton}>
-                        <Text style={styles.editProfileText}>Edit profile</Text>
+                {/* Buttons */}
+                <View className="flex-row space-x-3 mt-3">
+                    <TouchableOpacity className="bg-green-500 px-5 py-2 rounded-lg">
+                        <Text className="text-white font-semibold">
+                            Edit Profile
+                        </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.moreButton}>
+                    <TouchableOpacity className="bg-gray-300 px-4 py-2 rounded-lg">
                         <Ionicons
                             name="ellipsis-horizontal"
                             size={24}
@@ -98,50 +103,61 @@ const ProfileScreen = () => {
                 </View>
             </View>
 
-            <View style={styles.aboutSection}>
-                <Text style={styles.aboutTitle}>About</Text>
-                <Text style={styles.aboutText}>
+            {/* About Section */}
+            <View className="px-4 py-3 bg-white mt-3 rounded-lg shadow-md">
+                <Text className="text-lg font-semibold">About</Text>
+                <Text className="text-gray-600 mt-1">
                     Saya adalah petani yang sudah berkecimpung selama 11 tahun
-                    dan saya senang dengan pekerjaan saya ini. Semoga pertanian
-                    di Indonesia semakin maju dan berkembang, gaskeun boss!!
+                    dan saya senang dengan pekerjaan ini. Semoga pertanian di
+                    Indonesia semakin maju dan berkembang! 🚜
                 </Text>
             </View>
 
-            <View style={styles.postSection}>
-                <Text style={styles.postTitle}>Post</Text>
+            {/* Post Section */}
+            <View className="flex-row justify-between px-4 mt-5">
+                <Text className="text-lg font-semibold">Posts</Text>
                 <TouchableOpacity
-                    style={styles.writePostButton}
                     onPress={() => router.push("/newpost")}
+                    className="bg-green-500 px-4 py-2 rounded-lg"
                 >
-                    <Text style={styles.writePostText}>Write a post</Text>
+                    <Text className="text-white font-semibold">
+                        Write a post
+                    </Text>
                 </TouchableOpacity>
             </View>
 
+            {/* Posts List */}
             <FlatList
                 data={posts}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View style={styles.postCard}>
-                        <View style={styles.postHeader}>
-                            <Text style={styles.postUsername}>
+                    <View className="bg-white mt-3 rounded-lg shadow-md p-4">
+                        <View className="flex-row justify-between items-center">
+                            <Text className="font-semibold">
                                 {item.username}
                             </Text>
-                            <Text style={styles.postTime}>{item.time}</Text>
+                            <Text className="text-gray-500 text-xs">
+                                {item.time}
+                            </Text>
                             <Ionicons
                                 name="ellipsis-horizontal"
                                 size={20}
                                 color="black"
                             />
                         </View>
-                        <Text style={styles.postContent}>{item.content}</Text>
+                        <Text className="text-gray-700 mt-2">
+                            {item.content}
+                        </Text>
                         {item.image && (
                             <Image
                                 source={{ uri: item.image }}
-                                style={styles.postImage}
+                                className="w-full h-48 mt-2 rounded-lg"
                             />
                         )}
-                        <View style={styles.postActions}>
-                            <TouchableOpacity style={styles.actionButton}>
+
+                        {/* Actions */}
+                        <View className="flex-row justify-between mt-3">
+                            <TouchableOpacity className="flex-row items-center space-x-1">
                                 <Ionicons
                                     name="heart-outline"
                                     size={20}
@@ -149,7 +165,7 @@ const ProfileScreen = () => {
                                 />
                                 <Text>{item.likes}</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.actionButton}>
+                            <TouchableOpacity className="flex-row items-center space-x-1">
                                 <Ionicons
                                     name="chatbubble-outline"
                                     size={20}
@@ -157,7 +173,7 @@ const ProfileScreen = () => {
                                 />
                                 <Text>{item.comments}</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.actionButton}>
+                            <TouchableOpacity className="flex-row items-center space-x-1">
                                 <Ionicons
                                     name="share-outline"
                                     size={20}
@@ -171,176 +187,14 @@ const ProfileScreen = () => {
                 scrollEnabled={false}
             />
 
-            <TouchableOpacity style={styles.allPostsButton}>
-                <Text style={styles.allPostsText}>View All Post </Text>
+            {/* View All Posts */}
+            <TouchableOpacity className="bg-white py-3 mt-3 mx-4 rounded-lg shadow-md items-center">
+                <Text className="text-green-600 font-semibold">
+                    View All Posts
+                </Text>
             </TouchableOpacity>
         </ScrollView>
     );
 };
 
 export default ProfileScreen;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-    },
-    header: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: 15,
-        borderBottomWidth: 1,
-        borderColor: "#ddd",
-    },
-    headerTitle: {
-        fontSize: 18,
-        fontWeight: "bold",
-    },
-    editIconBanner: {
-        position: "absolute",
-        top: 10,
-        right: 10,
-    },
-    editIconProfile: {
-        position: "absolute",
-        bottom: 0,
-        right: 0,
-    },
-    banner: {
-        width: "100%",
-        height: 120,
-    },
-    profileSection: {
-        alignItems: "center",
-        padding: 15,
-    },
-    profileImage: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        marginTop: -40,
-        borderWidth: 3,
-        borderColor: "#fff",
-    },
-    name: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginTop: 10,
-    },
-    stats: {
-        fontSize: 14,
-        color: "#666",
-    },
-    location: {
-        fontSize: 14,
-        color: "#888",
-    },
-    community: {
-        fontSize: 14,
-        color: "#28a745",
-        fontWeight: "bold",
-        marginBottom: 10,
-    },
-    profileActions: {
-        flexDirection: "row",
-        alignItems: "center",
-        width: "100%",
-        justifyContent: "space-between",
-    },
-    editProfileButton: {
-        backgroundColor: "#28a745",
-        paddingVertical: 8,
-        paddingHorizontal: 20,
-        borderRadius: 5,
-        flex: 1,
-        marginRight: 10,
-    },
-    editProfileText: {
-        color: "#fff",
-        fontWeight: "bold",
-        textAlign: "center",
-    },
-    moreButton: {
-        padding: 8,
-    },
-    aboutSection: {
-        padding: 15,
-    },
-    aboutTitle: {
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-    aboutText: {
-        fontSize: 14,
-        color: "#666",
-        marginTop: 5,
-    },
-    postSection: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        padding: 15,
-    },
-    postTitle: {
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-    writePostButton: {
-        backgroundColor: "#28a745",
-        paddingVertical: 5,
-        paddingHorizontal: 15,
-        borderRadius: 5,
-    },
-    writePostText: {
-        color: "#fff",
-        fontWeight: "bold",
-    },
-    postCard: {
-        backgroundColor: "#fff",
-        padding: 15,
-        marginVertical: 5,
-        borderBottomWidth: 1,
-        borderColor: "#ddd",
-    },
-    postHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
-    postUsername: {
-        fontWeight: "bold",
-    },
-    postTime: {
-        color: "#888",
-        fontSize: 12,
-    },
-    postContent: {
-        fontSize: 14,
-        marginVertical: 5,
-    },
-    postImage: {
-        width: "100%",
-        height: 200,
-        borderRadius: 10,
-    },
-    postActions: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: 10,
-    },
-    allPostsButton: {
-        backgroundColor: "#fff",
-        padding: 10,
-        margin: 15,
-        alignItems: "center",
-        borderRadius: 5,
-    },
-    allPostsText: {
-        color: "#28a745",
-        fontWeight: "bold",
-    },
-    actionButton: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-});
