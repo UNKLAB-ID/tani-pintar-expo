@@ -86,6 +86,33 @@ const EcommerceScreen = () => {
         return `${h}:${m < 10 ? "0" : ""}${m}:${s < 10 ? "0" : ""}${s}`;
     };
 
+    const PromoSection = () => (
+        <View className="flex-row justify-between items-center bg-white p-4 rounded-lg shadow-md mb-4">
+            <View className="flex-1 items-center">
+                <Ionicons name="wallet-outline" size={24} color="green" />
+                <Text className="text-sm font-bold">TaniPay</Text>
+                <Text className="text-xs text-gray-500">Rp20.000</Text>
+                <Text className="text-xs text-gray-500">Tepat minimum</Text>
+            </View>
+            <View className="flex-1 items-center">
+                <Ionicons name="pricetag-outline" size={24} color="green" />
+                <Text className="text-sm font-bold">TanPinjam</Text>
+                <Text className="text-xs text-gray-500">Activate Now</Text>
+                <Text className="text-xs text-gray-500">
+                    Limit up to Rp50...
+                </Text>
+            </View>
+            <View className="flex-1 items-center">
+                <Ionicons name="gift-outline" size={24} color="green" />
+                <Text className="text-sm font-bold">Voucher</Text>
+                <Text className="text-xs text-gray-500">Voucher Discount</Text>
+                <Text className="text-xs text-gray-500">
+                    Free Delivery Service
+                </Text>
+            </View>
+        </View>
+    );
+
     return (
         <SafeAreaView className="flex-1 bg-white">
             {/* Header */}
@@ -124,6 +151,9 @@ const EcommerceScreen = () => {
                                 </Text>
                             </TouchableOpacity>
                         </View>
+
+                        {/* Promo Section */}
+                        <PromoSection />
 
                         {/* Categories */}
                         <View className="flex-row justify-between items-center mt-4">
