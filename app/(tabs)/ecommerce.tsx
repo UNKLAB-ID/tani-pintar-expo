@@ -81,7 +81,7 @@ const EcommerceScreen = () => {
         return () => clearInterval(timer);
     }, []);
 
-    const formatTime = (seconds) => {
+    const formatTime = (seconds: number) => {
         const h = Math.floor(seconds / 3600);
         const m = Math.floor((seconds % 3600) / 60);
         const s = seconds % 60;
@@ -191,7 +191,9 @@ const EcommerceScreen = () => {
                             renderItem={({ item }) => (
                                 <View className="m-2 p-2 bg-white shadow-lg rounded-lg items-center w-20">
                                     <Ionicons
-                                        name={item.icon}
+                                        name={
+                                            item.icon as keyof typeof Ionicons.glyphMap
+                                        }
                                         size={32}
                                         color="black"
                                     />
