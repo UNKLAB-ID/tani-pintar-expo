@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -69,6 +69,23 @@ const categories = [
 ];
 
 const EcommerceScreen = () => {
+    const [timeLeft, setTimeLeft] = useState(3600); // 1 hour in seconds
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
+
+    const formatTime = (seconds) => {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        return `${h}:${m < 10 ? "0" : ""}${m}:${s < 10 ? "0" : ""}${s}`;
+    };
+
     return (
         <SafeAreaView className="flex-1 bg-white">
             {/* Header */}
@@ -139,9 +156,23 @@ const EcommerceScreen = () => {
                         />
 
                         {/* Flash Sale */}
-                        <Text className="text-lg font-bold mt-4">
-                            Flash Sale
-                        </Text>
+                        <View className="flex-row justify-between items-center mt-4">
+                            <View className="flex-row items-center">
+                                <Text className="text-lg font-bold">
+                                    Flash Sale
+                                </Text>
+                                <View className="bg-red-600 p-1 rounded-lg ml-2">
+                                    <Text className="text-white font-bold">
+                                        {formatTime(timeLeft)}
+                                    </Text>
+                                </View>
+                            </View>
+                            <TouchableOpacity className="ml-2">
+                                <Text className="text-gray-600 font-semibold">
+                                    See All
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                         <FlatList
                             horizontal
                             data={products}
