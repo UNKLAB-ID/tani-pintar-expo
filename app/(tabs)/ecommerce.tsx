@@ -113,6 +113,18 @@ const EcommerceScreen = () => {
         </View>
     );
 
+    const ShippingField = () => (
+        <View className="flex-row justify-between items-center bg-white p-4 rounded-lg shadow-md mb-4">
+            <View className="flex-row items-center">
+                <Ionicons name="location-outline" size={24} color="green" />
+                <Text className="text-sm font-bold ml-2">
+                    Ship to Jln. Pangeran Diponegoro, ...
+                </Text>
+            </View>
+            <Ionicons name="chevron-forward-outline" size={24} color="black" />
+        </View>
+    );
+
     return (
         <SafeAreaView className="flex-1 bg-white">
             {/* Header */}
@@ -139,6 +151,9 @@ const EcommerceScreen = () => {
             <FlatList
                 ListHeaderComponent={
                     <View className="p-4">
+                        {/* Shipping Field */}
+                        <ShippingField />
+
                         {/* Banner */}
                         <View className="bg-green-600 p-4 rounded-lg mb-4">
                             <Text className="text-white text-lg font-bold">
