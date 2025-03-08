@@ -6,7 +6,6 @@ import {
     FlatList,
     TouchableOpacity,
     TextInput,
-    StyleSheet,
 } from "react-native";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -49,27 +48,30 @@ const SocialScreen = () => {
     const router = useRouter();
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
+        <View className="flex-1 bg-white pt-5">
+            {/* HEADER */}
+            <View className="flex-row items-center justify-between px-5 py-3 bg-white">
                 <Image
                     source={{
                         uri: "https://randomuser.me/api/portraits/men/3.jpg",
                     }}
-                    style={styles.profilePicSmall}
+                    className="w-10 h-10 rounded-full"
                 />
-                <View style={styles.headerText}>
-                    <Text style={styles.greeting}>{getGreeting()}</Text>
-                    <Text style={styles.name}>Mambaus Baus</Text>
+                <View className="flex-1 ml-3">
+                    <Text className="text-sm text-gray-500">
+                        {getGreeting()}
+                    </Text>
+                    <Text className="text-lg font-bold">Mambaus Baus</Text>
                 </View>
-                <View style={styles.headerIcons}>
-                    <TouchableOpacity style={styles.iconButton}>
+                <View className="flex-row">
+                    <TouchableOpacity className="bg-green-600 p-2 rounded-lg ml-2">
                         <Ionicons
                             name="notifications-outline"
                             size={24}
                             color="white"
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.iconButton}>
+                    <TouchableOpacity className="bg-green-600 p-2 rounded-lg ml-2">
                         <Ionicons
                             name="chatbubble-outline"
                             size={24}
@@ -79,32 +81,39 @@ const SocialScreen = () => {
                 </View>
             </View>
 
-            <View style={styles.searchContainer}>
+            {/* SEARCH BAR */}
+            <View className="flex-row items-center px-5 my-3">
                 <TextInput
-                    style={styles.searchInput}
+                    className="flex-1 bg-gray-100 p-3 rounded-lg text-sm"
                     placeholder="Find what you're looking for..."
                 />
                 <TouchableOpacity
-                    style={styles.addButton}
+                    className="bg-green-600 p-3 rounded-lg ml-3"
                     onPress={() => router.push("/newpost")}
                 >
                     <Ionicons name="add" size={24} color="white" />
                 </TouchableOpacity>
             </View>
 
+            {/* POST LIST */}
             <FlatList
                 data={posts}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View style={styles.postContainer}>
-                        <View style={styles.postHeader}>
+                    <View className="bg-white p-5 my-3 mx-5 rounded-lg shadow-md">
+                        {/* POST HEADER */}
+                        <View className="flex-row items-center mb-3">
                             <Image
                                 source={{ uri: item.profilePic }}
-                                style={styles.profilePic}
+                                className="w-12 h-12 rounded-full"
                             />
-                            <View style={styles.headerText}>
-                                <Text style={styles.username}>{item.name}</Text>
-                                <Text style={styles.time}>{item.time}</Text>
+                            <View className="ml-3 flex-1">
+                                <Text className="text-lg font-bold">
+                                    {item.name}
+                                </Text>
+                                <Text className="text-sm text-gray-500">
+                                    {item.time}
+                                </Text>
                             </View>
                             <TouchableOpacity>
                                 <Ionicons
@@ -115,47 +124,52 @@ const SocialScreen = () => {
                             </TouchableOpacity>
                         </View>
 
-                        <Text style={styles.postText}>{item.text}</Text>
-                        <Image source={item.image} style={styles.postImage} />
+                        {/* POST CONTENT */}
+                        <Text className="text-base mb-3">{item.text}</Text>
+                        <Image
+                            source={item.image}
+                            className="w-full h-64 rounded-lg"
+                        />
 
-                        <View style={styles.footer}>
-                            <TouchableOpacity style={styles.iconContainer}>
+                        {/* POST FOOTER */}
+                        <View className="flex-row justify-between mt-3">
+                            <TouchableOpacity className="flex-row items-center">
                                 <FontAwesome
                                     name="heart"
                                     size={18}
                                     color="gray"
                                 />
-                                <Text style={styles.iconText}>
+                                <Text className="ml-2 text-gray-500">
                                     {item.likes}
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.iconContainer}>
+                            <TouchableOpacity className="flex-row items-center">
                                 <FontAwesome
                                     name="comment"
                                     size={18}
                                     color="gray"
                                 />
-                                <Text style={styles.iconText}>
+                                <Text className="ml-2 text-gray-500">
                                     {item.comments}
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.iconContainer}>
+                            <TouchableOpacity className="flex-row items-center">
                                 <FontAwesome
                                     name="eye"
                                     size={18}
                                     color="gray"
                                 />
-                                <Text style={styles.iconText}>
+                                <Text className="ml-2 text-gray-500">
                                     {item.views}
                                 </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.iconContainer}>
+                            <TouchableOpacity className="flex-row items-center">
                                 <FontAwesome
                                     name="share"
                                     size={18}
                                     color="gray"
                                 />
-                                <Text style={styles.iconText}>
+                                <Text className="ml-2 text-gray-500">
                                     {item.shares}
                                 </Text>
                             </TouchableOpacity>
@@ -166,124 +180,5 @@ const SocialScreen = () => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        paddingTop: 20,
-    },
-
-    /** HEADER **/
-    header: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        backgroundColor: "#fff",
-    },
-    profilePicSmall: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-    },
-    headerText: {
-        flex: 1,
-        marginLeft: 10,
-    },
-    greeting: {
-        fontSize: 14,
-        color: "gray",
-    },
-    name: {
-        fontSize: 18,
-        fontWeight: "bold",
-    },
-    headerIcons: {
-        flexDirection: "row",
-    },
-    iconButton: {
-        backgroundColor: "#28a745",
-        borderRadius: 10,
-        padding: 8,
-        marginLeft: 8,
-    },
-
-    /** SEARCH BAR **/
-    searchContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        paddingHorizontal: 20,
-        marginBottom: 10,
-    },
-    searchInput: {
-        flex: 1,
-        backgroundColor: "#f0f0f0",
-        padding: 10,
-        borderRadius: 10,
-        fontSize: 14,
-    },
-    addButton: {
-        backgroundColor: "#28a745",
-        borderRadius: 10,
-        padding: 10,
-        marginLeft: 10,
-    },
-
-    /** POST STYLES **/
-    postContainer: {
-        backgroundColor: "#fff",
-        padding: 20,
-        marginVertical: 12,
-        marginHorizontal: 20,
-        borderRadius: 10,
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
-    },
-    postHeader: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 15,
-    },
-    profilePic: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-    },
-    username: {
-        fontSize: 18,
-        fontWeight: "bold",
-    },
-    time: {
-        fontSize: 14,
-        color: "gray",
-    },
-    postText: {
-        fontSize: 16,
-        marginBottom: 15,
-    },
-    postImage: {
-        width: "100%",
-        height: 250,
-        borderRadius: 10,
-    },
-    footer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: 15,
-    },
-    iconContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    iconText: {
-        marginLeft: 5,
-        fontSize: 16,
-        color: "gray",
-    },
-});
 
 export default SocialScreen;
