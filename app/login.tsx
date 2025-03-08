@@ -4,7 +4,6 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet,
     SafeAreaView,
 } from "react-native";
 import { useRouter } from "expo-router";
@@ -28,111 +27,53 @@ const LoginScreen = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Text style={styles.welcomeText}>Welcome</Text>
-                <Text style={styles.backText}>Back!</Text>
+        <SafeAreaView className="flex-1 bg-white px-5 pt-36">
+            {/* Header */}
+            <View className="flex-col mb-10 items-start">
+                <Text className="text-5xl font-bold text-[#166953]">
+                    Welcome
+                </Text>
+                <Text className="text-5xl font-bold text-black">Back!</Text>
             </View>
 
-            <Text style={styles.subtitle}>
+            <Text className="text-2xl text-gray-500 mb-10">
                 Log In with registered phone number!
             </Text>
 
+            {/* Input Field */}
             <TextInput
-                style={styles.input}
+                className="w-full p-5 text-xl border-2 border-[#166953] rounded-lg bg-white mb-5"
                 placeholder="+62 Input your phone number"
                 keyboardType="phone-pad"
                 value={phoneNumber}
                 onChangeText={setPhoneNumber}
             />
 
-            {error ? <Text style={styles.errorText}>{error}</Text> : null}
+            {error ? (
+                <Text className="text-red-500 text-xl mb-5">{error}</Text>
+            ) : null}
 
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Login</Text>
+            {/* Login Button */}
+            <TouchableOpacity
+                className="w-full bg-[#166953] p-6 rounded-lg items-center mb-5"
+                onPress={handleLogin}
+            >
+                <Text className="text-white text-2xl font-bold">Login</Text>
             </TouchableOpacity>
-            <View style={styles.footerContainer}>
-                <Text style={styles.dontHaveAccountText}>
+
+            {/* Footer */}
+            <View className="flex-row justify-center mt-10">
+                <Text className="text-xl text-gray-500">
                     Don't have an account?{" "}
                 </Text>
                 <TouchableOpacity onPress={handleRegister}>
-                    <Text style={styles.registerText}>Register</Text>
+                    <Text className="text-xl text-[#166953] underline">
+                        Register
+                    </Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        padding: 20,
-        top: 90,
-    },
-    headerContainer: {
-        flexDirection: "column",
-        marginBottom: 20,
-        justifyContent: "flex-start",
-        alignItems: "flex-start",
-    },
-    welcomeText: {
-        fontSize: 40,
-        fontWeight: "bold",
-        color: "#166953",
-    },
-    backText: {
-        fontSize: 40,
-        fontWeight: "bold",
-        color: "black",
-    },
-    subtitle: {
-        fontSize: 20,
-        color: "#888",
-        marginBottom: 30,
-    },
-    input: {
-        width: "100%",
-        padding: 16,
-        borderRadius: 8,
-        backgroundColor: "#fff",
-        marginBottom: 12,
-        fontSize: 20,
-        borderWidth: 2,
-        borderColor: "#166953",
-    },
-    errorText: {
-        color: "red",
-        fontSize: 18,
-        marginBottom: 10,
-    },
-    button: {
-        width: "100%",
-        backgroundColor: "#166953",
-        padding: 20,
-        borderRadius: 8,
-        alignItems: "center",
-        marginBottom: 10,
-    },
-    buttonText: {
-        color: "#fff",
-        fontSize: 22,
-        fontWeight: "bold",
-    },
-    footerContainer: {
-        flexDirection: "row",
-        justifyContent: "center",
-        marginTop: 20,
-    },
-    dontHaveAccountText: {
-        fontSize: 20,
-        color: "#888",
-    },
-    registerText: {
-        color: "#166953",
-        fontSize: 20,
-        textDecorationLine: "underline",
-    },
-});
 
 export default LoginScreen;
