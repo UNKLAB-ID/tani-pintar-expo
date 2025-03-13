@@ -9,6 +9,8 @@ import {
 import { useRouter } from "expo-router";
 
 const LoginScreen = () => {
+    fasdlkfjskadljfklsadjf
+    fsdajflskadjflksadjflksadf
     const router = useRouter();
     const [phoneNumber, setPhoneNumber] = useState("");
     const [error, setError] = useState("");
