@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
     View,
     Text,
-    TextInput,
     TouchableOpacity,
     SafeAreaView,
 } from "react-native";
@@ -10,7 +9,7 @@ import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 
 // Components Global
-import CustomButton from "@/components/ui/component-globals/button";
+import CustomButton from "@/components/ui/component-globals/button-primary";
 import CustomTextInput from "@/components/ui/component-globals/input-text";
 import PhoneInput from "@/components/ui/component-globals/input-phone";
 import ImagePickerInput from "@/components/ui/component-globals/input-images";
@@ -79,7 +78,7 @@ const RegisterScreen = () => {
                 />
             </View>
             <View>
-                <CustomButton title="Register" onPress={handleRegister} disabled={true} className="py-[8px]" />
+                <CustomButton title="Register" onPress={handleRegister} className="py-[13px]" />
             </View>
 
             <View className="flex-row justify-center mt-8">

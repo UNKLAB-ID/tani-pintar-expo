@@ -1,29 +1,33 @@
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
     View,
     Text,
-    TextInput,
     TouchableOpacity,
     SafeAreaView,
 } from "react-native";
 import { useRouter } from "expo-router";
 import PhoneInput from "@/components/ui/component-globals/input-phone";
-import { Colors } from "@/constants/Colors";
-import CustomButton from "@/components/ui/component-globals/button";
+import CustomButton from "@/components/ui/component-globals/button-primary";
 
 const LoginScreen = () => {
     const router = useRouter();
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [error, setError] = useState("");
+    const [error, setError] = useState(false);
 
     const handleLogin = () => {
         if (!phoneNumber) {
-            setError("Phone number is required!");
+           setError(true);
             return;
         }
-        console.log("Logging in with:", phoneNumber);
-        router.replace("/(tabs)/sosmed");
+      
+        router.replace("/otp");
     };
+
+useEffect(() => {
+    if (phoneNumber.length > 0) {
+        setError(false);
+    }
+}, [phoneNumber]);
 
     const handleRegister = () => {
         router.push("/register");
@@ -36,7 +40,7 @@ const LoginScreen = () => {
                 <Text className={`text-4xl font-bold text-primary`}>
                     Welcome
                 </Text>
-                <Text className="text-4xl font-bold text-black">Back!</Text>
+                <Text className="text-4xl font-bold text-text-primary">Back!</Text>
             </View>
 
             <Text className="text-xl text-text-secondary mb-10">
@@ -45,20 +49,18 @@ const LoginScreen = () => {
 
             {/* Input Field */}
             <View className="">
-                 <Text className={`mb-2 text-lg text-black`}>Phone Number</Text>
-            <PhoneInput
-                value={phoneNumber}
-                className="px-[20px]"
-                onChangeText={(text) => setPhoneNumber(text)}
-            />
-            {error ? (
-                <Text className="text-red-500 text-xl mb-5">{error}</Text>
-            ) : null}
+                <Text className={`mb-2 text-lg text-black`}>Phone Number</Text>
+                <PhoneInput
+                    value={phoneNumber}
+                    error={error }
+                    className="px-[20px]"
+                    onChangeText={(text) => setPhoneNumber(text)}
+                />
             </View>
 
             {/* Login Button */}
             <View>
-            <CustomButton title="Login" onPress={handleLogin} className="py-[8px]" disabled={true}/>
+                <CustomButton title="Login" onPress={handleLogin} className="py-[13px]"  />
             </View>
 
             {/* Footer */}

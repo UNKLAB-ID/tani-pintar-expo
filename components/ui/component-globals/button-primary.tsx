@@ -17,16 +17,16 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   textClassName = '',
   disabled = false,
 }) => {
- const borderColor = disabled? Colors.color.primary : Colors.color.border;
+ const borderColor = disabled?Colors.color.border : Colors.color.primary ;
 
   return (
     <TouchableOpacity
       className={`w-full rounded-lg items-center ${className}`}
-      style={[styles.input, { backgroundColor: borderColor }, ]}
+      style={[styles.button, { backgroundColor: borderColor }, ]}
       onPress={onPress}
       disabled={disabled}
     >
-      <Text className={`text-white text-2xl font-bold ${textClassName}`}>
+      <Text className={`text-white text-xl font-bold ${textClassName}`}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -34,7 +34,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 };
 
 const styles = StyleSheet.create({
-    input: {
+    button: {
       borderRadius: 12,
     },
   });
