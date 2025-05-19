@@ -7,6 +7,9 @@ import {
     SafeAreaView,
 } from "react-native";
 import { useRouter } from "expo-router";
+import PhoneInput from "@/components/ui/component-globals/input-phone";
+import { Colors } from "@/constants/Colors";
+import CustomButton from "@/components/ui/component-globals/button";
 
 const LoginScreen = () => {
     const router = useRouter();
@@ -29,45 +32,42 @@ const LoginScreen = () => {
     return (
         <SafeAreaView className="flex-1 bg-white px-5 pt-36">
             {/* Header */}
-            <View className="flex-col mb-10 items-start">
-                <Text className="text-5xl font-bold text-[#166953]">
+            <View className="flex-col items-start">
+                <Text className={`text-4xl font-bold text-primary`}>
                     Welcome
                 </Text>
-                <Text className="text-5xl font-bold text-black">Back!</Text>
+                <Text className="text-4xl font-bold text-black">Back!</Text>
             </View>
 
-            <Text className="text-2xl text-gray-500 mb-10">
+            <Text className="text-xl text-text-secondary mb-10">
                 Log In with registered phone number!
             </Text>
 
             {/* Input Field */}
-            <TextInput
-                className="w-full p-5 text-xl border-2 border-[#166953] rounded-lg bg-white mb-5"
-                placeholder="+62 Input your phone number"
-                keyboardType="phone-pad"
+            <View className="">
+                 <Text className={`mb-2 text-lg text-black`}>Phone Number</Text>
+            <PhoneInput
                 value={phoneNumber}
-                onChangeText={setPhoneNumber}
+                className="px-[20px]"
+                onChangeText={(text) => setPhoneNumber(text)}
             />
-
             {error ? (
                 <Text className="text-red-500 text-xl mb-5">{error}</Text>
             ) : null}
+            </View>
 
             {/* Login Button */}
-            <TouchableOpacity
-                className="w-full bg-[#166953] p-6 rounded-lg items-center mb-5"
-                onPress={handleLogin}
-            >
-                <Text className="text-white text-2xl font-bold">Login</Text>
-            </TouchableOpacity>
+            <View>
+            <CustomButton title="Login" onPress={handleLogin} className="py-[8px]" disabled={true}/>
+            </View>
 
             {/* Footer */}
             <View className="flex-row justify-center mt-10">
-                <Text className="text-xl text-gray-500">
+                <Text className="text-xl text-text-secondary">
                     Don't have an account?{" "}
                 </Text>
                 <TouchableOpacity onPress={handleRegister}>
-                    <Text className="text-xl text-[#166953] underline">
+                    <Text className={`text-xl text-primary underline`}>
                         Register
                     </Text>
                 </TouchableOpacity>
