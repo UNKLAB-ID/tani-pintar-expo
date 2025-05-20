@@ -10,7 +10,7 @@ const AuthScreen = () => {
 
 
   return (
-    <SafeAreaView className="px-4 bg-white pt-[64px]">
+    <SafeAreaView className="px-5 bg-white pt-[64px]">
       <View>
         <Text className="text-3xl font-semibold text-text-primary">Input Verification Code</Text>
         <Text className="text-xl text-text-secondary">We have sent a code to <Text className='text-text-primary'>baus@gmail.com</Text></Text>
