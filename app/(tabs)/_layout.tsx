@@ -1,7 +1,6 @@
 import { Tabs } from "expo-router";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import "../../global.css";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 import HomeIcons from "@/assets/icons/home-icons-disable";
 import HomeIconsActive from "@/assets/icons/home-icons-active";
@@ -28,7 +27,18 @@ export default function Layout() {
             return <IconComponent width={size} height={size} />;
           } else if (route.name === "ai") {
             const IconComponent = AiIcons;
-            return <IconComponent width={size} height={size} />;
+            return (
+              <View
+                style={{
+                  backgroundColor: "#28a745",
+                  borderRadius: 100,
+                  padding: 18,
+                  marginBottom: 27,
+                }}
+              >
+                <IconComponent width={size} height={size} />
+              </View>
+            );
           } else if (route.name === "export") {
             const IconComponent = focused ? AgentIconsActive : AgentIcons;
             return <IconComponent width={size} height={size} />;
@@ -39,7 +49,23 @@ export default function Layout() {
         },
         tabBarActiveTintColor: "#28a745",
         tabBarInactiveTintColor: "gray",
-        tabBarStyle: { height: 60, paddingBottom: 10 },
+        tabBarStyle: {
+          height: 63,
+          paddingBottom: 10,
+          paddingTop: 10,
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
+          position: "absolute",
+          backgroundColor: "#fff",
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: -3,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 6,
+          elevation: 10,
+        },
         tabBarShowLabel: true,
         tabBarLabel: ({ focused, color }) => {
           let label = "";
