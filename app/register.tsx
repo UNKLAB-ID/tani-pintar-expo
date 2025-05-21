@@ -50,7 +50,7 @@ const RegisterScreen = () => {
                 <Text className="text-4xl font-bold text-primary">
                     Register
                 </Text>
-                <Text className="text-xl text-text-secondary mt-3">
+                <Text className="text-xl text-text-secondary mt-3" style={{fontWeight:500}}>
                     Create an account to continue!
                 </Text>
 
@@ -95,11 +95,11 @@ const RegisterScreen = () => {
                 </View>
 
                 <View className="flex-row justify-center mt-8 mb-8">
-                    <Text className="text-xl text-text-secondary">
+                    <Text className="text-xl text-text-secondary" style={{fontWeight:500}}>
                         Already have an account?{" "}
                     </Text>
                     <TouchableOpacity onPress={() => { router.push("/login"); }}>
-                        <Text className={`text-xl text-primary underline`}>
+                        <Text className={`text-xl text-primary underline`} style={{fontWeight:500}}>
                             Log In
                         </Text>
                     </TouchableOpacity>

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet} from "react-native";
+import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
 import { Colors } from "@/constants/Colors";
+import FileUpladIcons from "@/assets/icons/global/file-upload-icons";
 
 type Props = {
   label?: string;
@@ -21,12 +22,12 @@ const ImagePickerInput: React.FC<Props> = ({
   onChange,
   className = "",
   textClassName = "",
-    error = false,
+  error = false,
 }) => {
-      const [isFocused, setIsFocused] = useState(false);
-      const borderColor = error
-      ? Colors.color.error 
-      : isFocused || value
+  const [isFocused, setIsFocused] = useState(false);
+  const borderColor = error
+    ? Colors.color.error
+    : isFocused || value
       ? Colors.color.primary
       : Colors.color.border;
 
@@ -43,38 +44,41 @@ const ImagePickerInput: React.FC<Props> = ({
   };
 
   return (
-  <View>
-       {label && <Text className={`mb-2 text-lg text-black`}>{label}</Text>}
-    <TouchableOpacity
-      className={`w-full p-6 bg-white rounded-lg items-center justify-center ${className}`}
-      style={[styles.input, { borderColor }, { height: 150 }]}
-      onPress={handlePick}
-      onFocus={() => setIsFocused(true)}
+    <View>
+      {label && <Text className={`mb-2 text-lg text-black`} style={{fontWeight:500}}>{label}</Text>}
+      <TouchableOpacity
+        className={`w-full p-6 bg-white rounded-lg items-center justify-center ${className}`}
+        style={[styles.input, { borderColor }, { height: 150 }]}
+        onPress={handlePick}
+        onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        
-    >
-      {value ? (
-       <Image
-       source={{ uri: value.uri }}
-       style={{ width: "100%", height: "100%", borderRadius: 12 }}
-       resizeMode="cover"
-     />     
-      ) : (
-        <Text className={`text-text-secondary text-lg ${textClassName}`}>
-          {placeholder}
-        </Text>
-      )}
-    </TouchableOpacity>
-  </View>
+
+      >
+        {value ? (
+          <Image
+            source={{ uri: value.uri }}
+            style={{ width: "100%", height: "100%", borderRadius: 12 }}
+            resizeMode="cover"
+          />
+        ) : (
+          <View>
+            <Text className="text-center"> <FileUpladIcons width={28} height={28} color={"#AAAAAA"} /></Text>
+            <Text className={`text-text-secondary text-lg ${textClassName}`} style={{fontWeight:500}}>
+              {placeholder}
+            </Text>
+          </View>
+        )}
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-    input: {
-      borderWidth: 1,
-      borderRadius: 12,
-      borderStyle: 'dashed',
-    },
-  });
+  input: {
+    borderWidth: 1,
+    borderRadius: 12,
+    borderStyle: 'dashed',
+  },
+});
 
 export default ImagePickerInput;

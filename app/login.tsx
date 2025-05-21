@@ -34,7 +34,7 @@ useEffect(() => {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-white px-5 pt-[60px]">
+        <SafeAreaView className="flex-1 bg-white px-5 pt-[65px]">
             {/* Header */}
             <View className="flex-col items-start">
                 <Text className={`text-4xl font-bold text-primary`}>
@@ -43,13 +43,13 @@ useEffect(() => {
                 <Text className="text-4xl font-bold text-text-primary">Back!</Text>
             </View>
 
-            <Text className="text-xl text-text-secondary mb-10 mt-5">
+            <Text className="text-xl text-text-secondary mb-10 mt-5" style={{fontWeight:500}}>
                 Log In with registered phone number!
             </Text>
 
             {/* Input Field */}
             <View >
-                <Text className={`mb-2 text-lg text-black`}>Phone Number</Text>
+                <Text className={`mb-2 text-lg text-black`} style={{fontWeight:500}}>Phone Number</Text>
                 <PhoneInput
                     value={phoneNumber}
                     error={error }
