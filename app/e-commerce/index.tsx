@@ -384,7 +384,7 @@ const EcommerceIndex = () => {
                 name: "Pupuk Organik Cair",
                 price: "Rp25.000",
                 originalPrice: "Rp35.000",
-                image: require("@/assets/download.jpeg"),
+                image: require("@/assets/images/bottle.png"),
                 sold: 250,
                 total: 2000,
                 discount: "29%",
