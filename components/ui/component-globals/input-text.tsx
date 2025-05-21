@@ -29,7 +29,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
 
     return (
         <View>
-            {label && <Text className={`mb-2 text-lg text-black`}>{label}</Text>}
+            {label && <Text className={`mb-2 text-lg text-black`} style={{fontWeight:500}}>{label}</Text>}
             <TextInput
             placeholder={props.placeholder}
                 keyboardType={type}
