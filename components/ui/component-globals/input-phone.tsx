@@ -13,13 +13,13 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   value,
   onChangeText,
   className = '',
-    error = false,
+  error = false,
   ...props
 }) => {
-    const [isFocused, setIsFocused] = useState(false);
-   const borderColor = error
-      ? Colors.color.error 
-      : isFocused || value
+  const [isFocused, setIsFocused] = useState(false);
+  const borderColor = error
+    ? Colors.color.error
+    : isFocused || value
       ? Colors.color.primary
       : Colors.color.border;
 
@@ -47,10 +47,10 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
 };
 
 const styles = StyleSheet.create({
-    input: {
-      borderWidth: 1,
-      borderRadius: 12,
-    },
-  });
+  input: {
+    borderWidth: 1,
+    borderRadius: 12,
+  },
+});
 
 export default PhoneInput;
