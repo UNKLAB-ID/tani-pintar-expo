@@ -2,15 +2,15 @@ import { Tabs } from "expo-router";
 import "../../global.css";
 import { Text, View } from "react-native";
 
-import HomeIcons from "@/assets/icons/home-icons-disable";
-import HomeIconsActive from "@/assets/icons/home-icons-active";
-import EcommerceIcons from "@/assets/icons/ecommerce-icons-disable";
-import EcommerceIconsActive from "@/assets/icons/ecommerce-icons-active";
-import AgentIcons from "@/assets/icons/agent-icons-disable ";
-import AgentIconsActive from "@/assets/icons/agent-icons-active";
-import ProfileIcons from "@/assets/icons/profile-icons-disable";
-import ProfileIconsActive from "@/assets/icons/profile-icons-active";
-import AiIcons from "@/assets/icons/ai-icons";
+import HomeIcons from "@/assets/icons/navbar/home-icons-disable";
+import HomeIconsActive from "@/assets/icons/navbar/home-icons-active";
+import EcommerceIcons from "@/assets/icons/navbar/ecommerce-icons-disable";
+import EcommerceIconsActive from "@/assets/icons/navbar/ecommerce-icons-active";
+import AgentIcons from "@/assets/icons/navbar/agent-icons-disable ";
+import AgentIconsActive from "@/assets/icons/navbar/agent-icons-active";
+import ProfileIcons from "@/assets/icons/navbar/profile-icons-disable";
+import ProfileIconsActive from "@/assets/icons/navbar/profile-icons-active";
+import AiIcons from "@/assets/icons/navbar/ai-icons";
 
 export default function Layout() {
   return (
