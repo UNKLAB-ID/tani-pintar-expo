@@ -20,7 +20,7 @@ const LoginScreen = () => {
             return;
         }
       
-        router.replace("/otp");
+        router.push(`/otp?back=login`);       
     };
 
 useEffect(() => {
@@ -34,7 +34,7 @@ useEffect(() => {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-white px-5 pt-[64px]">
+        <SafeAreaView className="flex-1 bg-white px-5 pt-[60px]">
             {/* Header */}
             <View className="flex-col items-start">
                 <Text className={`text-4xl font-bold text-primary`}>

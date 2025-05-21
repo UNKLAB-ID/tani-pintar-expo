@@ -18,6 +18,7 @@ import CustomButton from "@/components/ui/component-globals/button-primary";
 import CustomTextInput from "@/components/ui/component-globals/input-text";
 import PhoneInput from "@/components/ui/component-globals/input-phone";
 import ImagePickerInput from "@/components/ui/component-globals/input-images";
+import BackIcons from "@/assets/icons/global/back-icons";
 
 const RegisterScreen = () => {
     const router = useRouter();
@@ -32,7 +33,7 @@ const RegisterScreen = () => {
         //     setError("All fields are required!");
         //     return;
         // }
-        router.replace("/otp");
+        router.push(`/otp?back=register`);  
     };
 
     return (
@@ -41,8 +42,11 @@ const RegisterScreen = () => {
                 enableOnAndroid
                 extraScrollHeight={100}
                 keyboardShouldPersistTaps="handled"
-                contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 64 }}
+                contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 50 }}
             >
+                <TouchableOpacity className="mb-3" onPress={() => router.back()}>
+                    <BackIcons width={24} height={24} color={"#1F1F1F"} />
+                </TouchableOpacity>
                 <Text className="text-4xl font-bold text-primary">
                     Register
                 </Text>
@@ -50,7 +54,7 @@ const RegisterScreen = () => {
                     Create an account to continue!
                 </Text>
 
-                <View className="mt-10">
+                <View className="mt-8">
                     <CustomTextInput
                         value={name}
                         label="Name"
