@@ -1,11 +1,14 @@
+import BlockScriner from "@/components/ui/sosial-media/modal-block"
 import LoveIcons from "@/assets/icons/global/love-icons"
 import PointThreeHorizontal from "@/assets/icons/global/point-three-horizontal"
 import KomentarIcons from "@/assets/icons/sosial-media/komentar-icons"
 import PointIcons from "@/assets/icons/sosial-media/point-icons"
 import ShereIcons from "@/assets/icons/sosial-media/shere-icons"
 import React, { useRef, useState } from "react"
+import { TouchableOpacity } from "react-native"
 import { Text } from "react-native"
 import { Image, View, ScrollView } from "react-native"
+import ModalSettingSriner from "./modal-setting"
 
 interface CardSosialMediaProps {
     data?: any
@@ -17,6 +20,8 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
     const scrollRef = useRef(null)
     const [activeIndex, setActiveIndex] = useState(0)
     const [containerWidth, setContainerWidth] = useState(0)
+    const [modalVisible, setModalVisible] = useState(false)
+    const [modalBlock, setModalBlock] = useState(false)
 
     const handleScroll = (event: any) => {
         const slide = Math.round(event.nativeEvent.contentOffset.x / containerWidth)
@@ -46,7 +51,9 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
                                         <Text className="text-[14px] text-text-secondary">1 hour ago</Text>
                                     </View>
                                 </View>
-                                <PointThreeHorizontal width={24} height={24} />
+                                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                                    <PointThreeHorizontal width={24} height={24} />
+                                </TouchableOpacity>
                             </View>
 
                             {/* Caption */}
@@ -93,22 +100,46 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
                                 )
                             }
                             <View className="flex-row items-center">
-                                <View className="flex-row items-center justify-between" style={{ width:49 }}>
-                                    <LoveIcons width={18} height={18} color={"#434343"} />
+                                <View className="flex-row items-center justify-between" style={{ width: 49 }}>
+                                    <TouchableOpacity>
+                                        <LoveIcons width={18} height={18} color={"#434343"} />
+                                    </TouchableOpacity>
                                     <Text className="text-[14px] text-[#434343] ml-2">5.5K</Text>
                                 </View>
-                                <View className="flex-row items-center justify-between" style={{ width:49, marginHorizontal: 30 }}>
-                                    <KomentarIcons width={18} height={18} color={"#434343"} />
+                                <View className="flex-row items-center justify-between" style={{ width: 49, marginHorizontal: 30 }}>
+                                    <TouchableOpacity>
+                                        <KomentarIcons width={18} height={18} color={"#434343"} />
+                                    </TouchableOpacity>
                                     <Text className="text-[14px] text-[#434343] ml-2">5.5K</Text>
                                 </View>
-                                <View className="flex-row items-center justify-between" style={{ width:49 }}>
-                                    <ShereIcons width={18} height={18} color={"#434343"} />
+                                <View className="flex-row items-center justify-between" style={{ width: 49 }}>
+                                    <TouchableOpacity>
+                                        <ShereIcons width={18} height={18} color={"#434343"} />
+                                    </TouchableOpacity>
                                     <Text className="text-[14px] text-[#434343] ml-2">5.5K</Text>
                                 </View>
                             </View>
                         </View>
                     )
                 })
+            }
+            {/* 🔥 Tampilkan Modal */}
+            {
+                modalVisible && (
+                    <ModalSettingSriner
+                        modalVisible={modalVisible}
+                        setModalVisible={setModalVisible}
+                        setModalBlock={setModalBlock}
+                    />
+                )
+            }
+            {
+                modalBlock && (
+                    <BlockScriner
+                        modalBlock={modalBlock}
+                        setModalBlock={setModalBlock}
+                    />
+                )
             }
         </View>
     )

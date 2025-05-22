@@ -6,6 +6,15 @@ import CardSosialMedia from "@/components/ui/sosial-media/card-sosial-media";
 import { SafeAreaView, View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 
 const SosialMediaIndex = () => {
+    const getGreeting = () => {
+        const hour = new Date().getHours(); // WIB jika di perangkat pengguna sudah diatur ke Indonesia
+        if (hour >= 4 && hour < 11) return "Good Morning";
+        if (hour >= 11 && hour < 15) return "Good Afternoon";
+        if (hour >= 15 && hour < 18) return "Good Evening";
+        return "Good Night";
+    };
+    
+
     const imagesDummy = [
         {
             name: "Ahmad Mambaus Sholihin",
@@ -29,8 +38,8 @@ const SosialMediaIndex = () => {
 
     return (
         <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 67 }}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 67 }}
         >
             <SafeAreaView className="flex-1 w-full">
                 <View className="bg-white px-5 py-4" style={{ marginBottom: 3 }}>
@@ -40,7 +49,7 @@ const SosialMediaIndex = () => {
                                 <Image source={require('../../assets/images/Image-success-otp.png')} className="w-[40px] h-[40px] rounded-full" />
                             </View>
                             <View className="ml-3">
-                                <Text className="text-[12px] text-text-secondary">Good Morning,</Text>
+                                <Text className="text-[12px] text-text-secondary">{getGreeting()},</Text>
                                 <Text className="text-[16px] font-semibold text-text-primary">Mambaus Baus</Text>
                             </View>
                         </View>
