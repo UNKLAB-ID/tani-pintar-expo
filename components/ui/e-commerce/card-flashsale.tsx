@@ -25,37 +25,60 @@ const FlashSaleCard: React.FC<FlashSaleCardProps> = ({
   const soldPercent = 100 - remainingPercent;
 
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
-      <View style={styles.imageWrapper}>
-        <Image source={image} style={styles.image} resizeMode="contain" />
-
+    <TouchableOpacity
+      className="w-[128px] h-[184px]rounded-lg overflow-hidden bg-gray-400/10"
+      onPress={onPress}
+      activeOpacity={0.8}
+    >
+      {/* Gambar Produk */}
+      <View
+        className="justify-center items-center"
+        style={{ width: 128, height: 128 }}
+      >
+        <Image
+          source={image}
+          style={{
+            width: 128,
+            height: 128,
+            borderRadius: 4,
+          }}
+          resizeMode="contain"
+        />
         {discount ? (
           <View style={styles.discountBadge}>
-            <Text style={styles.discountText}>{discount}</Text>
+            <Text className="text-white text-[12px] font-semibold">
+              {discount}
+            </Text>
           </View>
         ) : null}
-
-        {/* Stock Progress Bar */}
-        <View style={styles.progressBar}>
-          {/* Sold portion bar */}
-          <View style={[styles.soldBar, { width: `${soldPercent}%` }]} />
-
-          {/* Available portion bar */}
-          <View
-            style={[styles.availableBar, { width: `${remainingPercent}%` }]}
-          />
-
-          {/* Sold text, fixed width, absolute so it won't shrink */}
-          {sold > 0 && <Text style={styles.soldText}>{sold} Sold</Text>}
-        </View>
       </View>
 
-      {/* Product Info */}
-      <View style={styles.info}>
-        <Text style={styles.name} numberOfLines={1}>
+      {/* Progress Bar */}
+      <View style={styles.progressBar}>
+        <View
+          className="h-full"
+          style={{ backgroundColor: "#FF3B30", width: `${soldPercent}%` }}
+        />
+        <View
+          className="h-full"
+          style={{ backgroundColor: "#FFA500", width: `${remainingPercent}%` }}
+        />
+
+        {sold > 0 && <Text style={styles.soldText}>{sold} Sold</Text>}
+      </View>
+
+      {/* Info Produk */}
+      <View className="px-[6px] py-[4px]">
+        <Text
+          className="text-[13px] font-normal text-[#333333]"
+          numberOfLines={1}
+        >
           {name}
         </Text>
-        <Text style={styles.price} numberOfLines={1}>
+        <Text
+          className="text-[14px] font-bold text-[#28a745]"
+          numberOfLines={1}
+        >
           {price}
         </Text>
       </View>
@@ -64,110 +87,37 @@ const FlashSaleCard: React.FC<FlashSaleCardProps> = ({
 };
 
 const styles = StyleSheet.create({
-  // Card container
-  card: {
-    width: 125,
-    borderRadius: 10,
-    overflow: "hidden",
-    margin: 0,
-    backgroundColor: "rgba(128, 128, 128, 0.09)",
-  },
-
-  // Image wrapper for positioning and background
-  imageWrapper: {
-    width: "100%",
-    height: 140,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
-
-  // Product image styling
-  image: {
-    borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 0,
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 0,
-    width: "100%",
-    height: "80%",
-  },
-
-  // Discount badge styles
   discountBadge: {
     position: "absolute",
-    top: 20,
+    top: 8,
     left: 0,
     backgroundColor: "#FF3B30",
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 3,
     borderTopLeftRadius: 0,
     borderBottomLeftRadius: 0,
     borderTopRightRadius: 50,
     borderBottomRightRadius: 50,
   },
-  discountText: {
-    color: "#fff",
-    fontSize: 12,
-    fontWeight: "600",
-  },
-
-  // Progress bar container
   progressBar: {
-    width: "100%",
-    height: 20,
+    width: 128,
+    height: 14,
     flexDirection: "row",
     overflow: "hidden",
     backgroundColor: "#ddd",
     position: "relative",
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 5,
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 5,
+    borderRadius: 4,
+    marginTop: 4,
   },
-
-  // Sold bar style
-  soldBar: {
-    height: "100%",
-    backgroundColor: "#FF3B30",
-  },
-
-  // Available stock bar style
-  availableBar: {
-    height: "100%",
-    backgroundColor: "#FFA500",
-  },
-
-  // Sold text style, absolute to keep width fixed and overlay bar
   soldText: {
     position: "absolute",
-    left: 8,
+    left: 6,
     top: "50%",
-    transform: [{ translateY: -10 }],
+    transform: [{ translateY: -7 }],
     color: "#fff",
-    fontSize: 12,
-    fontWeight: "600",
+    fontSize: 11,
+    fontWeight: "500",
     paddingHorizontal: 4,
-  },
-
-  // Product info container (name and price)
-  info: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-
-  // Product name text
-  name: {
-    fontSize: 14,
-    fontWeight: "400",
-    color: "#333",
-    marginBottom: 4,
-  },
-
-  // Product price text
-  price: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#28a745",
   },
 });
 

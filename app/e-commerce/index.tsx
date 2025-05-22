@@ -11,39 +11,88 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useRef, useState, useEffect } from "react";
+import { useRouter } from "expo-router";
 
 import InputSearchPrimary from "@/components/ui/component-globals/input-seach-primary";
 import MessageIcons from "@/assets/icons/global/message-icons";
 import CartIcons from "@/assets/icons/e-commerce/cart-icons";
 import LocationIcons from "@/assets/icons/e-commerce/locations-icons";
 import ArrowRightIcons from "@/assets/icons/e-commerce/arrow-right-icons";
-import CustomButton from "@/components/ui/component-globals/button-primary";
 import WalletIcons from "@/assets/icons/global/wallet-icons";
 import Wallet2Icons from "@/assets/icons/global/wallet2-icons";
 import VoucherIcons from "@/assets/icons/global/voucher-icons";
 import TopUpIcons from "@/assets/icons/e-commerce/topup-icons";
 import FlashSaleCard from "@/components/ui/e-commerce/card-flashsale";
+import ProductCard from "@/components/ui/e-commerce/card-product";
+import BackIcons from "@/assets/icons/global/back-icons";
 
 const { width } = Dimensions.get("window");
 
 const realBanners = [
   {
     id: 1,
-    title: "Year-End Sale",
-    subtitle: "Up to 50%",
-    image: require("@/assets/images/bottle.png"),
+
+    image: require("@/assets/images/trash/Banner-Promotion.png"),
   },
   {
     id: 2,
-    title: "Flash Deal",
-    subtitle: "Only Today",
-    image: require("@/assets/images/bottle.png"),
+
+    image: require("@/assets/images/trash/Banner-Promotion.png"),
   },
   {
     id: 3,
-    title: "Jual Murah",
-    subtitle: "Only Today",
-    image: require("@/assets/images/bottle.png"),
+
+    image: require("@/assets/images/trash/Banner-Promotion.png"),
+  },
+];
+
+const productData = [
+  {
+    id: 1,
+    name: "Pupuk Organik Cair",
+    price: "Rp25.000",
+    originalPrice: "Rp35.000",
+    image: require("@/assets/images/trash/bottle.png"),
+    sold: 250,
+    total: 2000,
+    discount: "29%",
+    rating: 5,
+    location: "jakarta",
+  },
+  {
+    id: 2,
+    name: "Benih Sayur Kangkung",
+    price: "Rp10.000",
+    originalPrice: "Rp15.000",
+    image: require("@/assets/images/trash/image18.png"),
+    sold: 250,
+    total: 500,
+    discount: "33%",
+    rating: 5,
+    location: "jakarta",
+  },
+  {
+    id: 3,
+    name: "Alat Semprot Mini",
+    price: "Rp70.000",
+    originalPrice: "Rp90.000",
+    image: require("@/assets/images/trash/image25.png"),
+    sold: 250,
+    total: 1100,
+    rating: 5,
+    location: "jakarta",
+  },
+  {
+    id: 4,
+    name: "Alat Mini",
+    price: "Rp70.000",
+    originalPrice: "Rp90.000",
+    image: require("@/assets/images/trash/Product1.png"),
+    sold: 250,
+    total: 1100,
+    discount: "22%",
+    rating: 5,
+    location: "jakarta",
   },
 ];
 
@@ -59,6 +108,7 @@ const EcommerceIndex = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const [timeLeftMs, setTimeLeftMs] = useState(3600 * 1000);
   const intervalRef = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (timeLeftMs <= 0) {
@@ -79,11 +129,15 @@ const EcommerceIndex = () => {
     return () => clearInterval(intervalRef.current);
   }, []);
 
+  const hanleBanner = () => {
+    router.push("/e-commerce/flashsale");
+  };
+
   const formatTime = (ms) => {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-    const milliseconds = Math.floor((ms % 1000) / 100); // 0-9 mili-detik
+    const milliseconds = Math.floor((ms % 1000) / 100);
 
     return `${minutes.toString().padStart(2, "0")}:${seconds
       .toString()
@@ -129,13 +183,19 @@ const EcommerceIndex = () => {
   }, [currentIndex]);
 
   return (
-    <SafeAreaView className="flex-1 w-full bg-white">
-      {/* Header */}
-      <ScrollView
-        contentContainerStyle={{ paddingBottom: 20 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <View className="bg-white px-5 py-4 ">
+    <ScrollView
+      contentContainerStyle={{ paddingBottom: 55 }}
+      showsVerticalScrollIndicator={false}
+      bounces={true}
+      alwaysBounceVertical={true}
+    >
+      <SafeAreaView className="flex-1 w-full  bg-white">
+        <View className="bg-white px-5 pt-0 pb-4">
+          <View className="flex-row">
+            <View className="mr-[9]">
+              <BackIcons width={28} height={28} />
+            </View>
+          </View>
           <View className="flex-row items-center justify-between">
             <View className="w-[276px]">
               <InputSearchPrimary
@@ -187,40 +247,13 @@ const EcommerceIndex = () => {
             })}
             renderItem={({ item }) => (
               <View style={{ width, paddingHorizontal: 20 }}>
-                <View className="w-full h-[120px] rounded-2xl overflow-hidden bg-black flex-row justify-between items-center px-4">
-                  {/* Images */}
-                  <View className="flex-row items-end space-x-[-4px] px-[19px]">
-                    <Image
-                      source={item.image}
-                      className="w-[36px] h-[78px]"
-                      resizeMode="contain"
-                    />
-                    <Image
-                      source={item.image}
-                      className="w-[44px] h-[95px]"
-                      resizeMode="contain"
-                    />
-                    <Image
-                      source={item.image}
-                      className="w-[36px] h-[78px]"
-                      resizeMode="contain"
-                    />
-                  </View>
-                  {/* Text & Button */}
-                  <View className="items-center justify-center px-[19px]">
-                    <Text className="text-white text-base font-bold text-center">
-                      {item.title}
-                    </Text>
-                    <Text className="text-[#cfcfcf] text-sm text-center">
-                      {item.subtitle}
-                    </Text>
-                    <CustomButton
-                      title="Shop Now"
-                      textClassName="font-extralight text-[11.9px]"
-                      className="rounded-full px-4 py-[3px] mt-2"
-                    />
-                  </View>
-                </View>
+                <TouchableOpacity onPress={hanleBanner} activeOpacity={0.8}>
+                  <Image
+                    source={item.image}
+                    className="w-full h-[120px] rounded-2xl"
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
               </View>
             )}
           />
@@ -244,51 +277,69 @@ const EcommerceIndex = () => {
         <View className="flex-row bg-[#F0F0F0] rounded-2xl px-5 py-4 mx-5 mt-5 space-x-4">
           <View className="w-1/3 items-start">
             <View className="flex-row items-center mb-1">
-              <WalletIcons width={18} height={18} className="mr-2" />
-              <Text className="text-sm font-medium text-black">TaniPay</Text>
+              <View style={{ marginRight: 3 }}>
+                <WalletIcons width={16} height={16} />
+              </View>
+              <Text className="text-[12px] font-medium text-black">
+                TaniPay
+              </Text>
             </View>
-            <Text className="text-sm font-bold text-black">Rp20.000</Text>
-            <Text
-              className="text-xs text-gray-500"
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              Topup minimum...
-            </Text>
+            <View className="space-y-1">
+              <Text className="text-[12px] font-bold text-black">Rp20.000</Text>
+              <Text
+                className="text-[10px] text-gray-500"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                Topup minimum...
+              </Text>
+            </View>
           </View>
 
-          <View className="w-1/3 items-start">
+          <View className="w-1/3">
             <View className="flex-row items-center mb-1">
-              <Wallet2Icons width={18} height={18} className="mr-2" />
-              <Text className="text-sm font-medium text-black">TaniPinjam</Text>
+              <View style={{ marginRight: 3 }}>
+                <Wallet2Icons width={16} height={16} />
+              </View>
+              <Text className="text-[12px] font-medium text-black">
+                TaniPinjam
+              </Text>
             </View>
-            <Text className="text-sm font-bold text-[#28a745]">
-              ActivateNow
-            </Text>
-            <Text
-              className="text-xs text-gray-500"
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              Limit up to Rp20...
-            </Text>
+            <View className="space-y-1">
+              <Text className="text-[12px] font-bold text-[#28a745]">
+                ActivateNow
+              </Text>
+              <Text
+                className="text-[10px] text-gray-500"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                Limit up to Rp20...
+              </Text>
+            </View>
           </View>
 
-          <View className="w-1/3 items-start">
+          <View className="w-1/3">
             <View className="flex-row items-center mb-1">
-              <VoucherIcons width={18} height={18} className="mr-2" />
-              <Text className="text-sm font-medium text-black">Voucher</Text>
+              <View style={{ marginRight: 3 }}>
+                <VoucherIcons width={16} height={16} />
+              </View>
+              <Text className="text-[12px] font-medium text-black">
+                Voucher
+              </Text>
             </View>
-            <Text className="text-sm font-bold text-black">
-              Voucher Discount
-            </Text>
-            <Text
-              className="text-xs text-[#28a745]"
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              Free Delivery Service
-            </Text>
+            <View className="space-y-1">
+              <Text className="text-[12px] font-bold text-black">
+                Voucher Discount
+              </Text>
+              <Text
+                className="text-[10px] text-[#28a745]"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                Free Delivery Service
+              </Text>
+            </View>
           </View>
         </View>
 
@@ -334,7 +385,6 @@ const EcommerceIndex = () => {
         </View>
 
         {/* card */}
-
         <View className="mt-6 px-5">
           {/* Header Flash Sale */}
           <View className="flex-row justify-between items-center mb-4">
@@ -342,23 +392,8 @@ const EcommerceIndex = () => {
               <Text className="font-bold text-green-600 text-[17px]">
                 Flash Sale
               </Text>
-              <View
-                style={{
-                  marginLeft: 12,
-                  paddingHorizontal: 10,
-                  paddingVertical: 4,
-                  borderRadius: 20,
-                  borderColor: "rgba(255, 0, 0, 0.3)",
-                  backgroundColor: "rgba(255, 0, 0, 0.1)",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "red",
-                    fontWeight: "600",
-                    fontSize: 14,
-                  }}
-                >
+              <View className="ml-3 px-2.5 py-1 rounded-full  bg-red-500/10">
+                <Text className="text-red-500 font-semibold text-sm">
                   {formatTime(timeLeftMs)}
                 </Text>
               </View>
@@ -371,55 +406,14 @@ const EcommerceIndex = () => {
                 >
                   See All
                 </Text>
-                <ArrowRightIcons width={20} height={20} stroke="#525252" />
+                <ArrowRightIcons width={20} height={20} />
               </View>
             </TouchableOpacity>
           </View>
 
           {/* List Produk: Scroll Horizontal */}
           <FlatList
-            data={[
-              {
-                id: 1,
-                name: "Pupuk Organik Cair",
-                price: "Rp25.000",
-                originalPrice: "Rp35.000",
-                image: require("@/assets/images/bottle.png"),
-                sold: 250,
-                total: 2000,
-                discount: "29%",
-              },
-              {
-                id: 2,
-                name: "Benih Sayur Kangkung",
-                price: "Rp10.000",
-                originalPrice: "Rp15.000",
-                image: require("@/assets/images/bottle.png"),
-                sold: 250,
-                total: 500,
-                discount: "33%",
-              },
-              {
-                id: 3,
-                name: "Alat Semprot Mini",
-                price: "Rp70.000",
-                originalPrice: "Rp90.000",
-                image: require("@/assets/images/bottle.png"),
-                sold: 250,
-                total: 1100,
-                discount: "22%",
-              },
-              {
-                id: 4,
-                name: "Alat Mini",
-                price: "Rp70.000",
-                originalPrice: "Rp90.000",
-                image: require("@/assets/images/bottle.png"),
-                sold: 250,
-                total: 1100,
-                discount: "22%",
-              },
-            ]}
+            data={productData}
             keyExtractor={(item) => item.id.toString()}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -437,13 +431,30 @@ const EcommerceIndex = () => {
             )}
           />
         </View>
-        <View>
-          <View className="mx-5">
+        <View className="mt-6 px-5">
+          <View className="mb-4">
             <Text className="text-[16px] font-bold">For You!</Text>
           </View>
+
+          {/* List Produk: Grid 2 Kolom */}
+          <View className="flex-row flex-wrap justify-between -mx-1">
+            {productData.map((item) => (
+              <View key={item.id} className="w-1/2 px-1 mb-4">
+                <ProductCard
+                  image={item.image}
+                  name={item.name}
+                  discount={item.discount}
+                  price={item.price}
+                  rating={item.rating ?? 0}
+                  sold={item.sold}
+                  location={item.location}
+                />
+              </View>
+            ))}
+          </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 
