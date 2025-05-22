@@ -13,6 +13,14 @@ import {
 } from "react-native";
 
 const SosialMediaIndex = () => {
+  const getGreeting = () => {
+    const hour = new Date().getHours(); // WIB jika di perangkat pengguna sudah diatur ke Indonesia
+    if (hour >= 4 && hour < 11) return "Good Morning";
+    if (hour >= 11 && hour < 15) return "Good Afternoon";
+    if (hour >= 15 && hour < 18) return "Good Evening";
+    return "Good Night";
+  };
+
   const imagesDummy = [
     {
       name: "Ahmad Mambaus Sholihin",
@@ -39,7 +47,7 @@ const SosialMediaIndex = () => {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: 67 }}
     >
-      <SafeAreaView className="flex-1 w-full ">
+      <SafeAreaView className="flex-1 w-full">
         <View className="bg-white px-5 py-4" style={{ marginBottom: 3 }}>
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center justify-between">
@@ -51,7 +59,7 @@ const SosialMediaIndex = () => {
               </View>
               <View className="ml-3">
                 <Text className="text-[12px] text-text-secondary">
-                  Good Morning,
+                  {getGreeting()},
                 </Text>
                 <Text className="text-[16px] font-semibold text-text-primary">
                   Mambaus Baus
