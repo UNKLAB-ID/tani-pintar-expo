@@ -8,7 +8,7 @@ import { useState } from "react";
 import { SafeAreaView, View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 
 const SosialMediaIndex = () => {
-    const [modalHidenPost, setModalHiddenPost] = useState(true);
+    const [modalHidenPost, setModalHiddenPost] = useState(false);
     const getGreeting = () => {
         const hour = new Date().getHours(); // WIB jika di perangkat pengguna sudah diatur ke Indonesia
         if (hour >= 4 && hour < 11) return "Good Morning";
