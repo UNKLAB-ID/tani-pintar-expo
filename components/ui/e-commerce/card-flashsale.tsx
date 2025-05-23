@@ -1,11 +1,11 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 
 interface FlashSaleCardProps {
   image: any;
   name: string;
   price: string;
-  discount: string;
+  discount?: string;
   sold: number;
   total: number;
   onPress?: () => void;
@@ -26,7 +26,7 @@ const FlashSaleCard: React.FC<FlashSaleCardProps> = ({
 
   return (
     <TouchableOpacity
-      className="w-[128px] h-[184px]rounded-lg overflow-hidden bg-gray-400/10"
+      className="w-[128px] h-[184px] rounded-lg overflow-hidden bg-gray-400/10"
       onPress={onPress}
       activeOpacity={0.8}
     >
@@ -37,44 +37,75 @@ const FlashSaleCard: React.FC<FlashSaleCardProps> = ({
       >
         <Image
           source={image}
-          style={{
-            width: 128,
-            height: 128,
-            borderRadius: 4,
-          }}
+          className="rounded-2xl"
+          style={{ width: 128, height: 128 }}
           resizeMode="contain"
         />
-        {discount ? (
-          <View style={styles.discountBadge}>
-            <Text className="text-white text-[12px] font-semibold">
-              {discount}
-            </Text>
+        {discount && (
+          <View
+            className="absolute bg-red-600 px-3 py-0.5"
+            style={{
+              top: 13,
+              left: 0,
+              borderTopRightRadius: 8,
+              borderBottomRightRadius: 8,
+            }}
+          >
+            <Text className="text-[14px] text-white font-bold">{discount}</Text>
           </View>
-        ) : null}
+        )}
       </View>
 
       {/* Progress Bar */}
-      <View style={styles.progressBar}>
+      <View
+        className="flex-row bg-[#ddd] overflow-hidden relative"
+        style={{
+          width: 128,
+          height: 14,
+          borderBottomRightRadius: 8,
+          borderBottomLeftRadius: 8,
+        }}
+      >
         <View
           className="h-full"
-          style={{ backgroundColor: "#FF3B30", width: `${soldPercent}%` }}
+          style={{
+            backgroundColor: "#FF3B30",
+            borderBottomLeftRadius: 8,
+            width: `${soldPercent}%`,
+          }}
         />
         <View
           className="h-full"
-          style={{ backgroundColor: "#FFA500", width: `${remainingPercent}%` }}
+          style={{
+            backgroundColor: "#FFA500",
+            borderBottomRightRadius: 8,
+            width: `${remainingPercent}%`,
+          }}
         />
 
-        {sold > 0 && <Text style={styles.soldText}>{sold} Sold</Text>}
+        {sold > 0 && (
+          <Text
+            className="absolute text-white text-[12px] font-semibold rounded px-1"
+            style={{
+              left: "65%",
+              top: "60%",
+              transform: [{ translateX: -70 }, { translateY: -10 }],
+            }}
+          >
+            {sold} Sold
+          </Text>
+        )}
       </View>
 
       {/* Info Produk */}
       <View className="px-[6px] py-[4px]">
         <Text
-          className="text-[13px] font-normal text-[#333333]"
-          numberOfLines={1}
+          className="text-[16px] font-normal text-[#1F1F1F] leading-[16px]"
+          style={{ fontWeight: "400" }}
         >
-          {name}
+          {name.length > 15 ? name.slice(0, 15) + "..." : name}
         </Text>
+
         <Text
           className="text-[14px] font-bold text-[#28a745]"
           numberOfLines={1}
@@ -85,40 +116,5 @@ const FlashSaleCard: React.FC<FlashSaleCardProps> = ({
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  discountBadge: {
-    position: "absolute",
-    top: 8,
-    left: 0,
-    backgroundColor: "#FF3B30",
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-    borderTopRightRadius: 50,
-    borderBottomRightRadius: 50,
-  },
-  progressBar: {
-    width: 128,
-    height: 14,
-    flexDirection: "row",
-    overflow: "hidden",
-    backgroundColor: "#ddd",
-    position: "relative",
-    borderRadius: 4,
-    marginTop: 4,
-  },
-  soldText: {
-    position: "absolute",
-    left: 6,
-    top: "50%",
-    transform: [{ translateY: -7 }],
-    color: "#fff",
-    fontSize: 11,
-    fontWeight: "500",
-    paddingHorizontal: 4,
-  },
-});
 
 export default FlashSaleCard;

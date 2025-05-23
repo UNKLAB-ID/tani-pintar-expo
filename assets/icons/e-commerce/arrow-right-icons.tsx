@@ -1,7 +1,15 @@
 import * as React from "react";
 import Svg, { SvgProps, Path } from "react-native-svg";
-const ArrowRightIcons = (props: SvgProps) => (
-  <Svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+
+const ArrowRightIcons = ({ width = 24, height = 24, ...props }: SvgProps) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    width={width}
+    height={height}
+    {...props}
+  >
     <Path
       fill="#1F1F1F"
       fillRule="evenodd"
@@ -10,4 +18,5 @@ const ArrowRightIcons = (props: SvgProps) => (
     />
   </Svg>
 );
+
 export default ArrowRightIcons;

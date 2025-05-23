@@ -14,7 +14,7 @@ import {
 
 const SosialMediaIndex = () => {
   const getGreeting = () => {
-    const hour = new Date().getHours(); // WIB jika di perangkat pengguna sudah diatur ke Indonesia
+    const hour = new Date().getHours();
     if (hour >= 4 && hour < 11) return "Good Morning";
     if (hour >= 11 && hour < 15) return "Good Afternoon";
     if (hour >= 15 && hour < 18) return "Good Evening";

@@ -16,15 +16,14 @@ import { useRouter } from "expo-router";
 import InputSearchPrimary from "@/components/ui/component-globals/input-seach-primary";
 import MessageIcons from "@/assets/icons/global/message-icons";
 import CartIcons from "@/assets/icons/e-commerce/cart-icons";
-import LocationIcons from "@/assets/icons/e-commerce/locations-icons";
+
 import ArrowRightIcons from "@/assets/icons/e-commerce/arrow-right-icons";
-import WalletIcons from "@/assets/icons/global/wallet-icons";
-import Wallet2Icons from "@/assets/icons/global/wallet2-icons";
-import VoucherIcons from "@/assets/icons/global/voucher-icons";
-import TopUpIcons from "@/assets/icons/e-commerce/topup-icons";
 import FlashSaleCard from "@/components/ui/e-commerce/card-flashsale";
 import ProductCard from "@/components/ui/e-commerce/card-product";
 import BackIcons from "@/assets/icons/global/back-icons";
+import TaniPaysCard from "@/components/ui/e-commerce/card-tanipay";
+import MainCategoryCard from "@/components/ui/e-commerce/main-category";
+import LocationInfo from "@/components/ui/e-commerce/location-info";
 
 const { width } = Dimensions.get("window");
 
@@ -45,6 +44,16 @@ const realBanners = [
     image: require("@/assets/images/trash/Banner-Promotion.png"),
   },
 ];
+
+const userAddress = {
+  id: 1,
+  label: "Rumah",
+  street: "Jl. Pangeran Diponegoro No. 45",
+  city: "Jakarta Pusat",
+  province: "DKI Jakarta",
+  postalCode: "10110",
+  country: "Indonesia",
+};
 
 const productData = [
   {
@@ -96,6 +105,34 @@ const productData = [
   },
 ];
 
+const taniPaysData = [
+  { id: 1, value: "Rp20.000" },
+  { id: 2, value: "ActivateNow" },
+];
+
+const mainCategoryData = [
+  {
+    id: 1,
+    icon: "TopUpIcons",
+    label: "Top Up\n& Bayar",
+  },
+  {
+    id: 2,
+    icon: "TopUpIcons",
+    label: "Alat\nPenyemprot",
+  },
+  {
+    id: 3,
+    icon: "TopUpIcons",
+    label: "Obat\nHerbal",
+  },
+  {
+    id: 4,
+    icon: "TopUpIcons",
+    label: "Jenis\nSayuran",
+  },
+];
+
 const banners = [
   realBanners[realBanners.length - 1],
   ...realBanners,
@@ -107,8 +144,14 @@ const EcommerceIndex = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [timeLeftMs, setTimeLeftMs] = useState(3600 * 1000);
+  const [saldo, setSaldo] = useState("Rp20.000");
+  const [isPinjamActive, setIsPinjamActive] = useState(false);
   const intervalRef = useRef(null);
   const router = useRouter();
+
+  const togglePinjam = () => {
+    setIsPinjamActive((prev) => !prev);
+  };
 
   useEffect(() => {
     if (timeLeftMs <= 0) {
@@ -129,7 +172,7 @@ const EcommerceIndex = () => {
     return () => clearInterval(intervalRef.current);
   }, []);
 
-  const hanleBanner = () => {
+  const handleFlashsale = () => {
     router.push("/e-commerce/flashsale");
   };
 
@@ -184,13 +227,13 @@ const EcommerceIndex = () => {
 
   return (
     <ScrollView
-      contentContainerStyle={{ paddingBottom: 55 }}
+      contentContainerStyle={{ paddingBottom: 70, backgroundColor: "white" }}
       showsVerticalScrollIndicator={false}
       bounces={true}
       alwaysBounceVertical={true}
     >
-      <SafeAreaView className="flex-1 w-full  bg-white">
-        <View className="bg-white px-5 pt-0 pb-4">
+      <SafeAreaView className="flex-1 w-full bg-white">
+        <View className="bg-white px-5  pb-4">
           <View className="flex-row">
             <View className="mr-[9]">
               <BackIcons width={28} height={28} />
@@ -214,20 +257,7 @@ const EcommerceIndex = () => {
         </View>
 
         {/* Location */}
-        <View className="px-5">
-          <View className="flex-row items-center justify-between">
-            <View className="flex-row items-center">
-              <LocationIcons width={25} height={25} color="#28a745" />
-              <Text className="ml-2 text-sm font-bold">
-                <Text className="text-[#8e8e8e]">Ship to </Text>
-                <Text className="text-[#2b2b2b]">
-                  Jl. Pangeran Diponegoro,...
-                </Text>
-              </Text>
-            </View>
-            <ArrowRightIcons width={18} height={18} />
-          </View>
-        </View>
+        <LocationInfo address={`${userAddress.street}`} />
 
         {/* Banner Slider */}
         <View className="mt-4 ">
@@ -247,7 +277,7 @@ const EcommerceIndex = () => {
             })}
             renderItem={({ item }) => (
               <View style={{ width, paddingHorizontal: 20 }}>
-                <TouchableOpacity onPress={hanleBanner} activeOpacity={0.8}>
+                <TouchableOpacity onPress={handleFlashsale} activeOpacity={0.8}>
                   <Image
                     source={item.image}
                     className="w-full h-[120px] rounded-2xl"
@@ -274,119 +304,19 @@ const EcommerceIndex = () => {
         </View>
 
         {/* Tani Pays */}
-        <View className="flex-row bg-[#F0F0F0] rounded-2xl px-5 py-4 mx-5 mt-5 space-x-4">
-          <View className="w-1/3 items-start">
-            <View className="flex-row items-center mb-1">
-              <View style={{ marginRight: 3 }}>
-                <WalletIcons width={16} height={16} />
-              </View>
-              <Text className="text-[12px] font-medium text-black">
-                TaniPay
-              </Text>
-            </View>
-            <View className="space-y-1">
-              <Text className="text-[12px] font-bold text-black">Rp20.000</Text>
-              <Text
-                className="text-[10px] text-gray-500"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                Topup minimum...
-              </Text>
-            </View>
-          </View>
-
-          <View className="w-1/3">
-            <View className="flex-row items-center mb-1">
-              <View style={{ marginRight: 3 }}>
-                <Wallet2Icons width={16} height={16} />
-              </View>
-              <Text className="text-[12px] font-medium text-black">
-                TaniPinjam
-              </Text>
-            </View>
-            <View className="space-y-1">
-              <Text className="text-[12px] font-bold text-[#28a745]">
-                ActivateNow
-              </Text>
-              <Text
-                className="text-[10px] text-gray-500"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                Limit up to Rp20...
-              </Text>
-            </View>
-          </View>
-
-          <View className="w-1/3">
-            <View className="flex-row items-center mb-1">
-              <View style={{ marginRight: 3 }}>
-                <VoucherIcons width={16} height={16} />
-              </View>
-              <Text className="text-[12px] font-medium text-black">
-                Voucher
-              </Text>
-            </View>
-            <View className="space-y-1">
-              <Text className="text-[12px] font-bold text-black">
-                Voucher Discount
-              </Text>
-              <Text
-                className="text-[10px] text-[#28a745]"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                Free Delivery Service
-              </Text>
-            </View>
-          </View>
-        </View>
+        <TaniPaysCard values={taniPaysData} />
 
         {/* Kategori Utama */}
-        <View className="mt-6 px-5 ">
+        <View className="mt-6 px-5">
           <View className="flex-row justify-between items-center space-x-4">
-            <View className="items-center flex-1">
-              <View className="bg-[#f9f9f9] p-4 rounded-full shadow-sm mb-1">
-                <TopUpIcons width={28} height={28} />
-              </View>
-              <Text className="text-xs font-medium text-center leading-4">
-                Top Up{"\n"}& Bayar
-              </Text>
-            </View>
-
-            <View className="items-center flex-1">
-              <View className="bg-[#f9f9f9] p-4 rounded-full shadow-sm mb-1">
-                <TopUpIcons width={28} height={28} />
-              </View>
-              <Text className="text-xs font-medium text-center leading-4">
-                Alat{"\n"}Penyemprot
-              </Text>
-            </View>
-
-            <View className="items-center flex-1">
-              <View className="bg-[#f9f9f9] p-4 rounded-full shadow-sm mb-1">
-                <TopUpIcons width={28} height={28} />
-              </View>
-              <Text className="text-xs font-medium text-center leading-4">
-                Obat{"\n"}Herbal
-              </Text>
-            </View>
-
-            <View className="items-center flex-1">
-              <View className="bg-[#f9f9f9] p-4 rounded-full shadow-sm mb-1">
-                <TopUpIcons width={28} height={28} />
-              </View>
-              <Text className="text-xs font-medium text-center leading-4">
-                Jenis{"\n"}Sayuran
-              </Text>
-            </View>
+            {mainCategoryData.map((item) => (
+              <MainCategoryCard key={item.id} item={item} />
+            ))}
           </View>
         </View>
 
         {/* card */}
         <View className="mt-6 px-5">
-          {/* Header Flash Sale */}
           <View className="flex-row justify-between items-center mb-4">
             <View className="flex-row items-center">
               <Text className="font-bold text-green-600 text-[17px]">
@@ -398,7 +328,7 @@ const EcommerceIndex = () => {
                 </Text>
               </View>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleFlashsale}>
               <View className="flex-row items-center">
                 <Text
                   className="text-sm"
@@ -406,6 +336,7 @@ const EcommerceIndex = () => {
                 >
                   See All
                 </Text>
+
                 <ArrowRightIcons width={20} height={20} />
               </View>
             </TouchableOpacity>
@@ -439,7 +370,7 @@ const EcommerceIndex = () => {
           {/* List Produk: Grid 2 Kolom */}
           <View className="flex-row flex-wrap justify-between -mx-1">
             {productData.map((item) => (
-              <View key={item.id} className="w-1/2 px-1 mb-4">
+              <View key={item.id} className="w-1/2 px-1 mb-1">
                 <ProductCard
                   image={item.image}
                   name={item.name}
