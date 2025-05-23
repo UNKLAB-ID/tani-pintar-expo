@@ -8,17 +8,20 @@ import HidenPostIcons from "@/assets/icons/sosial-media/hiden-post-icons";
 import ReportIcons from "@/assets/icons/sosial-media/report-icons";
 import BlockIcons from "@/assets/icons/sosial-media/block-icons";
 import CopyLinkIcons from "@/assets/icons/sosial-media/copy-link-icons";
+import NotInterestedIcons from "@/assets/icons/sosial-media/not-interested";
 
 interface ModalSettingSrinerProps {
     modalVisible: boolean;
     setModalVisible: (visible: boolean) => void;
     setModalBlock: (visible: boolean) => void;
+    setModalHidenPost: (visible: boolean) => void;
 }
 
 const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
     modalVisible,
     setModalVisible,
     setModalBlock,
+    setModalHidenPost,
 }) => {
     return (
         <Modal
@@ -59,11 +62,14 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
                         />
                           <CustomButtonSosialMedia
                             title="Hide Post"
-                            onPress={() => setModalVisible(false)}
+                            onPress={() => {
+                                setModalVisible(false);
+                                setModalHidenPost(true);
+                            }}
                             borderColor="#AAA"
                             textColor="#000"
                             widht={173}
-                            icon={<HidenPostIcons width={22.01} height={20.16}/>}
+                            icon={<HidenPostIcons width={22.01} height={20.16} color={"#1F1F1F"}/>}
                         />
                     </View>
                     <View className="flex-row items-center justify-between mb-5">
@@ -84,7 +90,7 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
                             borderColor="#AAA"
                             textColor="#FF0808"
                             widht={173}
-                            icon={<BlockIcons width={22} height={22} />}
+                            icon={<BlockIcons width={22} height={22}/>}
                         />
                     </View>
                     <CustomButtonSosialMedia
@@ -93,7 +99,15 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
                             borderColor="#AAA"
                             textColor="#FF0808"
                             className="w-full"
-                            icon={<ReportIcons width={22} height={22}/>}
+                            icon={<ReportIcons width={22} height={22} color={"#FF0808"}/>}
+                        />
+                      <CustomButtonSosialMedia
+                            title="Not Interested"
+                            onPress={() => setModalVisible(false)}
+                            borderColor="#AAA"
+                            textColor="#000"
+                            className="w-full mt-5 mb-5"
+                            icon={<NotInterestedIcons width={32} height={32} />}
                         />
                 </View>
             </TouchableOpacity>

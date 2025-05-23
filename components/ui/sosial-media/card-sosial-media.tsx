@@ -9,13 +9,16 @@ import { TouchableOpacity } from "react-native"
 import { Text } from "react-native"
 import { Image, View, ScrollView } from "react-native"
 import ModalSettingSriner from "./modal-setting"
+import ModalHidenPost from "./modal-hiden-post"
 
 interface CardSosialMediaProps {
     data?: any
+    setModalHidenPost: (visible: boolean) => void
 }
 
 const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
     data,
+    setModalHidenPost,
 }) => {
     const scrollRef = useRef(null)
     const [activeIndex, setActiveIndex] = useState(0)
@@ -130,6 +133,7 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
                         modalVisible={modalVisible}
                         setModalVisible={setModalVisible}
                         setModalBlock={setModalBlock}
+                        setModalHidenPost={setModalHidenPost}
                     />
                 )
             }
