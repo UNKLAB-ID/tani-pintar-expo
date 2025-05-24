@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import {
     View,
     Text,
     TouchableOpacity,
     SafeAreaView,
-    KeyboardAvoidingView,
-    ScrollView,
-    Platform,
-    Keyboard,
+    Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
@@ -19,21 +16,24 @@ import CustomTextInput from "@/components/ui/component-globals/input-text";
 import PhoneInput from "@/components/ui/component-globals/input-phone";
 import ImagePickerInput from "@/components/ui/component-globals/input-images";
 import BackIcons from "@/assets/icons/global/back-icons";
+import { Controller, useForm } from "react-hook-form";
 
 const RegisterScreen = () => {
     const router = useRouter();
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [error, setError] = useState("");
-    const [ktpPhoto, setKtpPhoto] = useState<any>(null);
+    const { control, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: {
+            name: "",
+            email: "",
+            phone: "",
+            ktpPhoto: null,
+        },
+    });
 
-    const handleRegister = () => {
-        // if (!name || !email || !phoneNumber) {
-        //     setError("All fields are required!");
-        //     return;
-        // }
-        router.push(`/otp?back=register`);  
+    const handleRegister = (data: { name: string; email: string; phone: string; ktpPhoto: any }) => {
+        if (!data.name || !data.email || !data.phone || !data.ktpPhoto) {
+            return;
+        }
+        router.push(`/otp?back=register`);
     };
 
     return (
@@ -50,56 +50,118 @@ const RegisterScreen = () => {
                 <Text className="text-4xl font-bold text-primary">
                     Register
                 </Text>
-                <Text className="text-xl text-text-secondary mt-3" style={{fontWeight:500}}>
+                <Text className="text-xl text-text-secondary mt-3" style={{ fontWeight: 500 }}>
                     Create an account to continue!
                 </Text>
 
+                {/* Name Input */}
                 <View className="mt-8">
-                    <CustomTextInput
-                        value={name}
-                        label="Name"
-                        placeholder="Input your full name"
-                        onChangeText={(text) => setName(text)} />
-                </View>
-                <View className="my-4">
-                    <CustomTextInput
-                        value={email}
-                        label="Email"
-                        type="email-address"
-                        placeholder="Input your active email"
-                        onChangeText={(text) => setEmail(text)} />
-                </View>
-                <View>
-                    <ImagePickerInput
-                        value={ktpPhoto}
-                        onChange={(image: ImagePicker.ImagePickerAsset) => setKtpPhoto(image)}
-                        label="KTP Photo (Max 2Mb)"
-                        placeholder="Select file in your gallery ID card photo"
+                    <Controller
+                        control={control}
+                        name="name"
+                        rules={{ required: "Name is required" }}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <>
+                                <CustomTextInput
+                                    value={value}
+                                    label="Name"
+                                    error={!!error}
+                                    placeholder="Input your full name"
+                                    onChangeText={onChange}
+                                />
+                            </>
+                        )}
                     />
                 </View>
 
-                {error ? (
-                    <Text className="text-red-500 text-lg mb-4">{error}</Text>
-                ) : null}
-
+                {/* Email Input */}
                 <View className="my-4">
-                    <Text className={`mb-2 text-lg text-black`}>Phone Number</Text>
-                    <PhoneInput
-                        value={phoneNumber}
-                        className="px-[20px]"
-                        onChangeText={(text) => setPhoneNumber(text)}
+                    <Controller
+                        control={control}
+                        name="email"
+                        rules={{
+                            required: true,
+                            pattern: {
+                                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                message: "Invalid email format",
+                            },
+                        }}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <>
+                                <CustomTextInput
+                                    value={value}
+                                    label="Email"
+                                    type="email-address"
+                                    error={!!error}
+                                    placeholder="Input your active email"
+                                    onChangeText={onChange}
+                                />
+                            </>
+                        )}
                     />
                 </View>
+
+                {/* KTP Photo Input */}
                 <View>
-                    <CustomButton title="Register" onPress={handleRegister} className="py-[13px]" />
+                    <Controller
+                        control={control}
+                        name="ktpPhoto"
+                        rules={{ required: "KTP photo is required" }}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <>
+                                <ImagePickerInput
+                                    value={value}
+                                    onChange={(image: ImagePicker.ImagePickerAsset) => onChange(image)}
+                                    label="KTP Photo (Max 2Mb)"
+                                    error={!!error}
+                                    placeholder="Select file in your gallery ID card photo"
+                                />
+                                     {error && (
+                                    <Text className="text-red-500 mt-1">
+                                        {error.message}
+                                    </Text>
+                                )}
+                            </>
+                        )}
+                    />
                 </View>
 
+                {/* Phone Number Input */}
+                <View className="my-4">
+                    <Controller
+                        control={control}
+                        name="phone"
+                        rules={{ required: "Phone number is required" }}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <>
+                                <Text className={`mb-2 text-lg text-black`}>Phone Number</Text>
+                                <PhoneInput
+                                    value={value}
+                                    className="px-[20px]"
+                                    error={!!error}
+                                    onChangeText={onChange}
+                                />
+                            </>
+                        )}
+                    />
+                </View>
+
+                {/* Register Button */}
+                <View>
+                    <CustomButton
+                        title="Register"
+                        onPress={handleSubmit(handleRegister)}
+                        className="py-[13px]"
+                    />
+                </View>
+
+                {/* Footer */}
                 <View className="flex-row justify-center mt-8 mb-8">
-                    <Text className="text-xl text-text-secondary" style={{fontWeight:500}}>
+                    <Text className="text-xl text-text-secondary" style={{ fontWeight: 500 }}>
                         Already have an account?{" "}
                     </Text>
                     <TouchableOpacity onPress={() => { router.push("/login"); }}>
-                        <Text className={`text-xl text-primary underline`} style={{fontWeight:500}}>
+                        <Text className={`text-xl text-primary underline`} style={{ fontWeight: 500 }}>
                             Log In
                         </Text>
                     </TouchableOpacity>
