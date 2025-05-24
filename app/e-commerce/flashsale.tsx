@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
-
 import ShareSquareIcons from "@/assets/icons/e-commerce/share-icons";
 import InputSearchPrimary from "@/components/ui/component-globals/input-seach-primary";
 import BackIcons from "@/assets/icons/global/back-icons";
@@ -121,26 +120,32 @@ const FlashSaleScreen = () => {
 
   return (
     <>
-      <StatusBar className="bg-primary" barStyle="light-content" />
-      <View className="flex-1">
-        <SafeAreaView className="flex-1">
-          <View className="px-5 py-3 pt-8 bg-primary flex-row items-center justify-center space-x-2">
-            <TouchableOpacity onPress={handleBackHome} className="p-1 mt-4">
-              <BackIcons width={24} height={24} color="#FFF" />
-            </TouchableOpacity>
-            <InputSearchPrimary
-              coloricon="#AAA"
-              placeholder="Search for discounted items"
-              className="bg-white px-[12px] h-[40px] flex-1 rounded-md mt-3"
-            />
-            <TouchableOpacity className="p-2 mt-1">
-              <ShareSquareIcons width={24} height={24} />
-            </TouchableOpacity>
-          </View>
+      <StatusBar
+        backgroundColor="#169953"
+        barStyle="light-content"
+        translucent={false}
+      />
+      <View className="flex-1 pt-7 bg-primary">
+        <View className="bg-primary flex-row items-center justify-center space-x-2 py-2 px-5">
+          <TouchableOpacity onPress={handleBackHome} className="p-1">
+            <BackIcons width={24} height={24} color="#FFF" />
+          </TouchableOpacity>
+          <InputSearchPrimary
+            coloricon="#AAA"
+            placeholder="Search for discounted items"
+            className="bg-white px-[12px] h-[40px] flex-1 rounded-md"
+            iconPosition="right"
+          />
+          <TouchableOpacity className="p-2">
+            <ShareSquareIcons width={24} height={24} />
+          </TouchableOpacity>
+        </View>
 
+        {/*content */}
+        <SafeAreaView edges={["top"]} style={{ flex: 1 }}>
           <ScrollView
             contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }}
-            className="bg-white  rounded-t-xl flex-1"
+            className="bg-white rounded-t-xl flex-1"
           >
             {/* Banner */}
             <Image

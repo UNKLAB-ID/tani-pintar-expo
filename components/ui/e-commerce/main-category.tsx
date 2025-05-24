@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text } from "react-native";
 import TopUpIcons from "@/assets/icons/e-commerce/topup-icons";
 
-// Tambahkan icon lain ke sini jika diperlukan
 const iconMap: Record<string, React.FC<{ width: number; height: number }>> = {
   TopUpIcons,
 };

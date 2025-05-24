@@ -9,6 +9,7 @@ import {
   NativeSyntheticEvent,
   ScrollView,
   TouchableOpacity,
+  StatusBar,
 } from "react-native";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "expo-router";
@@ -16,7 +17,6 @@ import { useRouter } from "expo-router";
 import InputSearchPrimary from "@/components/ui/component-globals/input-seach-primary";
 import MessageIcons from "@/assets/icons/global/message-icons";
 import CartIcons from "@/assets/icons/e-commerce/cart-icons";
-
 import ArrowRightIcons from "@/assets/icons/e-commerce/arrow-right-icons";
 import FlashSaleCard from "@/components/ui/e-commerce/card-flashsale";
 import ProductCard from "@/components/ui/e-commerce/card-product";
@@ -24,6 +24,9 @@ import BackIcons from "@/assets/icons/global/back-icons";
 import TaniPaysCard from "@/components/ui/e-commerce/card-tanipay";
 import MainCategoryCard from "@/components/ui/e-commerce/main-category";
 import LocationInfo from "@/components/ui/e-commerce/location-info";
+import VoucherIcons from "@/assets/icons/global/voucher-icons";
+import Wallet2Icons from "@/assets/icons/global/wallet2-icons";
+import WalletIcons from "@/assets/icons/global/wallet-icons";
 
 const { width } = Dimensions.get("window");
 
@@ -105,10 +108,10 @@ const productData = [
   },
 ];
 
-const taniPaysData = [
-  { id: 1, value: "Rp20.000" },
-  { id: 2, value: "ActivateNow" },
-];
+const taniPaysData = {
+  saldo: "Rp20.000",
+  statusPinjam: "Activate Now",
+};
 
 const mainCategoryData = [
   {
@@ -144,14 +147,8 @@ const EcommerceIndex = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [timeLeftMs, setTimeLeftMs] = useState(3600 * 1000);
-  const [saldo, setSaldo] = useState("Rp20.000");
-  const [isPinjamActive, setIsPinjamActive] = useState(false);
   const intervalRef = useRef(null);
   const router = useRouter();
-
-  const togglePinjam = () => {
-    setIsPinjamActive((prev) => !prev);
-  };
 
   useEffect(() => {
     if (timeLeftMs <= 0) {
@@ -258,7 +255,6 @@ const EcommerceIndex = () => {
 
         {/* Location */}
         <LocationInfo address={`${userAddress.street}`} />
-
         {/* Banner Slider */}
         <View className="mt-4 ">
           <FlatList
@@ -303,8 +299,74 @@ const EcommerceIndex = () => {
           </View>
         </View>
 
-        {/* Tani Pays */}
-        <TaniPaysCard values={taniPaysData} />
+        <View className="flex-row w-[355px] h-[83px] bg-[#F0F0F0] justify-center rounded-xl pt-3 pb-3 px-4 py-4 mx-5 mt-5 ">
+          <View className="w-1/3 items-start">
+            <View className="flex-row items-center mb-1 mt-1">
+              <View style={{ marginRight: 3 }}>
+                <WalletIcons width={16} height={16} />
+              </View>
+              <Text className="text-[12px] font-medium text-black">
+                TaniPay
+              </Text>
+            </View>
+            <View className="space-y-1">
+              <Text className="text-[12px] font-bold text-black">Rp20.000</Text>
+              <Text
+                className="text-[10px] text-gray-500"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                Topup minimum...
+              </Text>
+            </View>
+          </View>
+
+          <View className="w-1/3">
+            <View className="flex-row items-center mb-1 mt-1">
+              <View style={{ marginRight: 3 }}>
+                <Wallet2Icons width={16} height={16} />
+              </View>
+              <Text className="text-[12px] font-medium text-black">
+                TaniPinjam
+              </Text>
+            </View>
+            <View className="space-y-1">
+              <Text className="text-[12px] font-bold text-[#28a745]">
+                ActivateNow
+              </Text>
+              <Text
+                className="text-[10px] text-gray-500"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                Limit up to Rp20...
+              </Text>
+            </View>
+          </View>
+
+          <View className="w-1/3">
+            <View className="flex-row items-center mb-1 mt-1">
+              <View style={{ marginRight: 3 }}>
+                <VoucherIcons width={16} height={16} />
+              </View>
+              <Text className="text-[12px] font-medium text-black">
+                Voucher
+              </Text>
+            </View>
+            <View className="space-y-1">
+              <Text className="text-[12px] font-bold text-black">
+                Voucher Discount
+              </Text>
+              <Text
+                className="text-[10px] text-[#28a745]"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                Free Delivery Service
+              </Text>
+            </View>
+          </View>
+        </View>
 
         {/* Kategori Utama */}
         <View className="mt-6 px-5">

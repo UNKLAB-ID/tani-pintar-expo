@@ -4,63 +4,78 @@ import WalletIcons from "@/assets/icons/global/wallet-icons";
 import Wallet2Icons from "@/assets/icons/global/wallet2-icons";
 import VoucherIcons from "@/assets/icons/global/voucher-icons";
 
-interface TaniPayItem {
-  id: number;
-  value: string;
+interface TaniPaysCardProps {
+  saldo?: string;
+  statusPinjam?: string;
 }
 
-interface TaniPaysCardsProps {
-  values: TaniPayItem[];
-}
-
-const TaniPaysCard: React.FC<TaniPaysCardsProps> = ({ values }) => {
+const TaniPaysCard: React.FC<TaniPaysCardProps> = ({
+  saldo = "Rp0",
+  statusPinjam = "Not Active",
+}) => {
   return (
-    <View className="flex-row bg-[#F0F0F0] rounded-2xl px-5 py-4 mx-5 mt-5 space-x-4">
-      <View className="flex-1 items-start">
+    <View className="flex-row bg-[#F9F9F9] rounded-xl px-5 py-4 mx-5 mt-5 space-x-4">
+      <View className="w-1/3 items-start">
         <View className="flex-row items-center mb-1">
-          <WalletIcons width={18} height={18} className="mr-2" />
-          <Text className="text-sm font-medium text-black">TaniPay</Text>
+          <View style={{ marginRight: 3 }}>
+            <WalletIcons width={16} height={16} />
+          </View>
+          <Text className="text-[12px] font-medium text-black">TaniPay</Text>
         </View>
-        <Text className="text-sm font-bold text-black">{values[0]?.value}</Text>
-        <Text
-          className="text-xs text-gray-500"
-          numberOfLines={1}
-          ellipsizeMode="tail"
-        >
-          Topup minimum...
-        </Text>
+        <View className="space-y-1">
+          <Text className="text-[12px] font-bold text-black">{saldo}</Text>
+          <Text
+            className="text-[10px] text-gray-500"
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            Topup minimum...
+          </Text>
+        </View>
       </View>
 
-      <View className="flex-1 items-center">
+      {/* TaniPinjam */}
+      <View className="w-1/3">
         <View className="flex-row items-center mb-1">
-          <Wallet2Icons width={18} height={18} className="mr-2" />
-          <Text className="text-sm font-medium text-black">TaniPinjam</Text>
+          <View style={{ marginRight: 3 }}>
+            <Wallet2Icons width={16} height={16} />
+          </View>
+          <Text className="text-[12px] font-medium text-black">TaniPinjam</Text>
         </View>
-        <Text className="text-sm font-bold text-[#28a745]">
-          {values[1]?.value}
-        </Text>
-        <Text
-          className="text-xs text-gray-500"
-          numberOfLines={1}
-          ellipsizeMode="tail"
-        >
-          Limit up to Rp20...
-        </Text>
+        <View className="space-y-1">
+          <Text className="text-[12px] font-bold text-[#28a745]">
+            {statusPinjam}
+          </Text>
+          <Text
+            className="text-[10px] text-gray-500"
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            Limit up to Rp20...
+          </Text>
+        </View>
       </View>
 
-      <View className="flex-1 items-end ml-3">
+      {/* Voucher */}
+      <View className="w-1/3">
         <View className="flex-row items-center mb-1">
-          <VoucherIcons width={18} height={18} className="mr-2" />
-          <Text className="text-sm font-medium text-black">Voucher</Text>
+          <View style={{ marginRight: 3 }}>
+            <VoucherIcons width={16} height={16} />
+          </View>
+          <Text className="text-[12px] font-medium text-black">Voucher</Text>
         </View>
-        <Text className="text-sm font-bold text-black">Voucher Discount</Text>
-        <Text
-          className="text-xs text-[#28a745]"
-          numberOfLines={1}
-          ellipsizeMode="tail"
-        >
-          Free Delivery Service
-        </Text>
+        <View className="space-y-1">
+          <Text className="text-[12px] font-bold text-black">
+            Voucher Discount
+          </Text>
+          <Text
+            className="text-[10px] text-[#28a745]"
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            Free Delivery Service
+          </Text>
+        </View>
       </View>
     </View>
   );

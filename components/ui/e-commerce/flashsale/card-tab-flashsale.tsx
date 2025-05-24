@@ -60,9 +60,7 @@ const FlashSaleTabCard: React.FC<FlashSaleTabCardProps> = ({
               borderBottomRightRadius: 8,
             }}
           >
-            <Text className="text-[14px] text-white font-bold">
-              {discount}%
-            </Text>
+            <Text className="text-[14px] text-white font-bold">{discount}</Text>
           </View>
         )}
       </View>
