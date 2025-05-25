@@ -128,7 +128,7 @@ const FlashSaleScreen = () => {
       <View className="flex-1 pt-7 bg-primary">
         <View className="bg-primary flex-row items-center justify-center space-x-2 py-2 px-5">
           <TouchableOpacity onPress={handleBackHome} className="p-1">
-            <BackIcons width={24} height={24} color="#FFF" />
+            <BackIcons width={20} height={20} color="#FFF" />
           </TouchableOpacity>
           <InputSearchPrimary
             coloricon="#AAA"

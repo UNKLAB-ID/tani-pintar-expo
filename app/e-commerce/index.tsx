@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "expo-router";
-
+import { LinearGradient } from "expo-linear-gradient";
 import InputSearchPrimary from "@/components/ui/component-globals/input-seach-primary";
 import MessageIcons from "@/assets/icons/global/message-icons";
 import CartIcons from "@/assets/icons/e-commerce/cart-icons";
@@ -172,6 +172,9 @@ const EcommerceIndex = () => {
   const handleFlashsale = () => {
     router.push("/e-commerce/flashsale");
   };
+  const handleProductDetail = () => {
+    router.push("/e-commerce/detail-product");
+  };
 
   const formatTime = (ms) => {
     const totalSeconds = Math.floor(ms / 1000);
@@ -229,13 +232,8 @@ const EcommerceIndex = () => {
       bounces={true}
       alwaysBounceVertical={true}
     >
-      <SafeAreaView className="flex-1 w-full bg-white">
-        <View className="bg-white px-5  pb-4">
-          <View className="flex-row">
-            <View className="mr-[9]">
-              <BackIcons width={28} height={28} />
-            </View>
-          </View>
+      <SafeAreaView className="flex-1 w-full ">
+        <View className="px-5 py-3 pb-4">
           <View className="flex-row items-center justify-between">
             <View className="w-[276px]">
               <InputSearchPrimary
@@ -255,7 +253,6 @@ const EcommerceIndex = () => {
 
         {/* Location */}
         <LocationInfo address={`${userAddress.street}`} />
-        {/* Banner Slider */}
         <View className="mt-4 ">
           <FlatList
             ref={flatListRef}
@@ -378,72 +375,78 @@ const EcommerceIndex = () => {
         </View>
 
         {/* card */}
-        <View className="mt-6 px-5">
-          <View className="flex-row justify-between items-center mb-4">
-            <View className="flex-row items-center">
-              <Text className="font-bold text-green-600 text-[17px]">
-                Flash Sale
-              </Text>
-              <View className="ml-3 px-2.5 py-1 rounded-full  bg-red-500/10">
-                <Text className="text-red-500 font-semibold text-sm">
-                  {formatTime(timeLeftMs)}
-                </Text>
-              </View>
-            </View>
-            <TouchableOpacity onPress={handleFlashsale}>
+        <LinearGradient colors={["#FFFFFF", "#F0F0F0"]}>
+          <View className="mt-6 px-5">
+            <View className="flex-row justify-between items-center mb-4">
               <View className="flex-row items-center">
-                <Text
-                  className="text-sm"
-                  style={{ color: "#525252", marginLeft: 150 }}
-                >
-                  See All
+                <Text className="font-bold text-green-600 text-[17px]">
+                  Flash Sale
                 </Text>
-
-                <ArrowRightIcons width={20} height={20} />
+                <View className="ml-3 px-2.5 py-1 rounded-full  bg-red-500/10">
+                  <Text className="text-red-500 font-semibold text-sm">
+                    {formatTime(timeLeftMs)}
+                  </Text>
+                </View>
               </View>
-            </TouchableOpacity>
+              <TouchableOpacity onPress={handleFlashsale}>
+                <View className="flex-row items-center">
+                  <Text
+                    className="text-sm"
+                    style={{ color: "#525252", marginLeft: 150 }}
+                  >
+                    See All
+                  </Text>
+
+                  <ArrowRightIcons width={20} height={20} />
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            {/* List Produk: Scroll Horizontal */}
+
+            <FlatList
+              data={productData}
+              keyExtractor={(item) => item.id.toString()}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({ item }) => (
+                <View className="mr-2 pb-3">
+                  <FlashSaleCard
+                    image={item.image}
+                    name={item.name}
+                    price={item.price}
+                    sold={item.sold}
+                    total={item.total}
+                    discount={item.discount}
+                  />
+                </View>
+              )}
+            />
           </View>
+        </LinearGradient>
+        <View style={{ backgroundColor: "#F0F0F0" }} className="pt-6">
+          <View className="bg-white rounded-xl pt-2 px-5">
+            <View className="mb-4">
+              <Text className="text-[16px] font-bold py-3">For You!</Text>
+            </View>
 
-          {/* List Produk: Scroll Horizontal */}
-          <FlatList
-            data={productData}
-            keyExtractor={(item) => item.id.toString()}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <View className="mr-2">
-                <FlashSaleCard
-                  image={item.image}
-                  name={item.name}
-                  price={item.price}
-                  sold={item.sold}
-                  total={item.total}
-                  discount={item.discount}
-                />
-              </View>
-            )}
-          />
-        </View>
-        <View className="mt-6 px-5">
-          <View className="mb-4">
-            <Text className="text-[16px] font-bold">For You!</Text>
-          </View>
-
-          {/* List Produk: Grid 2 Kolom */}
-          <View className="flex-row flex-wrap justify-between -mx-1">
-            {productData.map((item) => (
-              <View key={item.id} className="w-1/2 px-1 mb-1">
-                <ProductCard
-                  image={item.image}
-                  name={item.name}
-                  discount={item.discount}
-                  price={item.price}
-                  rating={item.rating ?? 0}
-                  sold={item.sold}
-                  location={item.location}
-                />
-              </View>
-            ))}
+            {/* List Produk: Grid 2 Kolom */}
+            <View className="flex-row flex-wrap justify-between -mx-1">
+              {productData.map((item) => (
+                <View key={item.id} className="w-1/2 px-1 mb-1">
+                  <ProductCard
+                    image={item.image}
+                    name={item.name}
+                    discount={item.discount}
+                    price={item.price}
+                    rating={item.rating ?? 0}
+                    sold={item.sold}
+                    location={item.location}
+                    onPress={handleProductDetail}
+                  />
+                </View>
+              ))}
+            </View>
           </View>
         </View>
       </SafeAreaView>
