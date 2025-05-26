@@ -7,20 +7,17 @@ import { Image } from "react-native";
 import { Modal, Text, TouchableOpacity, View } from "react-native"
 
 interface ModalHidenPostProps {
-    hidenPost: boolean;
-    setHidenPost: (visible: boolean) => void;
+    setHidenPost: () => void;
 }
 
-const ModalHidenPost: React.FC<ModalHidenPostProps> = ({ hidenPost, setHidenPost }) => {
+const ModalHidenPost: React.FC<ModalHidenPostProps> = ({setHidenPost}) => {
     return (
-        <TouchableOpacity
+        <View
         className="px-5 py-4"
             style={{
                 flex: 1,
                 justifyContent: 'flex-end',
             }}
-            activeOpacity={1}
-            onPressOut={() => setHidenPost(false)}
         >
             <View style={{borderBottomColor:"#C8C8C8", borderBottomWidth: 1, paddingBottom:10}}>
                 <View className="flex-row mb-1">
@@ -38,16 +35,16 @@ const ModalHidenPost: React.FC<ModalHidenPostProps> = ({ hidenPost, setHidenPost
                     />
                     <Text className="text-center text-[14px] ml-3 items-center" style={{fontWeight:500}}>Do not show Natasya Julio for 14 days</Text>
                 </View>
-                <View className="flex-row items-center mb-4">
+                <TouchableOpacity className="flex-row items-center mb-4">
                     <ReportIcons width={22} height={22} color={"#1F1F1F"} />
                     <Text className="text-[14px] text-text-primary ml-3" style={{fontWeight:500}}>Report post</Text>
-                </View>
-                <View className="flex-row items-center">
+                </TouchableOpacity>
+                <TouchableOpacity className="flex-row items-center" onPress={setHidenPost}>
                     <UndoPostIcons width={22} height={22} color={"#1F1F1F"} />
                     <Text className="text-[14px] text-text-primary ml-3" style={{fontWeight:500}}>Undo post</Text>
-                </View>
+                </TouchableOpacity>
             </View>
-        </TouchableOpacity>
+        </View>
 
     )
 }

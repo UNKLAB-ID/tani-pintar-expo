@@ -4,11 +4,31 @@ import ButtonPlusIcons from "@/assets/icons/sosial-media/button-plus-icons";
 import InputSearchPrimary from "@/components/ui/component-globals/input-seach-primary";
 import CardSosialMedia from "@/components/ui/sosial-media/card-sosial-media";
 import ModalHidenPost from "@/components/ui/sosial-media/modal-hiden-post";
+import { hide } from "expo-router/build/utils/splash";
 import { useState } from "react";
 import { SafeAreaView, View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 
 const SosialMediaIndex = () => {
-    const [modalHidenPost, setModalHiddenPost] = useState(false);
+    const [dataPosts, setDataPosts] = useState([
+        {
+            id: 1,
+            hidenPost: false,
+            name: "Ahmad Mambaus Sholihin",
+            text: "Saya mempunyai ide bagus...",
+            data: [],
+        },
+        {
+            id: 2,
+            hidenPost: false,
+            name: "Jhon Doe",
+            text: "Ada yang pernah make obat ini kah guys?",
+            data: [
+                { images: require("../../assets/images/Image-success-otp.png") },
+                { images: require("../../assets/images/Image-success-otp.png") },
+            ],
+        },
+    ]);
+    
     const getGreeting = () => {
         const hour = new Date().getHours(); // WIB jika di perangkat pengguna sudah diatur ke Indonesia
         if (hour >= 4 && hour < 11) return "Good Morning";
@@ -16,28 +36,6 @@ const SosialMediaIndex = () => {
         if (hour >= 15 && hour < 18) return "Good Evening";
         return "Good Night";
     };
-
-
-  const imagesDummy = [
-    {
-      name: "Ahmad Mambaus Sholihin",
-      text: "Saya mempunyai ide bagus untuk membuat bahan baru untuk para petani untuk membuat obat otomatis pembasmi hama supaya mempercepat pengerjaan dan tidak banyak makan waktu?",
-      data: [],
-    },
-    {
-      name: "Jhon Doe",
-      text: "Ada yang pernah make obat ini kah guys? cocok ga ya buat tanaman saya?",
-      data: [
-        { images: require("../../assets/images/Image-success-otp.png") },
-        { images: require("../../assets/images/Image-success-otp.png") },
-        { images: require("../../assets/images/Image-success-otp.png") },
-        { images: require("../../assets/images/Image-success-otp.png") },
-        { images: require("../../assets/images/Image-success-otp.png") },
-        { images: require("../../assets/images/Image-success-otp.png") },
-        { images: require("../../assets/images/Image-success-otp.png") },
-      ],
-    },
-  ];
 
     return (
         <View>
@@ -74,27 +72,10 @@ const SosialMediaIndex = () => {
                         </View>
                     </View>
                     <View>
-                        <CardSosialMedia data={imagesDummy} setModalHidenPost={setModalHiddenPost} />
+                        <CardSosialMedia data={dataPosts} setData={setDataPosts} />
                     </View>
                 </SafeAreaView>
             </ScrollView>
-            {
-                modalHidenPost && (
-                    <View
-                        style={{
-                            position: 'absolute',
-                            bottom: 50,
-                            left: 0,
-                            right: 0,
-                            width: '100%',
-                            zIndex: 9999,
-                            backgroundColor: 'white',
-                        }}
-                    >
-                        <ModalHidenPost hidenPost={modalHidenPost} setHidenPost={setModalHiddenPost} />
-                    </View>
-                )
-            }{/*  */}
         </View>
     );
 }
