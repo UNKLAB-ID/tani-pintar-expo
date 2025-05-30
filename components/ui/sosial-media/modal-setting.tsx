@@ -28,7 +28,9 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
             visible={modalVisible}
             transparent
             animationType="slide"
+            statusBarTranslucent={true}
             onRequestClose={() => setModalVisible(false)}
+
         >
             <TouchableOpacity
                 style={{
@@ -45,6 +47,7 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
                         backgroundColor: "#fff",
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
+                        height: 350,
                     }}
                 >
                     <View style={{ alignItems: "center", marginBottom: 20, marginTop: 20 }}>
@@ -60,7 +63,7 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
                             widht={173}
                             icon={modalVisible ? <BoockmarkSave width={22} height={22} /> : <BoockmarkUnsave width={22} height={22} />}
                         />
-                          <CustomButtonSosialMedia
+                        <CustomButtonSosialMedia
                             title="Hide Post"
                             onPress={() => {
                                 setModalVisible(false);
@@ -69,7 +72,7 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
                             borderColor="#AAA"
                             textColor="#000"
                             widht={173}
-                            icon={<HidenPostIcons width={22.01} height={20.16} color={"#1F1F1F"}/>}
+                            icon={<HidenPostIcons width={22.01} height={20.16} color={"#1F1F1F"} />}
                         />
                     </View>
                     <View className="flex-row items-center justify-between mb-5">
@@ -81,7 +84,7 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
                             widht={173}
                             icon={<CopyLinkIcons width={20} height={20} />}
                         />
-                          <CustomButtonSosialMedia
+                        <CustomButtonSosialMedia
                             title="Block"
                             onPress={() => {
                                 setModalVisible(false)
@@ -90,25 +93,25 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
                             borderColor="#AAA"
                             textColor="#FF0808"
                             widht={173}
-                            icon={<BlockIcons width={22} height={22}/>}
+                            icon={<BlockIcons width={22} height={22} />}
                         />
                     </View>
                     <CustomButtonSosialMedia
-                            title="Report"
-                            onPress={() => setModalVisible(false)}
-                            borderColor="#AAA"
-                            textColor="#FF0808"
-                            className="w-full"
-                            icon={<ReportIcons width={22} height={22} color={"#FF0808"}/>}
-                        />
-                      <CustomButtonSosialMedia
-                            title="Not Interested"
-                            onPress={() => setModalVisible(false)}
-                            borderColor="#AAA"
-                            textColor="#000"
-                            className="w-full mt-5 mb-5"
-                            icon={<NotInterestedIcons width={32} height={32} />}
-                        />
+                        title="Report"
+                        onPress={() => setModalVisible(false)}
+                        borderColor="#AAA"
+                        textColor="#FF0808"
+                        className="w-full"
+                        icon={<ReportIcons width={22} height={22} color={"#FF0808"} />}
+                    />
+                    <CustomButtonSosialMedia
+                        title="Not Interested"
+                        onPress={() => setModalVisible(false)}
+                        borderColor="#AAA"
+                        textColor="#000"
+                        className="w-full mt-5 mb-5"
+                        icon={<NotInterestedIcons width={32} height={32} />}
+                    />
                 </View>
             </TouchableOpacity>
         </Modal>

@@ -3,8 +3,6 @@ import NotifcationIcons from "@/assets/icons/global/notification-icons";
 import ButtonPlusIcons from "@/assets/icons/sosial-media/button-plus-icons";
 import InputSearchPrimary from "@/components/ui/component-globals/input-seach-primary";
 import CardSosialMedia from "@/components/ui/sosial-media/card-sosial-media";
-import ModalHidenPost from "@/components/ui/sosial-media/modal-hiden-post";
-import { hide } from "expo-router/build/utils/splash";
 import { useState } from "react";
 import { SafeAreaView, View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 
@@ -41,7 +39,7 @@ const SosialMediaIndex = () => {
         <View>
             <ScrollView
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 67 }}
+                contentContainerStyle={{ paddingBottom: 3 }}
             >
                 <SafeAreaView className="flex-1 w-full">
                     <View className="bg-white px-5 py-4" style={{ marginBottom: 3 }}>

@@ -88,7 +88,7 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
                                         {/* Image Slider */}
                                         {
                                             value.data.length > 0 && (
-                                                <View className="relative"
+                                                <View className="relative mb-3"
                                                     onLayout={(event) => {
                                                         const width = event.nativeEvent.layout.width
                                                         setContainerWidth(width)
@@ -115,7 +115,7 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
                                                     </ScrollView>
 
                                                     {/* Indicator */}
-                                                    <View className="absolute right-2 bg-black" style={{ borderRadius: 64, width: 34, top: 10, right: 10 }}>
+                                                    <View style={{ width: 34, top: 10, right: 10, position: "absolute", backgroundColor:"#000", borderRadius:100}}>
                                                         <Text className="text-white text-xs text-center py-1">
                                                             {activeIndex + 1}/{value.data.length}
                                                         </Text>

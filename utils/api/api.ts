@@ -5,14 +5,13 @@ interface ApiResponse<T = any> {
   status: number;
   data: T | null;
   message: string;
+  error?: any; 
 }
 
 const API = axios.create({
-  baseURL: 'https://your-api-url.com/api',
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
   timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: {}
 });
 
 // Interceptor (misalnya untuk token)
@@ -44,12 +43,14 @@ const handleResponse = <T = any>(res: AxiosResponse<T>): ApiResponse<T> => {
 const handleError = (err: AxiosError): ApiResponse => {
   const status = err.response?.status || 500;
   const message =(err.response?.data as any)?.message || err.message || 'Something went wrong';
+  const errorData = err.response?.data; 
 
   return {
     success: false,
     status,
     data: null,
     message,
+    error: errorData || err,
   };
 };
 
@@ -63,18 +64,18 @@ const api = {
     }
   },
 
-  post: async <T = any>(url: string, data: any = {}): Promise<ApiResponse<T>> => {
+  post: async <T = any>(url: string, data: any = {}, config: any = {}): Promise<ApiResponse<T>> => {
     try {
-      const res = await API.post<T>(url, data);
+      const res = await API.post<T>(url, data, config);
       return handleResponse<T>(res);
     } catch (err) {
       return handleError(err as AxiosError);
     }
-  },
+  },  
 
-  put: async <T = any>(url: string, data: any = {}): Promise<ApiResponse<T>> => {
+  put: async <T = any>(url: string, data: any = {}, config: any = {}): Promise<ApiResponse<T>> => {
     try {
-      const res = await API.put<T>(url, data);
+      const res = await API.put<T>(url, data, config);
       return handleResponse<T>(res);
     } catch (err) {
       return handleError(err as AxiosError);
