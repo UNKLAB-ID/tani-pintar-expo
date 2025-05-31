@@ -6,12 +6,14 @@ import CustomButton from '@/components/ui/component-globals/button-primary';
 import { router, useLocalSearchParams } from 'expo-router';
 import BackIcons from '@/assets/icons/global/back-icons';
 import { useForm, Controller } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import api from '@/utils/api/api';
 
 const AuthScreen = () => {
-  const { back } = useLocalSearchParams();
-  const { control, handleSubmit, setValue } = useForm({
+  const { back, phone } = useLocalSearchParams();
+  const { control, handleSubmit, setValue, formState: { errors }, setError } = useForm({
     defaultValues: {
-      otp: '',
+      code: '',
     },
   });
 
@@ -27,11 +29,47 @@ const AuthScreen = () => {
     }
   };
 
-  const handleVerify = (data: { otp: string }) => {
-    if (!data.otp && data.otp.length <= 4) {
+  const mutation = useMutation({
+    mutationFn: async (data: { code: string }) => {
+      const required = {
+        code: data.code,
+        phone_number: phone,
+      }
+
+      if (back === "register") {
+        return await api.post("/accounts/register/confirm", required);
+      } else if (back === "login") {
+        return await api.post("/accounts/login/confirm", required);
+      }
+    },
+
+    onSuccess: (res) => {
+      if (res?.success) {
+        router.replace('/success-otp');
+      } else if (res?.error) {
+        Object.keys(res.error).forEach((field) => {
+          setError(field as keyof typeof errors, {
+            type: "server",
+            message: res.error[field][0], // Ambil pesan error pertama
+          });
+        });
+      } else {
+        Alert.alert("Register Failed", res?.message);
+      }
+
+    },
+
+    onError: (error) => {
+      Alert.alert('Verification Failed', error.message);
+    },
+  })
+
+  const handleVerify = (data: { code: string }) => {
+    if (!data.code || data.code.length !== 4) {
       return;
     }
-    router.push("/success-otp");
+
+    mutation.mutate(data);
   };
 
   useEffect(() => {
@@ -54,19 +92,24 @@ const AuthScreen = () => {
       <View>
         <Text className="text-3xl font-semibold text-text-primary">Input Verification Code</Text>
         <Text className="text-xl text-text-secondary" style={{ fontWeight: 500 }}>
-          We have sent a code to <Text className='text-text-primary'>baus@gmail.com</Text>
+          We have sent a code to <Text className='text-text-primary'>{phone}</Text>
         </Text>
         <View className='mt-[50px]'>
           <Controller
             control={control}
-            name="otp"
+            name="code"
             rules={{
               required: "OTP is required",
               minLength: { value: 4, message: "OTP must be 4 digits" },
             }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <>
-                <OTPInput value={value} onChange={(val) => setValue("otp", val)} />
+                <OTPInput value={value} onChange={(val) => setValue("code", val)} />
+                {error && (
+                  <Text className="text-red-500 mt-1 text-center">
+                    {error.message}
+                  </Text>
+                )}
               </>
             )}
           />

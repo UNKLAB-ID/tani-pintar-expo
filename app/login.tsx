@@ -10,20 +10,50 @@ import { useRouter } from "expo-router";
 import PhoneInput from "@/components/ui/component-globals/input-phone";
 import CustomButton from "@/components/ui/component-globals/button-primary";
 import { useForm, Controller } from 'react-hook-form';
+import { useMutation } from "@tanstack/react-query";
+import api from "@/utils/api/api";
 
 const LoginScreen = () => {
     const router = useRouter();
-    const { control, handleSubmit, formState: { errors } } = useForm({
+    const { control, handleSubmit, formState: { errors }, setError } = useForm({
         defaultValues: {
-            phone: "",
+            phone_number: "",
         },
     });
 
-    const handleLogin = (data: { phone: string }) => {
-        if (!data.phone) {
+    const mutation = useMutation({
+        mutationFn: async (data: { phone_number: string }) => {
+            //  API call for login
+            
+            return api.post("/accounts/login/", { phone_number: data.phone_number })
+        },
+
+        onSuccess: (res, variables) => {
+            if (res.success) {
+                router.replace(`/otp?back=login&phone=${variables.phone_number}`);
+            } else if (res.error) {
+                Object.keys(res.error).forEach((field) => {
+                    setError(field as keyof typeof errors, {
+                        type: "server",
+                        message: res.error[field][0], // Ambil pesan error pertama
+                    });
+                });
+            } else{
+                Alert.alert("Login Failed", res.message || "An error occurred");
+            }
+        },
+
+        onError: (error) => {
+            Alert.alert("Login Failed", error.message);
+        },
+    })
+
+    const handleLogin = (data: { phone_number: string }) => {
+        if (!data.phone_number) {
             return;
         }
-        router.push(`/otp?back=login`);
+
+        mutation.mutate(data);
     };
 
     const handleRegister = () => {
@@ -52,7 +82,7 @@ const LoginScreen = () => {
 
                 <Controller
                     control={control}
-                    name="phone"
+                    name="phone_number"
                     rules={{ required: "Phone number is required" }}
                     render={({ field: { onChange, value }, fieldState: { error } }) => (
                         <>

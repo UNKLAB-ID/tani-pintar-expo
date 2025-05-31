@@ -15,7 +15,7 @@ const SuccessOTPScreen = () => {
         </Text>
     </View>
     <View className="mt-[50px]">
-        <CustomButton className='py-[10px]' title="Start Exploring" onPress={()=> router.push('/(tabs)/sosmed')}/>
+        <CustomButton className='py-[10px]' title="Start Exploring" onPress={()=> router.replace('/(tabs)/sosmed')}/>
     </View>
    </SafeAreaView>
   );

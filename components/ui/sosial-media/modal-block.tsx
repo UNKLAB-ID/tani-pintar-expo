@@ -21,6 +21,7 @@ const BlockScriner: React.FC<BlockScrinerProps> = ({
             animationType="slide"
             transparent={true}
             visible={modalBlock}
+            statusBarTranslucent={true}
             onRequestClose={() => setModalBlock(false)}
         >
             <TouchableOpacity
@@ -38,6 +39,7 @@ const BlockScriner: React.FC<BlockScrinerProps> = ({
                         backgroundColor: '#fff',
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
+                        height: 410,
                     }}
                 >
                     <View style={{ alignItems: 'center', marginVertical: 20 }}>
@@ -58,7 +60,7 @@ const BlockScriner: React.FC<BlockScrinerProps> = ({
                                 <MessageBlockIcons width={24} height={24} />
                                 <Text className="text-[12px] ml-3 text-[#191919]">They will no longer have access to your profile or content on TaniVerse, and they won't be able to message you.</Text>
                             </View>
-                            <View className="flex-row items-center" style={{marginVertical:10}}>
+                            <View className="flex-row items-center" style={{ marginVertical: 10 }}>
                                 <NotificationBlockIcons width={24} height={24} />
                                 <Text className="text-[12px] ml-3 text-[#191919]">They don’t get a notification of the blocked.</Text>
                             </View>
