@@ -67,7 +67,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             borderBottomRightRadius: 20,
           }}
         >
-          <Text className="text-[14px] text-white font-bold">{discount}%</Text>
+          <Text className="text-[14px] text-white font-bold">{discount}</Text>
         </View>
       )}
 

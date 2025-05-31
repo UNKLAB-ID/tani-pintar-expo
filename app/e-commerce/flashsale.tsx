@@ -14,6 +14,7 @@ import InputSearchPrimary from "@/components/ui/component-globals/input-seach-pr
 import BackIcons from "@/assets/icons/global/back-icons";
 import FlashSaleTabCard from "@/components/ui/e-commerce/flashsale/card-tab-flashsale";
 import { router, useRouter } from "expo-router";
+import InputSearchFlashSale from "@/components/ui/e-commerce/flashsale/input-seach-primary";
 
 const realBanners = [
   {
@@ -127,10 +128,10 @@ const FlashSaleScreen = () => {
       />
       <View className="flex-1 pt-7 bg-primary">
         <View className="bg-primary flex-row items-center justify-center space-x-2 py-2 px-5">
-          <TouchableOpacity onPress={handleBackHome} className="p-1">
+          <TouchableOpacity onPress={handleBackHome} className="p-1 mr-2">
             <BackIcons width={20} height={20} color="#FFF" />
           </TouchableOpacity>
-          <InputSearchPrimary
+          <InputSearchFlashSale
             coloricon="#AAA"
             placeholder="Search for discounted items"
             className="bg-white px-[12px] h-[40px] flex-1 rounded-md"
