@@ -1,129 +1,220 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
     View,
     Text,
-    TextInput,
     TouchableOpacity,
     SafeAreaView,
+    Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+// Components Global
+import CustomButton from "@/components/ui/component-globals/button-primary";
+import CustomTextInput from "@/components/ui/component-globals/input-text";
+import PhoneInput from "@/components/ui/component-globals/input-phone";
+import ImagePickerInput from "@/components/ui/component-globals/input-images";
+import BackIcons from "@/assets/icons/global/back-icons";
+import { Controller, useForm } from "react-hook-form";
+
+// React Query
+import { useMutation } from "@tanstack/react-query";
+import api from "@/utils/api/api";
 
 const RegisterScreen = () => {
     const router = useRouter();
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [error, setError] = useState("");
-    const [ktpPhoto, setKtpPhoto] = useState<any>(null);
+    const { control, handleSubmit, formState: { errors }, setError } = useForm({
+        defaultValues: {
+            name: "",
+            email: "",
+            phone_number: "",
+            id_card_file: null,
+        },
+    });
 
-    const handleRegister = () => {
-        if (!name || !email || !phoneNumber) {
-            setError("All fields are required!");
+    const mutation = useMutation({
+        mutationFn: async (data: { name: string; email: string; phone_number: string; id_card_file: any }) => {
+            const formData = new FormData();
+
+            // Tambahkan data ke FormData
+            formData.append("name", data.name);
+            formData.append("email", data.email);
+            formData.append("phone_number", data.phone_number);
+
+            // Tambahkan file ke FormData
+            if (data.id_card_file) {
+                formData.append("id_card_file", {
+                    uri: data.id_card_file.uri,
+                    name: data.id_card_file.fileName || "id_card.jpg",
+                    type: data.id_card_file.mimeType || "image/jpeg",
+                } as any);
+            }
+
+            return api.post("/accounts/register/", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+        },
+        onSuccess: (res, variables) => {
+            if (res.success) {
+                router.replace(`/otp?back=register&phone=${variables.phone_number}`);
+            } else if (res.error) {
+                Object.keys(res.error).forEach((field) => {
+                    setError(field as keyof typeof errors, {
+                        type: "server",
+                        message: res.error[field][0], // Ambil pesan error pertama
+                    });
+                });
+            } else {
+                Alert.alert("Register Failed", res.message);
+            }
+        },
+        onError: (error: any) => {
+            Alert.alert("Registration Failed", error.message || "An error occurred during registration.");
+        },
+    });
+
+    const handleRegister = (data: { name: string; email: string; phone_number: string; id_card_file: any }) => {
+        if (!data.name || !data.email || !data.phone_number || !data.id_card_file) {
             return;
         }
-        console.log("Registering with:", {
-            name,
-            email,
-            phoneNumber,
-            ktpPhoto,
-        });
-        router.push("/login");
-    };
 
-    const handleImagePicker = async () => {
-        const permissionResult =
-            await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (permissionResult.granted) {
-            const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: false,
-                aspect: [4, 3],
-                quality: 1,
-            });
-
-            if (!result.canceled && result.assets && result.assets.length > 0) {
-                setKtpPhoto(result.assets[0].uri);
-            }
-        } else {
-            alert("Permission to access gallery is required!");
-        }
-    };
-
-    const handleLogin = () => {
-        router.push("/login");
+        mutation.mutate(data);
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-white px-5 pt-16">
-            <Text className="text-5xl font-bold text-[#166953] mb-4">
-                Register
-            </Text>
-            <Text className="text-2xl text-gray-500 mb-10">
-                Create an account to continue!
-            </Text>
-
-            <TextInput
-                className="w-full p-5 text-xl border-2 border-[#166953] rounded-lg bg-white mb-5"
-                placeholder="Input your full name"
-                value={name}
-                onChangeText={setName}
-            />
-
-            <TextInput
-                className="w-full p-5 text-xl border-2 border-[#166953] rounded-lg bg-white mb-5"
-                placeholder="Input your active email"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-            />
-
-            <TouchableOpacity
-                className="w-full p-16 border-2 border-[#166953] bg-white rounded-lg mb-6 flex-row items-center justify-center"
-                onPress={handleImagePicker}
+        <SafeAreaView className="flex-1 bg-white">
+            <KeyboardAwareScrollView
+                enableOnAndroid
+                extraScrollHeight={100}
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 50 }}
             >
-                <MaterialCommunityIcons
-                    name="file-image"
-                    size={28}
-                    color="#166953"
-                />
-                <Text className="text-[#166953] text-lg font-bold ml-4">
-                    {ktpPhoto
-                        ? "KTP Photo Selected"
-                        : "Select KTP Photo (Optional)"}
-                </Text>
-            </TouchableOpacity>
-
-            <TextInput
-                className="w-full p-5 text-xl border-2 border-[#166953] rounded-lg bg-white mb-5"
-                placeholder="+62 Input your phone number"
-                value={phoneNumber}
-                onChangeText={setPhoneNumber}
-                keyboardType="phone-pad"
-            />
-
-            {error ? (
-                <Text className="text-red-500 text-lg mb-4">{error}</Text>
-            ) : null}
-
-            <TouchableOpacity
-                className="w-full bg-[#166953] p-6 rounded-lg items-center mb-5"
-                onPress={handleRegister}
-            >
-                <Text className="text-white text-2xl font-bold">Register</Text>
-            </TouchableOpacity>
-
-            <View className="flex-row justify-center mt-8">
-                <Text className="text-xl text-gray-500">
-                    Already have an account?{" "}
-                </Text>
-                <TouchableOpacity onPress={handleLogin}>
-                    <Text className="text-xl text-[#166953] underline">
-                        Log In
-                    </Text>
+                <TouchableOpacity className="mb-3" onPress={() => router.back()}>
+                    <BackIcons width={24} height={24} color={"#1F1F1F"} />
                 </TouchableOpacity>
-            </View>
+                <Text className="text-4xl font-bold text-primary">
+                    Register
+                </Text>
+                <Text className="text-xl text-text-secondary mt-3" style={{ fontWeight: 500 }}>
+                    Create an account to continue!
+                </Text>
+
+                {/* Name Input */}
+                <View className="mt-8">
+                    <Controller
+                        control={control}
+                        name="name"
+                        rules={{ required: "Name is required" }}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <>
+                                <CustomTextInput
+                                    value={value}
+                                    label="Name"
+                                    error={!!error}
+                                    placeholder="Input your full name"
+                                    onChangeText={onChange}
+                                />
+                            </>
+                        )}
+                    />
+                </View>
+
+                {/* Email Input */}
+                <View className="my-4">
+                    <Controller
+                        control={control}
+                        name="email"
+                        rules={{
+                            required: true,
+                            pattern: {
+                                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                message: "Invalid email format",
+                            },
+                        }}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <>
+                                <CustomTextInput
+                                    value={value}
+                                    label="Email"
+                                    type="email-address"
+                                    error={!!error}
+                                    placeholder="Input your active email"
+                                    onChangeText={onChange}
+                                />
+                            </>
+                        )}
+                    />
+                </View>
+
+                {/* KTP Photo Input */}
+                <View>
+                    <Controller
+                        control={control}
+                        name="id_card_file"
+                        rules={{ required: "KTP photo is required" }}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <>
+                                <ImagePickerInput
+                                    value={value}
+                                    onChange={(image: ImagePicker.ImagePickerAsset) => onChange(image)}
+                                    label="KTP Photo (Max 2Mb)"
+                                    error={!!error}
+                                    placeholder="Select file in your gallery ID card photo"
+                                />
+                                {error && (
+                                    <Text className="text-red-500 mt-1">
+                                        {error.message}
+                                    </Text>
+                                )}
+                            </>
+                        )}
+                    />
+                </View>
+
+                {/* Phone Number Input */}
+                <View className="my-4">
+                    <Controller
+                        control={control}
+                        name="phone_number"
+                        rules={{ required: "Phone number is required" }}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <>
+                                <Text className={`mb-2 text-lg text-black`}>Phone Number</Text>
+                                <PhoneInput
+                                    value={value}
+                                    className="px-[20px]"
+                                    error={!!error}
+                                    onChangeText={onChange}
+                                />
+                            </>
+                        )}
+                    />
+                </View>
+
+                {/* Register Button */}
+                <View>
+                    <CustomButton
+                        title="Register"
+                        onPress={handleSubmit(handleRegister)}
+                        className="py-[13px]"
+                    />
+                </View>
+
+                {/* Footer */}
+                <View className="flex-row justify-center mt-8 mb-8">
+                    <Text className="text-xl text-text-secondary" style={{ fontWeight: 500 }}>
+                        Already have an account?{" "}
+                    </Text>
+                    <TouchableOpacity onPress={() => { router.push("/login"); }}>
+                        <Text className={`text-xl text-primary underline`} style={{ fontWeight: 500 }}>
+                            Log In
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </KeyboardAwareScrollView>
         </SafeAreaView>
     );
 };

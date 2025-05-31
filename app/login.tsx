@@ -2,24 +2,58 @@ import React, { useState } from "react";
 import {
     View,
     Text,
-    TextInput,
     TouchableOpacity,
     SafeAreaView,
+    Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
+import PhoneInput from "@/components/ui/component-globals/input-phone";
+import CustomButton from "@/components/ui/component-globals/button-primary";
+import { useForm, Controller } from 'react-hook-form';
+import { useMutation } from "@tanstack/react-query";
+import api from "@/utils/api/api";
 
 const LoginScreen = () => {
     const router = useRouter();
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [error, setError] = useState("");
+    const { control, handleSubmit, formState: { errors }, setError } = useForm({
+        defaultValues: {
+            phone_number: "",
+        },
+    });
 
-    const handleLogin = () => {
-        if (!phoneNumber) {
-            setError("Phone number is required!");
+    const mutation = useMutation({
+        mutationFn: async (data: { phone_number: string }) => {
+            //  API call for login
+            
+            return api.post("/accounts/login/", { phone_number: data.phone_number })
+        },
+
+        onSuccess: (res, variables) => {
+            if (res.success) {
+                router.replace(`/otp?back=login&phone=${variables.phone_number}`);
+            } else if (res.error) {
+                Object.keys(res.error).forEach((field) => {
+                    setError(field as keyof typeof errors, {
+                        type: "server",
+                        message: res.error[field][0], // Ambil pesan error pertama
+                    });
+                });
+            } else{
+                Alert.alert("Login Failed", res.message || "An error occurred");
+            }
+        },
+
+        onError: (error) => {
+            Alert.alert("Login Failed", error.message);
+        },
+    })
+
+    const handleLogin = (data: { phone_number: string }) => {
+        if (!data.phone_number) {
             return;
         }
-        console.log("Logging in with:", phoneNumber);
-        router.replace("/(tabs)/sosmed");
+
+        mutation.mutate(data);
     };
 
     const handleRegister = () => {
@@ -27,47 +61,58 @@ const LoginScreen = () => {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-white px-5 pt-36">
+        <SafeAreaView className="flex-1 bg-white px-5 pt-[65px]">
             {/* Header */}
-            <View className="flex-col mb-10 items-start">
-                <Text className="text-5xl font-bold text-[#166953]">
+            <View className="flex-col items-start">
+                <Text className="text-4xl font-bold text-primary">
                     Welcome
                 </Text>
-                <Text className="text-5xl font-bold text-black">Back!</Text>
+                <Text className="text-4xl font-bold text-text-primary">Back!</Text>
             </View>
 
-            <Text className="text-2xl text-gray-500 mb-10">
+            <Text className="text-xl text-text-secondary mb-10 mt-5" style={{ fontWeight: 500 }}>
                 Log In with registered phone number!
             </Text>
 
             {/* Input Field */}
-            <TextInput
-                className="w-full p-5 text-xl border-2 border-[#166953] rounded-lg bg-white mb-5"
-                placeholder="+62 Input your phone number"
-                keyboardType="phone-pad"
-                value={phoneNumber}
-                onChangeText={setPhoneNumber}
-            />
+            <View>
+                <Text className="mb-2 text-lg text-black" style={{ fontWeight: 500 }}>
+                    Phone Number
+                </Text>
 
-            {error ? (
-                <Text className="text-red-500 text-xl mb-5">{error}</Text>
-            ) : null}
+                <Controller
+                    control={control}
+                    name="phone_number"
+                    rules={{ required: "Phone number is required" }}
+                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                        <>
+                            <PhoneInput
+                                value={value}
+                                onChangeText={onChange}
+                                error={!!error}
+                                className="px-[20px]"
+                            />
+                        </>
+                    )}
+                />
+            </View>
 
             {/* Login Button */}
-            <TouchableOpacity
-                className="w-full bg-[#166953] p-6 rounded-lg items-center mb-5"
-                onPress={handleLogin}
-            >
-                <Text className="text-white text-2xl font-bold">Login</Text>
-            </TouchableOpacity>
+            <View className="mt-10">
+                <CustomButton
+                    title="Login"
+                    onPress={handleSubmit(handleLogin)}
+                    className="py-[13px]"
+                />
+            </View>
 
             {/* Footer */}
             <View className="flex-row justify-center mt-10">
-                <Text className="text-xl text-gray-500">
+                <Text className="text-xl text-text-secondary">
                     Don't have an account?{" "}
                 </Text>
                 <TouchableOpacity onPress={handleRegister}>
-                    <Text className="text-xl text-[#166953] underline">
+                    <Text className="text-xl text-primary underline">
                         Register
                     </Text>
                 </TouchableOpacity>
