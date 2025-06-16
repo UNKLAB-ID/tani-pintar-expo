@@ -8,23 +8,30 @@
       content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1.00001,viewport-fit=cover"
     />
     <title>Tani Pintar</title>
-    <style>
-      body {
+    <style>      body {
         margin: 0;
         padding: 0;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
       
       @media screen and (min-width: 768px) {
         body {
+          background-color: #f5f5f5;
           display: flex;
           justify-content: center;
+          padding: 20px 0;
         }
 
         #root {
           max-width: 414px;
           width: 100%;
-          min-height: 100vh;
+          min-height: calc(100vh - 40px);
+          background-color: #ffffff;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+          border-radius: 8px;
+          overflow: hidden;
         }
       }
     </style>
