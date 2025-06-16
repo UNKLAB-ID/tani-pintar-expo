@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, Image } from "react-native";
+import React from 'react';
+import { View, Text, Image } from 'react-native';
 
 type Props = {
   image: any;
@@ -23,7 +23,7 @@ export default function OtherProductCard({
         resizeMode="contain"
       />
       <Text className="text-[12px] mt-2">
-        {name?.length > 15 ? name.slice(0, 15) + "..." : name || "Tanpa Nama"}
+        {name?.length > 15 ? name.slice(0, 15) + '...' : name || 'Tanpa Nama'}
       </Text>
       <View
         className="flex-row items-center justify-start mt-1"
@@ -31,17 +31,17 @@ export default function OtherProductCard({
       >
         <Text className="text-[16px] text-black font-semibold">
           {(() => {
-            if (!price) return "";
+            if (!price) return '';
 
-            const numberOnly = price.replace(/[^0-9]/g, "");
+            const numberOnly = price.replace(/[^0-9]/g, '');
             const numericValue = parseInt(numberOnly);
 
-            if (isNaN(numericValue)) return "";
+            if (isNaN(numericValue)) return '';
 
             if (numericValue < 100000) {
-              return "Rp " + numberOnly.slice(0, 2) + ". ...";
+              return 'Rp ' + numberOnly.slice(0, 2) + '. ...';
             } else {
-              return "Rp " + numberOnly.slice(0, 3) + "...";
+              return 'Rp ' + numberOnly.slice(0, 3) + '...';
             }
           })()}
         </Text>
@@ -49,7 +49,7 @@ export default function OtherProductCard({
         <View
           className="rounded-full items-center justify-center"
           style={{
-            backgroundColor: "#FF0808",
+            backgroundColor: '#FF0808',
             width: 49,
             height: 24,
             paddingHorizontal: 8,

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState } from 'react';
 import {
   View,
   SafeAreaView,
@@ -10,37 +10,37 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   FlatList,
-} from "react-native";
+} from 'react-native';
 
-import CartIcons from "@/assets/icons/e-commerce/cart-icons";
-import BackIcons from "@/assets/icons/global/back-icons";
-import Share2Icons from "@/assets/icons/e-commerce/share-detail-icons";
-import MenuVerticalIcons from "@/assets/icons/e-commerce/menu-dots-vertikal-icons";
-import ProductDetailCard from "@/components/ui/e-commerce/detail/card-product-detail";
-import { router } from "expo-router";
-import ProductSpecifications from "@/components/ui/e-commerce/detail/product-specifications";
-import ProductDescription from "@/components/ui/e-commerce/detail/product-description";
-import StoreInfo from "@/components/ui/e-commerce/detail/store-info";
-import OtherProductCard from "@/components/ui/e-commerce/detail/card-other-product";
-import ButtonPlusPrimaryIcons from "@/assets/icons/e-commerce/button-plus-primary-icons";
-import MessageIcons from "@/assets/icons/global/message-icons";
+import CartIcons from '@/assets/icons/e-commerce/cart-icons';
+import BackIcons from '@/assets/icons/global/back-icons';
+import Share2Icons from '@/assets/icons/e-commerce/share-detail-icons';
+import MenuVerticalIcons from '@/assets/icons/e-commerce/menu-dots-vertikal-icons';
+import ProductDetailCard from '@/components/ui/e-commerce/detail/card-product-detail';
+import { router } from 'expo-router';
+import ProductSpecifications from '@/components/ui/e-commerce/detail/product-specifications';
+import ProductDescription from '@/components/ui/e-commerce/detail/product-description';
+import StoreInfo from '@/components/ui/e-commerce/detail/store-info';
+import OtherProductCard from '@/components/ui/e-commerce/detail/card-other-product';
+import ButtonPlusPrimaryIcons from '@/assets/icons/e-commerce/button-plus-primary-icons';
+import MessageIcons from '@/assets/icons/global/message-icons';
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
 const imageProduct = [
-  { id: 1, image: require("@/assets/images/trash/image25.png") },
-  { id: 2, image: require("@/assets/images/trash/bottle.png") },
-  { id: 3, image: require("@/assets/images/trash/Banner-Promotion.png") },
+  { id: 1, image: require('@/assets/images/trash/image25.png') },
+  { id: 2, image: require('@/assets/images/trash/bottle.png') },
+  { id: 3, image: require('@/assets/images/trash/Banner-Promotion.png') },
 ];
 
 const ProductSpesifikasi = {
-  name: "Sprayer 2-in-1",
+  name: 'Sprayer 2-in-1',
   specifications: {
-    brand: "H&L",
-    category: "Other Garden Supplies",
+    brand: 'H&L',
+    category: 'Other Garden Supplies',
 
-    function: "Spray Machine",
-    dimensions: "30×30×30",
-    weight: "7000",
+    function: 'Spray Machine',
+    dimensions: '30×30×30',
+    weight: '7000',
   },
 };
 
@@ -64,7 +64,7 @@ Konsultasikan kebutuhan alat teknik anda di SOSMED kami untuk mengetahui produk 
 };
 
 const product = {
-  name: "Alat Penyemprot Hama H&L – Alat penyemprot listrik manual 2 in 1 berkapasitas 16 liter",
+  name: 'Alat Penyemprot Hama H&L – Alat penyemprot listrik manual 2 in 1 berkapasitas 16 liter',
   price: 765000,
   discount: 15,
   originalPrice: 900000,
@@ -75,41 +75,41 @@ const product = {
 };
 
 const toko = {
-  name: "H&L Official",
-  location: "Kota Tangerang",
+  name: 'H&L Official',
+  location: 'Kota Tangerang',
   rating: 4.6,
   totalReview: 500,
-  image: require("@/assets/images/trash/bottle.png"),
+  image: require('@/assets/images/trash/bottle.png'),
 };
 
 export const otherProducts = [
   {
-    id: "1",
-    image: require("@/assets/images/trash/image25.png"),
-    name: "H&L Semprotan S...",
-    price: "Rp36.000",
-    discount: "20%",
+    id: '1',
+    image: require('@/assets/images/trash/image25.png'),
+    name: 'H&L Semprotan S...',
+    price: 'Rp36.000',
+    discount: '20%',
   },
   {
-    id: "2",
-    image: require("@/assets/images/trash/bottle.png"),
-    name: "Electric Sprayer...",
-    price: "Rp250.000",
-    discount: "17%",
+    id: '2',
+    image: require('@/assets/images/trash/bottle.png'),
+    name: 'Electric Sprayer...',
+    price: 'Rp250.000',
+    discount: '17%',
   },
   {
-    id: "3",
-    image: require("@/assets/images/trash/Banner-Promotion.png"),
-    name: "Sprayer Elektrik...",
-    price: "Rp480.000",
-    discount: "15%",
+    id: '3',
+    image: require('@/assets/images/trash/Banner-Promotion.png'),
+    name: 'Sprayer Elektrik...',
+    price: 'Rp480.000',
+    discount: '15%',
   },
   {
-    id: "5",
-    image: require("@/assets/images/trash/Banner-Promotion.png"),
-    name: "Sprayer Elektrik...",
-    price: "Rp4.180.000",
-    discount: "15%",
+    id: '5',
+    image: require('@/assets/images/trash/Banner-Promotion.png'),
+    name: 'Sprayer Elektrik...',
+    price: 'Rp4.180.000',
+    discount: '15%',
   },
 ];
 
@@ -146,7 +146,7 @@ export default function ProductDetailScreen() {
   };
 
   const handleBack = () => {
-    router.push("/(tabs)/ecommerce");
+    router.push('/(tabs)/ecommerce');
   };
 
   return (
@@ -221,7 +221,7 @@ export default function ProductDetailScreen() {
             </TouchableOpacity>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {otherProducts.map((item) => (
+            {otherProducts.map(item => (
               <OtherProductCard
                 key={item.id}
                 image={item.image}
@@ -234,7 +234,7 @@ export default function ProductDetailScreen() {
           <View className="mt-4 flex-row space-x-3">
             <TouchableOpacity className="border border-[#169953] w-[40px] h-[40px] mr-2 ml-3 rounded-2xl flex-row justify-center items-center py-2">
               <View>
-                <MessageIcons width={18} height={18} color={"#169953"} />
+                <MessageIcons width={18} height={18} color={'#169953'} />
               </View>
             </TouchableOpacity>
             <TouchableOpacity className="flex-1 w-[146px] h-[40px] border border-[#169953] rounded-2xl flex-row justify-center items-center py-2">

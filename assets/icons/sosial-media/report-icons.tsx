@@ -1,5 +1,5 @@
-import * as React from "react"
-import Svg, { SvgProps, Path } from "react-native-svg"
+import * as React from 'react';
+import Svg, { SvgProps, Path } from 'react-native-svg';
 const ReportIcons = (props: SvgProps) => (
   <Svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
     <Path
@@ -11,5 +11,5 @@ const ReportIcons = (props: SvgProps) => (
       d="M11.917 4.583h-1.834v9.167h1.834V4.584ZM11.917 15.584h-1.834v1.833h1.834v-1.834Z"
     />
   </Svg>
-)
-export default ReportIcons
+);
+export default ReportIcons;

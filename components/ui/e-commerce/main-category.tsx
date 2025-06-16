@@ -1,6 +1,6 @@
-import React from "react";
-import { View, Text } from "react-native";
-import TopUpIcons from "@/assets/icons/e-commerce/topup-icons";
+import React from 'react';
+import { View, Text } from 'react-native';
+import TopUpIcons from '@/assets/icons/e-commerce/topup-icons';
 
 const iconMap: Record<string, React.FC<{ width: number; height: number }>> = {
   TopUpIcons,
@@ -20,7 +20,7 @@ const MainCategoryCard: React.FC<MainCategoryCardProps> = ({ item }) => {
     <View className="items-center flex-1">
       <View
         className="p-4 rounded-full mb-1"
-        style={{ backgroundColor: "#f9f9f9" }}
+        style={{ backgroundColor: '#f9f9f9' }}
       >
         <IconComponent width={28} height={28} />
       </View>

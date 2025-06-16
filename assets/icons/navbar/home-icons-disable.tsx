@@ -1,5 +1,5 @@
-import * as React from "react";
-import Svg, { SvgProps, G, Path, Defs, ClipPath } from "react-native-svg";
+import * as React from 'react';
+import Svg, { SvgProps, G, Path, Defs, ClipPath } from 'react-native-svg';
 const HomeIcons = (props: SvgProps) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
