@@ -1,5 +1,7 @@
 # **TaniVerse Mobile App 🌱🚀**
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9da42ce5-9d21-409a-abf4-04f0e4be21c0/deploy-status)](https://app.netlify.com/projects/tani-pintar/deploys) [![Lint](https://github.com/UNKLAB-ID/tani-pintar-expo/actions/workflows/lint.yml/badge.svg)](https://github.com/UNKLAB-ID/tani-pintar-expo/actions/workflows/lint.yml)
+
 **TaniVerse** is a digital agriculture platform designed to empower farmers by connecting them to global markets and enhancing productivity through cutting-edge technology. Built with **Expo** and leveraging **AI, IoT, and e-commerce**, TaniVerse provides farmers with real-time market insights, smart farming tools, and seamless digital transactions to modernize agriculture and boost efficiency.
 
 ## **🌟 Key Features**
