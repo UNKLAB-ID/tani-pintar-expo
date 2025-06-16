@@ -3,6 +3,7 @@ import axios, {
   InternalAxiosRequestConfig,
   AxiosResponse,
 } from 'axios';
+import { crossPlatformStorage } from '@/utils/storage/crossPlatformStorage';
 
 interface ApiResponse<T = any> {
   success: boolean;
@@ -18,21 +19,106 @@ const API = axios.create({
   headers: {},
 });
 
-// Interceptor (misalnya untuk token)
+// Token management
+const TOKEN_KEY = 'access_token';
+const REFRESH_TOKEN_KEY = 'refresh_token';
+
+const getAccessToken = async (): Promise<string | null> => {
+  try {
+    const isStorageAvailable = await crossPlatformStorage.isAvailable();
+    if (!isStorageAvailable) {
+      console.warn('Storage is not available');
+      return null;
+    }
+    return await crossPlatformStorage.getItem(TOKEN_KEY);
+  } catch (error) {
+    console.error('Error getting access token:', error);
+    return null;
+  }
+};
+
+const getRefreshToken = async (): Promise<string | null> => {
+  try {
+    return await crossPlatformStorage.getItem(REFRESH_TOKEN_KEY);
+  } catch (error) {
+    console.error('Error getting refresh token:', error);
+    return null;
+  }
+};
+
+const setTokens = async (accessToken: string, refreshToken: string): Promise<void> => {
+  try {
+    await crossPlatformStorage.setItem(TOKEN_KEY, accessToken);
+    await crossPlatformStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+  } catch (error) {
+    console.error('Error setting tokens:', error);
+  }
+};
+
+const clearTokens = async (): Promise<void> => {
+  try {
+    await crossPlatformStorage.deleteItem(TOKEN_KEY);
+    await crossPlatformStorage.deleteItem(REFRESH_TOKEN_KEY);
+  } catch (error) {
+    console.error('Error clearing tokens:', error);
+  }
+};
+
+const refreshAccessToken = async (): Promise<string | null> => {
+  try {
+    const refreshToken = await getRefreshToken();
+    if (!refreshToken) return null;
+
+    const response = await axios.post(
+      `${process.env.EXPO_PUBLIC_API_URL}/accounts/refresh-token/`,
+      { refresh: refreshToken }
+    );    if (response.data?.access) {
+      await crossPlatformStorage.setItem(TOKEN_KEY, response.data.access);
+      return response.data.access;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error refreshing token:', error);
+    await clearTokens();
+    return null;
+  }
+};
+
+// Request interceptor to add token
 API.interceptors.request.use(
   async (
     config: InternalAxiosRequestConfig
   ): Promise<InternalAxiosRequestConfig> => {
-    // const token = await AsyncStorage.getItem('token');
-    // if (token) {
-    //   config.headers = {
-    //     ...config.headers,
-    //     Authorization: `Bearer ${token}`,
-    //   };
-    // }
+    const token = await getAccessToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error: AxiosError) => Promise.reject(error)
+);
+
+// Response interceptor to handle token refresh
+API.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const newToken = await refreshAccessToken();
+      if (newToken) {
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return API(originalRequest);
+      } else {
+        // Redirect to login or handle auth failure
+        await clearTokens();
+      }
+    }
+
+    return Promise.reject(error);
+  }
 );
 
 // Response handler
@@ -100,7 +186,6 @@ const api = {
       return handleError(err as AxiosError);
     }
   },
-
   delete: async <T = any>(url: string): Promise<ApiResponse<T>> => {
     try {
       const res = await API.delete<T>(url);
@@ -108,6 +193,14 @@ const api = {
     } catch (err) {
       return handleError(err as AxiosError);
     }
+  },
+
+  // Token management functions
+  auth: {
+    setTokens,
+    clearTokens,
+    getAccessToken,
+    getRefreshToken,
   },
 };
 

@@ -14,7 +14,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import BackIcons from '@/assets/icons/global/back-icons';
 import { useForm, Controller } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
-import api from '@/utils/api/api';
+import { AuthService } from '@/utils/auth/AuthService';
 
 const AuthScreen = () => {
   const { back, phone } = useLocalSearchParams();
@@ -42,22 +42,16 @@ const AuthScreen = () => {
       }
     }
   };
-
   const mutation = useMutation({
     mutationFn: async (data: { code: string }) => {
-      const required = {
-        code: data.code,
-        phone_number: phone,
-      };
-
       if (back === 'register') {
-        return await api.post('/accounts/register/confirm', required);
+        return await AuthService.register(phone as string, data.code);
       } else if (back === 'login') {
-        return await api.post('/accounts/login/confirm', required);
+        return await AuthService.login(phone as string, data.code);
       }
+      throw new Error('Invalid auth type');
     },
-
-    onSuccess: res => {
+    onSuccess: async res => {
       if (res?.success) {
         router.replace('/success-otp');
       } else if (res?.error) {
@@ -68,7 +62,7 @@ const AuthScreen = () => {
           });
         });
       } else {
-        Alert.alert('Register Failed', res?.message);
+        Alert.alert('Authentication Failed', res?.message);
       }
     },
 
