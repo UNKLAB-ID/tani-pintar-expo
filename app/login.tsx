@@ -1,124 +1,129 @@
-import React, { useState } from "react";
+import React from 'react';
 import {
-    View,
-    Text,
-    TouchableOpacity,
-    SafeAreaView,
-    Alert,
-} from "react-native";
-import { useRouter } from "expo-router";
-import PhoneInput from "@/components/ui/component-globals/input-phone";
-import CustomButton from "@/components/ui/component-globals/button-primary";
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  Alert,
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import PhoneInput from '@/components/ui/component-globals/input-phone';
+import CustomButton from '@/components/ui/component-globals/button-primary';
 import { useForm, Controller } from 'react-hook-form';
-import { useMutation } from "@tanstack/react-query";
-import api from "@/utils/api/api";
+import { useMutation } from '@tanstack/react-query';
+import api from '@/utils/api/api';
 
 const LoginScreen = () => {
-    const router = useRouter();
-    const { control, handleSubmit, formState: { errors }, setError } = useForm({
-        defaultValues: {
-            phone_number: "",
-        },
-    });
+  const router = useRouter();
+  const {
+    control,
+    handleSubmit,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    formState: { errors },
+    setError,
+  } = useForm({
+    defaultValues: {
+      phone_number: '',
+    },
+  });
 
-    const mutation = useMutation({
-        mutationFn: async (data: { phone_number: string }) => {
-            //  API call for login
-            
-            return api.post("/accounts/login/", { phone_number: data.phone_number })
-        },
+  const mutation = useMutation({
+    mutationFn: async (data: { phone_number: string }) => {
+      //  API call for login
 
-        onSuccess: (res, variables) => {
-            if (res.success) {
-                router.replace(`/otp?back=login&phone=${variables.phone_number}`);
-            } else if (res.error) {
-                Object.keys(res.error).forEach((field) => {
-                    setError(field as keyof typeof errors, {
-                        type: "server",
-                        message: res.error[field][0], // Ambil pesan error pertama
-                    });
-                });
-            } else{
-                Alert.alert("Login Failed", res.message || "An error occurred");
-            }
-        },
+      return api.post('/accounts/login/', { phone_number: data.phone_number });
+    },
 
-        onError: (error) => {
-            Alert.alert("Login Failed", error.message);
-        },
-    })
+    onSuccess: (res, variables) => {
+      if (res.success) {
+        router.replace(`/otp?back=login&phone=${variables.phone_number}`);
+      } else if (res.error) {
+        Object.keys(res.error).forEach(field => {
+          setError(field as keyof typeof errors, {
+            type: 'server',
+            message: res.error[field][0], // Ambil pesan error pertama
+          });
+        });
+      } else {
+        Alert.alert('Login Failed', res.message || 'An error occurred');
+      }
+    },
 
-    const handleLogin = (data: { phone_number: string }) => {
-        if (!data.phone_number) {
-            return;
-        }
+    onError: error => {
+      Alert.alert('Login Failed', error.message);
+    },
+  });
 
-        mutation.mutate(data);
-    };
+  const handleLogin = (data: { phone_number: string }) => {
+    if (!data.phone_number) {
+      return;
+    }
 
-    const handleRegister = () => {
-        router.push("/register");
-    };
+    mutation.mutate(data);
+  };
 
-    return (
-        <SafeAreaView className="flex-1 bg-white px-5 pt-[65px]">
-            {/* Header */}
-            <View className="flex-col items-start">
-                <Text className="text-4xl font-bold text-primary">
-                    Welcome
-                </Text>
-                <Text className="text-4xl font-bold text-text-primary">Back!</Text>
-            </View>
+  const handleRegister = () => {
+    router.push('/register');
+  };
 
-            <Text className="text-xl text-text-secondary mb-10 mt-5" style={{ fontWeight: 500 }}>
-                Log In with registered phone number!
-            </Text>
+  return (
+    <SafeAreaView className="flex-1 bg-white px-5 pt-[65px]">
+      {/* Header */}
+      <View className="flex-col items-start">
+        <Text className="text-4xl font-bold text-primary">Welcome</Text>
+        <Text className="text-4xl font-bold text-text-primary">Back!</Text>
+      </View>
 
-            {/* Input Field */}
-            <View>
-                <Text className="mb-2 text-lg text-black" style={{ fontWeight: 500 }}>
-                    Phone Number
-                </Text>
+      <Text
+        className="text-xl text-text-secondary mb-10 mt-5"
+        style={{ fontWeight: 500 }}
+      >
+        Log In with registered phone number!
+      </Text>
 
-                <Controller
-                    control={control}
-                    name="phone_number"
-                    rules={{ required: "Phone number is required" }}
-                    render={({ field: { onChange, value }, fieldState: { error } }) => (
-                        <>
-                            <PhoneInput
-                                value={value}
-                                onChangeText={onChange}
-                                error={!!error}
-                                className="px-[20px]"
-                            />
-                        </>
-                    )}
-                />
-            </View>
+      {/* Input Field */}
+      <View>
+        <Text className="mb-2 text-lg text-black" style={{ fontWeight: 500 }}>
+          Phone Number
+        </Text>
 
-            {/* Login Button */}
-            <View className="mt-10">
-                <CustomButton
-                    title="Login"
-                    onPress={handleSubmit(handleLogin)}
-                    className="py-[13px]"
-                />
-            </View>
+        <Controller
+          control={control}
+          name="phone_number"
+          rules={{ required: 'Phone number is required' }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <>
+              <PhoneInput
+                value={value}
+                onChangeText={onChange}
+                error={!!error}
+                className="px-[20px]"
+              />
+            </>
+          )}
+        />
+      </View>
 
-            {/* Footer */}
-            <View className="flex-row justify-center mt-10">
-                <Text className="text-xl text-text-secondary">
-                    Don't have an account?{" "}
-                </Text>
-                <TouchableOpacity onPress={handleRegister}>
-                    <Text className="text-xl text-primary underline">
-                        Register
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        </SafeAreaView>
-    );
+      {/* Login Button */}
+      <View className="mt-10">
+        <CustomButton
+          title="Login"
+          onPress={handleSubmit(handleLogin)}
+          className="py-[13px]"
+        />
+      </View>
+
+      {/* Footer */}
+      <View className="flex-row justify-center mt-10">
+        <Text className="text-xl text-text-secondary">
+          Don&apos;t have an account?{' '}
+        </Text>
+        <TouchableOpacity onPress={handleRegister}>
+          <Text className="text-xl text-primary underline">Register</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
 };
 
 export default LoginScreen;

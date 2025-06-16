@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import React from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 
 interface FlashSaleCardProps {
   image: any;
@@ -69,7 +69,7 @@ const FlashSaleCard: React.FC<FlashSaleCardProps> = ({
         <View
           className="h-full"
           style={{
-            backgroundColor: "#FF3B30",
+            backgroundColor: '#FF3B30',
             borderBottomLeftRadius: 8,
             width: `${soldPercent}%`,
           }}
@@ -77,7 +77,7 @@ const FlashSaleCard: React.FC<FlashSaleCardProps> = ({
         <View
           className="h-full"
           style={{
-            backgroundColor: "#FFA500",
+            backgroundColor: '#FFA500',
             borderBottomRightRadius: 8,
             width: `${remainingPercent}%`,
           }}
@@ -87,8 +87,8 @@ const FlashSaleCard: React.FC<FlashSaleCardProps> = ({
           <Text
             className="absolute text-white text-[12px] font-semibold rounded px-1"
             style={{
-              left: "65%",
-              top: "60%",
+              left: '65%',
+              top: '60%',
               transform: [{ translateX: -70 }, { translateY: -10 }],
             }}
           >
@@ -101,9 +101,9 @@ const FlashSaleCard: React.FC<FlashSaleCardProps> = ({
       <View className="px-[6px] py-[4px]">
         <Text
           className="text-[16px] font-normal text-[#1F1F1F] leading-[16px]"
-          style={{ fontWeight: "400" }}
+          style={{ fontWeight: '400' }}
         >
-          {name.length > 15 ? name.slice(0, 15) + "..." : name}
+          {name.length > 15 ? name.slice(0, 15) + '...' : name}
         </Text>
 
         <Text

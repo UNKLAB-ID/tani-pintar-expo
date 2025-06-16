@@ -1,7 +1,7 @@
-import React from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
-import Location2Icons from "@/assets/icons/e-commerce/locations2-icons";
-import StarIcons from "@/assets/icons/e-commerce/stars-icons";
+import React from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import Location2Icons from '@/assets/icons/e-commerce/locations2-icons';
+import StarIcons from '@/assets/icons/e-commerce/stars-icons';
 
 interface ProductCardProps {
   image: any;
@@ -26,11 +26,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const calculateDiscountPrice = () => {
     if (!discount) return price;
-    const numericPrice = parseFloat(price.replace(/[^\d]/g, ""));
+    const numericPrice = parseFloat(price.replace(/[^\d]/g, ''));
     const numericDiscount = parseFloat(discount);
     const discountedPrice =
       numericPrice - (numericPrice * numericDiscount) / 100;
-    return `Rp ${discountedPrice.toLocaleString("id-ID")}`;
+    return `Rp ${discountedPrice.toLocaleString('id-ID')}`;
   };
 
   return (
@@ -62,7 +62,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           style={{
             left: 0,
             top: 15,
-            backgroundColor: "#EF4444",
+            backgroundColor: '#EF4444',
             borderTopRightRadius: 20,
             borderBottomRightRadius: 20,
           }}
@@ -76,9 +76,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <Text
           numberOfLines={1}
           className="text-[16px] font-medium text-[#1F1F1F]"
-          style={{ fontWeight: "400" }}
+          style={{ fontWeight: '400' }}
         >
-          {name.length > 20 ? name.slice(0, 20) + "..." : name}
+          {name.length > 20 ? name.slice(0, 20) + '...' : name}
         </Text>
 
         {discount ? (
@@ -90,8 +90,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
               className="text-[12px]"
               style={{
                 marginLeft: 8,
-                color: "#9CA3AF",
-                textDecorationLine: "line-through",
+                color: '#9CA3AF',
+                textDecorationLine: 'line-through',
               }}
             >
               {price}

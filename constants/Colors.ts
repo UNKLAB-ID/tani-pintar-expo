@@ -13,9 +13,8 @@ export const Colors = {
     success: '#169953',
     warning: '#ffff00',
   },
-  text:{
+  text: {
     primary: '#1f1f1f',
     secondary: '#AAAAAA',
-
-  }
+  },
 };

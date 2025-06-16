@@ -1,6 +1,6 @@
-import React from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-import BagIcons from "@/assets/icons/e-commerce/bag-icons";
+import React from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import BagIcons from '@/assets/icons/e-commerce/bag-icons';
 
 interface FlashSaleTabCardProps {
   image: any;
@@ -28,11 +28,11 @@ const FlashSaleTabCard: React.FC<FlashSaleTabCardProps> = ({
   // Hitung harga diskon jika ada
   const getDiscountPrice = () => {
     if (!discount) return price;
-    const numericPrice = parseFloat(price.replace(/[^\d]/g, ""));
+    const numericPrice = parseFloat(price.replace(/[^\d]/g, ''));
     const numericDiscount = parseFloat(discount);
     const discountedPrice =
       numericPrice - (numericPrice * numericDiscount) / 100;
-    return `Rp ${discountedPrice.toLocaleString("id-ID")}`;
+    return `Rp ${discountedPrice.toLocaleString('id-ID')}`;
   };
 
   return (
@@ -47,7 +47,7 @@ const FlashSaleTabCard: React.FC<FlashSaleTabCardProps> = ({
         <Image
           source={image}
           resizeMode="cover"
-          style={{ width: 128, height: "100%" }}
+          style={{ width: 128, height: '100%' }}
           className="rounded-md"
         />
         {discount && (
@@ -68,7 +68,7 @@ const FlashSaleTabCard: React.FC<FlashSaleTabCardProps> = ({
       {/* Info Produk */}
       <View className="flex-1 justify-between py-2">
         <Text className="text-[18px] font-semibold text-black mb-5">
-          {name.length > 17 ? name.slice(0, 17) + "..." : name}
+          {name.length > 17 ? name.slice(0, 17) + '...' : name}
         </Text>
 
         {discount ? (
@@ -76,8 +76,8 @@ const FlashSaleTabCard: React.FC<FlashSaleTabCardProps> = ({
             <Text
               className="text-[12px] text-gray-400"
               style={{
-                textDecorationLine: "line-through",
-                color: "#9CA3AF",
+                textDecorationLine: 'line-through',
+                color: '#9CA3AF',
                 marginBottom: 4,
               }}
             >
@@ -101,12 +101,12 @@ const FlashSaleTabCard: React.FC<FlashSaleTabCardProps> = ({
           >
             <View
               className="h-full"
-              style={{ backgroundColor: "#169953", width: `${soldPercent}%` }}
+              style={{ backgroundColor: '#169953', width: `${soldPercent}%` }}
             />
             <View
               className="h-full"
               style={{
-                backgroundColor: "#F3F3F3",
+                backgroundColor: '#F3F3F3',
                 width: `${remainingPercent}%`,
               }}
             />
@@ -114,8 +114,8 @@ const FlashSaleTabCard: React.FC<FlashSaleTabCardProps> = ({
               <Text
                 className="absolute text-black text-[12px] font-semibold rounded px-1"
                 style={{
-                  left: "65%",
-                  top: "60%",
+                  left: '65%',
+                  top: '60%',
                   transform: [{ translateX: -50 }, { translateY: -10 }],
                 }}
               >
@@ -141,10 +141,10 @@ const styles = StyleSheet.create({
   progressBar: {
     width: 134,
     height: 24,
-    flexDirection: "row",
-    overflow: "hidden",
-    backgroundColor: "#ddd",
-    position: "relative",
+    flexDirection: 'row',
+    overflow: 'hidden',
+    backgroundColor: '#ddd',
+    position: 'relative',
     borderRadius: 10,
     marginTop: 4,
   },

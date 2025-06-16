@@ -1,6 +1,6 @@
-import React from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
-import StarIcons from "@/assets/icons/e-commerce/stars-icons";
+import React from 'react';
+import { View, Text, Image } from 'react-native';
+import StarIcons from '@/assets/icons/e-commerce/stars-icons';
 
 type StoreInfoProps = {
   toko: {

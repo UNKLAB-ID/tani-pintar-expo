@@ -1,12 +1,12 @@
-import * as React from "react";
-import Svg, { SvgProps, Circle, Path } from "react-native-svg";
+import * as React from 'react';
+import Svg, { SvgProps, Circle, Path } from 'react-native-svg';
 
 interface SearchIconPrimaryProps extends SvgProps {
   color?: string;
 }
 
 const SearchIconPrimary: React.FC<SearchIconPrimaryProps> = ({
-  color = "#000", // default hitam
+  color = '#000', // default hitam
   ...props
 }) => (
   <Svg

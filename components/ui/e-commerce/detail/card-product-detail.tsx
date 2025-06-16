@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -8,9 +8,9 @@ import {
   useWindowDimensions,
   NativeSyntheticEvent,
   NativeScrollEvent,
-} from "react-native";
-import LoveIcons from "@/assets/icons/global/love-icons";
-import StarIcons from "@/assets/icons/e-commerce/stars-icons";
+} from 'react-native';
+import LoveIcons from '@/assets/icons/global/love-icons';
+import StarIcons from '@/assets/icons/e-commerce/stars-icons';
 
 interface ProductDetailCardProps {
   product: {
@@ -45,7 +45,7 @@ export default function ProductDetailCard({
         <FlatList
           ref={flatListRef}
           data={imageProduct}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={item => item.id.toString()}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
@@ -74,8 +74,8 @@ export default function ProductDetailCard({
               key={index}
               className={`mx-[2px] rounded-full ${
                 index === activeIndex
-                  ? "bg-[#28a745] w-[20px]"
-                  : "bg-[#dcdcdc] w-[8px]"
+                  ? 'bg-[#28a745] w-[20px]'
+                  : 'bg-[#dcdcdc] w-[8px]'
               } h-[8px]`}
             />
           ))}
@@ -87,7 +87,7 @@ export default function ProductDetailCard({
         <View className="flex-row justify-between items-start">
           <View className="flex-1">
             <Text className="text-[24px] font-bold text-black">
-              Rp{product.price.toLocaleString("id-ID")}
+              Rp{product.price.toLocaleString('id-ID')}
             </Text>
             {product.discount && product.originalPrice && (
               <View className="flex-row items-center space-x-2 mt-1">
@@ -97,13 +97,13 @@ export default function ProductDetailCard({
                   </Text>
                 </View>
                 <Text className="text-[14px] text-gray-500 line-through">
-                  Rp{product.originalPrice.toLocaleString("id-ID")}
+                  Rp{product.originalPrice.toLocaleString('id-ID')}
                 </Text>
               </View>
             )}
           </View>
           <TouchableOpacity className="mt-1 ml-2" activeOpacity={0.7}>
-            <LoveIcons width={25} height={24} color={"#C8C8C8"} />
+            <LoveIcons width={25} height={24} color={'#C8C8C8'} />
           </TouchableOpacity>
         </View>
 

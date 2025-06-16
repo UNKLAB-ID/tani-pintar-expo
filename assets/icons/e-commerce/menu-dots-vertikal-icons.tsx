@@ -1,5 +1,5 @@
-import * as React from "react";
-import Svg, { SvgProps, Path } from "react-native-svg";
+import * as React from 'react';
+import Svg, { SvgProps, Path } from 'react-native-svg';
 
 interface IconProps extends SvgProps {
   size?: number;
@@ -8,7 +8,7 @@ interface IconProps extends SvgProps {
 
 const MenuVerticalIcons: React.FC<IconProps> = ({
   size = 24,
-  color = "#7D7D7D",
+  color = '#7D7D7D',
   ...props
 }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>

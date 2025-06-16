@@ -1,6 +1,6 @@
-import React from "react";
-import { View, Text } from "react-native";
-import ReturnBox from "@/assets/icons/e-commerce/return-box";
+import React from 'react';
+import { View, Text } from 'react-native';
+import ReturnBox from '@/assets/icons/e-commerce/return-box';
 
 type SpecificationProps = {
   data: {
