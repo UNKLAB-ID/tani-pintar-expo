@@ -15,6 +15,7 @@ import BackIcons from '@/assets/icons/global/back-icons';
 import { useForm, Controller } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import api from '@/utils/api/api';
+import * as SecureStore from 'expo-secure-store';
 
 const AuthScreen = () => {
   const { back, phone } = useLocalSearchParams();
@@ -57,8 +58,14 @@ const AuthScreen = () => {
       }
     },
 
-    onSuccess: res => {
+    onSuccess: async res => {
+      console.log('Verification response:', res);
       if (res?.success) {
+        // TODO: Update this to better handling in the future
+        // Save the JWT token to secure storage
+        await SecureStore.setItemAsync('access_token', res.data.access);
+        await SecureStore.setItemAsync('refresh_token', res.data.refresh);
+
         router.replace('/success-otp');
       } else if (res?.error) {
         Object.keys(res.error).forEach(field => {
@@ -73,6 +80,7 @@ const AuthScreen = () => {
     },
 
     onError: error => {
+      console.error('Verification error:', error);
       Alert.alert('Verification Failed', error.message);
     },
   });

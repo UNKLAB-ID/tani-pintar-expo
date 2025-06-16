@@ -1,16 +1,31 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, Image } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useProfile } from '@/hooks/useProfile';
 
 const SplashScreen = () => {
   const router = useRouter();
+  const { data: profile, isLoading, isError } = useProfile();
 
   useEffect(() => {
-    setTimeout(() => {
+    const handleNavigation = () => {
+      console.log('profile', profile);
+      // If still loading, wait
+      if (isLoading) return;      // If profile data is available, user is authenticated - go to social media tab
+      if (profile && !isError) {
+        router.replace('/(tabs)/sosmed');
+        return;
+      }
+
+      // If no profile data or error, go to login
       router.replace('/login');
-    }, 2000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    };
+
+    // Add a minimum splash screen display time
+    const timer = setTimeout(handleNavigation, 2000);
+
+    return () => clearTimeout(timer);
+  }, [isLoading, profile, isError, router]);
 
   return (
     <SafeAreaView style={styles.container}>
