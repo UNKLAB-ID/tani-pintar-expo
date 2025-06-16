@@ -14,8 +14,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import BackIcons from '@/assets/icons/global/back-icons';
 import { useForm, Controller } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
-import api from '@/utils/api/api';
-import * as SecureStore from 'expo-secure-store';
+import { AuthService } from '@/utils/auth/AuthService';
 
 const AuthScreen = () => {
   const { back, phone } = useLocalSearchParams();
@@ -43,28 +42,17 @@ const AuthScreen = () => {
       }
     }
   };
-
   const mutation = useMutation({
     mutationFn: async (data: { code: string }) => {
-      const required = {
-        code: data.code,
-        phone_number: phone,
-      };
-
       if (back === 'register') {
-        return await api.post('/accounts/register/confirm', required);
+        return await AuthService.register(phone as string, data.code);
       } else if (back === 'login') {
-        return await api.post('/accounts/login/confirm', required);
+        return await AuthService.login(phone as string, data.code);
       }
+      throw new Error('Invalid auth type');
     },
-
     onSuccess: async res => {
       if (res?.success) {
-        // TODO: Update this to better handling in the future
-        // Save the JWT token to secure storage
-        await SecureStore.setItemAsync('access_token', res.data.access);
-        await SecureStore.setItemAsync('refresh_token', res.data.refresh);
-
         router.replace('/success-otp');
       } else if (res?.error) {
         Object.keys(res.error).forEach(field => {
@@ -74,7 +62,7 @@ const AuthScreen = () => {
           });
         });
       } else {
-        Alert.alert('Register Failed', res?.message);
+        Alert.alert('Authentication Failed', res?.message);
       }
     },
 

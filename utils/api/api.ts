@@ -3,7 +3,7 @@ import axios, {
   InternalAxiosRequestConfig,
   AxiosResponse,
 } from 'axios';
-import * as SecureStore from 'expo-secure-store';
+import { crossPlatformStorage } from '@/utils/storage/crossPlatformStorage';
 
 interface ApiResponse<T = any> {
   success: boolean;
@@ -25,7 +25,12 @@ const REFRESH_TOKEN_KEY = 'refresh_token';
 
 const getAccessToken = async (): Promise<string | null> => {
   try {
-    return await SecureStore.getItemAsync(TOKEN_KEY);
+    const isStorageAvailable = await crossPlatformStorage.isAvailable();
+    if (!isStorageAvailable) {
+      console.warn('Storage is not available');
+      return null;
+    }
+    return await crossPlatformStorage.getItem(TOKEN_KEY);
   } catch (error) {
     console.error('Error getting access token:', error);
     return null;
@@ -34,7 +39,7 @@ const getAccessToken = async (): Promise<string | null> => {
 
 const getRefreshToken = async (): Promise<string | null> => {
   try {
-    return await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+    return await crossPlatformStorage.getItem(REFRESH_TOKEN_KEY);
   } catch (error) {
     console.error('Error getting refresh token:', error);
     return null;
@@ -43,8 +48,8 @@ const getRefreshToken = async (): Promise<string | null> => {
 
 const setTokens = async (accessToken: string, refreshToken: string): Promise<void> => {
   try {
-    await SecureStore.setItemAsync(TOKEN_KEY, accessToken);
-    await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, refreshToken);
+    await crossPlatformStorage.setItem(TOKEN_KEY, accessToken);
+    await crossPlatformStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
   } catch (error) {
     console.error('Error setting tokens:', error);
   }
@@ -52,8 +57,8 @@ const setTokens = async (accessToken: string, refreshToken: string): Promise<voi
 
 const clearTokens = async (): Promise<void> => {
   try {
-    await SecureStore.deleteItemAsync(TOKEN_KEY);
-    await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
+    await crossPlatformStorage.deleteItem(TOKEN_KEY);
+    await crossPlatformStorage.deleteItem(REFRESH_TOKEN_KEY);
   } catch (error) {
     console.error('Error clearing tokens:', error);
   }
@@ -67,10 +72,8 @@ const refreshAccessToken = async (): Promise<string | null> => {
     const response = await axios.post(
       `${process.env.EXPO_PUBLIC_API_URL}/accounts/refresh-token/`,
       { refresh: refreshToken }
-    );
-
-    if (response.data?.access) {
-      await SecureStore.setItemAsync(TOKEN_KEY, response.data.access);
+    );    if (response.data?.access) {
+      await crossPlatformStorage.setItem(TOKEN_KEY, response.data.access);
       return response.data.access;
     }
     return null;
