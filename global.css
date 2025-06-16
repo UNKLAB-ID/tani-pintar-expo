@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Simple web responsive design - mobile-like width with full viewport height */
+@media screen and (min-width: 768px) {
+  body {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  #root {
+    max-width: 414px; /* Mobile-like width */
+    width: 100%;
+    min-height: 100vh; /* Full viewport height */
+  }
+}
