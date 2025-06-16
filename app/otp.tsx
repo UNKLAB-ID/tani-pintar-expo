@@ -59,7 +59,6 @@ const AuthScreen = () => {
     },
 
     onSuccess: async res => {
-      console.log('Verification response:', res);
       if (res?.success) {
         // TODO: Update this to better handling in the future
         // Save the JWT token to secure storage
