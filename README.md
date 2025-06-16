@@ -10,6 +10,12 @@
 🔹 **Digital Distribution Network** – Manage and track product distribution in real time for better supply chain efficiency.  
 🔹 **Community & Partnerships** – Build strong networks with companies, stakeholders, and fellow farmers for mutual growth.
 
+## **📱 Platform Support**
+
+🔹 **Mobile-First Design** – Optimized for iOS and Android devices with native performance.  
+🔹 **Web Responsive** – Web version maintains mobile-like experience with centered layout (max-width: 414px) for consistency across platforms.  
+🔹 **Cross-Platform** – Single codebase runs seamlessly on mobile and web.
+
 ## **📲 Getting Started**
 
 1️⃣ Install dependencies:
@@ -26,9 +32,9 @@ npx expo start
 
 3️⃣ Open the app using:
 
-- Expo Go
+- **Mobile**: Expo Go app or development build
+- **Web**: Browser at http://localhost:8081 (responsive design maintains mobile experience)
 - Android Emulator / iOS Simulator
-- Development Build
 
 ## **🎯 Vision & Mission**
 
