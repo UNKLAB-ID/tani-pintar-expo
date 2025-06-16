@@ -79,7 +79,6 @@ const AuthScreen = () => {
     },
 
     onError: error => {
-      console.error('Verification error:', error);
       Alert.alert('Verification Failed', error.message);
     },
   });
