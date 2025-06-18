@@ -1,5 +1,6 @@
 import LoveIcons from "@/assets/icons/global/love-icons";
 import GarisHorizotal from "@/assets/icons/sosial-media/garis-horizontal-icons";
+import IconsComentars from "@/assets/icons/sosial-media/iconst-button-comentars";
 import api from "@/utils/api/api";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
@@ -9,7 +10,6 @@ import {
     ScrollView,
     TextInput,
     TouchableWithoutFeedback,
-    Keyboard,
     TouchableOpacity,
     Image,
     Modal,
@@ -17,6 +17,7 @@ import {
     View,
     SafeAreaView,
 } from "react-native";
+import moment from "moment";
 
 interface ModalComentarsProps {
     modalCommentVisible: boolean;
@@ -40,22 +41,37 @@ const ModalComentars: React.FC<ModalComentarsProps> = ({
     const { data } = useQuery({
         queryKey: ["postComentarList"],
         queryFn: feactDataComentarList,
+        refetchOnWindowFocus: true
     });
 
     useEffect(() => {
         setDataComentars(data?.results || []);
     }, [data]);
 
-    console.log(data)
-    console.log(id)
+    const emojis = ["😀", "😂", "😍", "😎", "😭", "👍", "🎉", "🔥", "❤️"];
 
+    const formatWaktuSingkat = (tanggal: string) => {
+        const now = moment();
+        const posted = moment(tanggal);
+        const diffInMinutes = now.diff(posted, "minutes");
+        const diffInHours = now.diff(posted, "hours");
+        const diffInDays = now.diff(posted, "days");
+      
+        if (diffInMinutes < 60) {
+          return `${diffInMinutes}m`; // menit
+        } else if (diffInHours < 24) {
+          return `${diffInHours}h`; // jam
+        } else {
+          return `${diffInDays}d`; // hari
+        }
+      };
     return (
         <Modal
             visible={modalCommentVisible}
             transparent
             animationType="slide"
             onRequestClose={() => setModalCommentVisible(false)}
-            // statusBarTranslucent={true}
+        // statusBarTranslucent={true}
         >
             <TouchableWithoutFeedback onPress={() => setModalCommentVisible(false)}>
                 <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.5)", }} />
@@ -95,10 +111,10 @@ const ModalComentars: React.FC<ModalComentarsProps> = ({
                                             style={{ width: 40, height: 40, borderRadius: 20, marginRight: 10 }}
                                         />
                                         <View style={{ flex: 1 }}>
-                                            <Text style={{ fontWeight: "600" }}>Mambaus Baus</Text>
+                                            <Text style={{ fontWeight: "600" }}>{value.user.profile?.full_name}</Text>
                                             <Text style={{ marginTop: 4 }}>{value.content}</Text>
                                             <View style={{ flexDirection: "row", marginTop: 4 }}>
-                                                <Text style={{ color: "#999" }}>30m</Text>
+                                                <Text style={{ color: "#999" }}>{formatWaktuSingkat(value.created_at)}</Text>
                                                 <Text style={{ marginLeft: 8, fontWeight: "bold", color: "#169953" }}>Reply</Text>
                                             </View>
                                         </View>
@@ -117,42 +133,45 @@ const ModalComentars: React.FC<ModalComentarsProps> = ({
                         {/* INPUT KOMENTAR */}
                         <View
                             style={{
-                                flexDirection: "row",
-                                alignItems: "center",
                                 padding: 16,
                                 borderTopWidth: 1,
                                 borderColor: "#ccc",
                                 backgroundColor: "#fff",
                             }}
                         >
-                            <TextInput
-                                value={commentInput}
-                                onChangeText={setCommentInput}
-                                placeholder="Tulis komentar..."
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 16 }}>
+                                {emojis.map((emoji, index) => (
+                                    <TouchableOpacity key={index} onPress={() => setCommentInput(prev => prev + emoji)}>
+                                        <Text style={{ fontSize: 24, marginHorizontal: 8 }}>{emoji}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </ScrollView>
+                            <View
                                 style={{
-                                    flex: 1,
-                                    backgroundColor: "#f0f0f0",
-                                    borderRadius: 20,
-                                    paddingHorizontal: 16,
-                                    paddingVertical: Platform.OS === "ios" ? 12 : 8,
-                                    fontSize: 14,
-                                    marginRight: 10,
-                                }}
-                            />
-                            <TouchableOpacity
-                                onPress={() => {
-                                    console.log("Komentar:", commentInput);
-                                    setCommentInput("");
-                                }}
-                                style={{
-                                    backgroundColor: "#3b82f6",
-                                    paddingHorizontal: 16,
-                                    paddingVertical: 10,
-                                    borderRadius: 20,
+                                    flexDirection: "row",
+                                    alignItems: "center",
                                 }}
                             >
-                                <Text style={{ color: "#fff", fontWeight: "600" }}>Send</Text>
-                            </TouchableOpacity>
+                                <TextInput
+                                    value={commentInput}
+                                    onChangeText={setCommentInput}
+                                    placeholder="Wow, bagus sekali ya bunda-bunda"
+                                    style={{
+                                        flex: 1,
+                                        paddingVertical: Platform.OS === "ios" ? 12 : 8,
+                                        fontSize: 14,
+                                        marginRight: 10,
+                                    }}
+                                />
+                                <TouchableOpacity
+                                    onPress={() => setCommentInput("")}
+                                    className="rounded-full bg-primary items-center justify-center"
+                                    style={{ width: 36, height: 36, }}
+                                >
+                                    <IconsComentars width={16} height={16} />
+                                </TouchableOpacity>
+
+                            </View>
                         </View>
                     </SafeAreaView>
                 </KeyboardAvoidingView>
