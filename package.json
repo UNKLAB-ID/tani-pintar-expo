@@ -75,7 +75,7 @@
     "jest-expo": "^53.0.0",
     "lint-staged": "^16.1.2",
     "prettier": "^3.5.3",
-    "react-test-renderer": "19.0.0",
+    "react-test-renderer": "19.1.0",
     "typescript": "~5.8.3"
   },
   "private": true
