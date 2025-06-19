@@ -46,7 +46,10 @@ const getRefreshToken = async (): Promise<string | null> => {
   }
 };
 
-const setTokens = async (accessToken: string, refreshToken: string): Promise<void> => {
+const setTokens = async (
+  accessToken: string,
+  refreshToken: string
+): Promise<void> => {
   try {
     await crossPlatformStorage.setItem(TOKEN_KEY, accessToken);
     await crossPlatformStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
@@ -72,7 +75,8 @@ const refreshAccessToken = async (): Promise<string | null> => {
     const response = await axios.post(
       `${process.env.EXPO_PUBLIC_API_URL}/accounts/refresh-token/`,
       { refresh: refreshToken }
-    );    if (response.data?.access) {
+    );
+    if (response.data?.access) {
       await crossPlatformStorage.setItem(TOKEN_KEY, response.data.access);
       return response.data.access;
     }
@@ -102,7 +106,9 @@ API.interceptors.request.use(
 API.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
