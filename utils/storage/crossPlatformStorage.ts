@@ -10,9 +10,11 @@ class CrossPlatformStorage {
 
   private isLocalStorageAvailable(): boolean {
     try {
-      return typeof window !== 'undefined' && 
-             window.localStorage !== undefined &&
-             window.localStorage !== null;
+      return (
+        typeof window !== 'undefined' &&
+        window.localStorage !== undefined &&
+        window.localStorage !== null
+      );
     } catch {
       return false;
     }
@@ -77,10 +79,11 @@ class CrossPlatformStorage {
         // Web: Clear app-specific localStorage keys
         if (this.isLocalStorageAvailable()) {
           const keys = Object.keys(localStorage);
-          const appKeys = keys.filter(key => 
-            key.includes('access_token') || 
-            key.includes('refresh_token') ||
-            key.startsWith('tani_pintar_') // Use app prefix if you have one
+          const appKeys = keys.filter(
+            key =>
+              key.includes('access_token') ||
+              key.includes('refresh_token') ||
+              key.startsWith('tani_pintar_') // Use app prefix if you have one
           );
           appKeys.forEach(key => localStorage.removeItem(key));
         }
@@ -102,11 +105,11 @@ class CrossPlatformStorage {
     try {
       const testKey = '__storage_test__';
       const testValue = 'test';
-      
+
       await this.setItem(testKey, testValue);
       const retrieved = await this.getItem(testKey);
       await this.deleteItem(testKey);
-      
+
       return retrieved === testValue;
     } catch {
       return false;

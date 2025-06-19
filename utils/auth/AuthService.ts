@@ -33,7 +33,11 @@ export class AuthService {
         return { success: true, data: response.data };
       }
 
-      return { success: false, message: response.message, error: response.error };
+      return {
+        success: false,
+        message: response.message,
+        error: response.error,
+      };
     } catch (error) {
       console.error('Login error:', error);
       return { success: false, message: 'Login failed', error };
@@ -55,7 +59,11 @@ export class AuthService {
         return { success: true, data: response.data };
       }
 
-      return { success: false, message: response.message, error: response.error };
+      return {
+        success: false,
+        message: response.message,
+        error: response.error,
+      };
     } catch (error) {
       console.error('Register error:', error);
       return { success: false, message: 'Registration failed', error };
@@ -69,7 +77,7 @@ export class AuthService {
     try {
       // Optionally call logout endpoint if your API has one
       // await api.post('/accounts/logout/');
-      
+
       await api.auth.clearTokens();
     } catch (error) {
       console.error('Logout error:', error);

@@ -3,8 +3,7 @@ import ReportIcons from '@/assets/icons/sosial-media/report-icons';
 import UndoPostIcons from '@/assets/icons/sosial-media/undo-post-icons';
 import { Colors } from '@/constants/Colors';
 import React from 'react';
-import { Image , Text, TouchableOpacity, View } from 'react-native';
-
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 interface ModalHidenPostProps {
   setHidenPost: () => void;

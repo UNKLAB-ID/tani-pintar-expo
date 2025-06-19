@@ -1,5 +1,5 @@
-import * as React from "react"
-import Svg, { SvgProps, Path } from "react-native-svg"
+import * as React from 'react';
+import Svg, { SvgProps, Path } from 'react-native-svg';
 const TagPeopleIcons = (props: SvgProps) => (
   <Svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
     <Path
@@ -7,5 +7,5 @@ const TagPeopleIcons = (props: SvgProps) => (
       d="M20.526 8.284 12.937.88a3 3 0 0 0-2.528-.85L3.521.97a1 1 0 1 0 .272 1.981l6.889-.942c.306-.042.622.063.851.292l7.59 7.405a3.004 3.004 0 0 1 .323 3.847 4.93 4.93 0 0 0-.911-1.3L11.06 4.841a3.019 3.019 0 0 0-2.528-.85l-6.889.941a1 1 0 0 0-.858.881L.02 12.73c-.1.911.214 1.804.864 2.453L8.3 22.535A4.961 4.961 0 0 0 11.834 24h.017a4.965 4.965 0 0 0 3.543-1.487l3.167-3.208a4.967 4.967 0 0 0 1.423-3.388l.577-.576c1.925-1.95 1.914-5.112-.032-7.057l-.003.001ZM5 10a1 1 0 0 1-1-1c.006-1.308 1.994-1.307 2 0a1 1 0 0 1-1 1Z"
     />
   </Svg>
-)
-export default TagPeopleIcons
+);
+export default TagPeopleIcons;

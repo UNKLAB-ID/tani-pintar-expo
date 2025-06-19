@@ -14,9 +14,10 @@ export function useProfile() {
     queryFn: async () => {
       const accessToken = await api.auth.getAccessToken();
       if (!accessToken) throw new Error('No access token found');
-      
+
       const res = await api.get<Profile>('/accounts/profile/');
-      if (!res.success) throw new Error(res.message || 'Failed to fetch profile');
+      if (!res.success)
+        throw new Error(res.message || 'Failed to fetch profile');
       return res.data!;
     },
     retry: (failureCount, error: any) => {

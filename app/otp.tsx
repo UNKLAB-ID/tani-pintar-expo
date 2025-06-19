@@ -1,6 +1,13 @@
 // screens/AuthScreen.tsx
 import React, { useEffect } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, BackHandler, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  BackHandler,
+  Alert,
+} from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import OTPInput from '@/components/ui/component-globals/input-otp';
 import CustomButton from '@/components/ui/component-globals/button-primary';
@@ -46,8 +53,8 @@ const AuthScreen = () => {
       throw new Error('Invalid auth type');
     },
 
-    onSuccess: async(res) => {
-      if (res?.success) { 
+    onSuccess: async res => {
+      if (res?.success) {
         await SecureStore.setItemAsync('access_token', res.data.access);
         router.replace('/success-otp');
       } else if (res?.error) {
