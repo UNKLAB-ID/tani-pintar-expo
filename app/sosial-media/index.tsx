@@ -5,6 +5,7 @@ import InputSearchPrimary from "@/components/ui/component-globals/input-seach-pr
 import CardSosialMedia from "@/components/ui/sosial-media/card-sosial-media";
 import api from "@/utils/api/api";
 import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaView, View, Text, TouchableOpacity, Image, ScrollView, StatusBar } from "react-native";
 
@@ -71,7 +72,7 @@ const SosialMediaIndex = () => {
                             <View className="w-[302px]">
                                 <InputSearchPrimary coloricon="#000" placeholder="Find what you’re looking for..." className="px-[12px] h-[39px]" />
                             </View>
-                            <TouchableOpacity className=""><ButtonPlusIcons /></TouchableOpacity>
+                            <TouchableOpacity onPress={()=> router.push("/sosial-media/create-post-media")}><ButtonPlusIcons /></TouchableOpacity>
                         </View>
                     </View>
                     <View>
