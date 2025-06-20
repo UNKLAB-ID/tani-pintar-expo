@@ -19,7 +19,6 @@ interface CardSosialMediaProps {
 
 const CardSosialMedia: React.FC<CardSosialMediaProps> = ({ data, setData }) => {
   const scrollRef = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalBlock, setModalBlock] = useState(false);
@@ -27,12 +26,20 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({ data, setData }) => {
   const [id, setId] = useState(0);
   const [slugCOment, setSlugComment] = useState('');
   const [index, setIndex] = useState(0);
+  const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
 
-  const handleScroll = (event: any) => {
-    const slide = Math.round(
-      event.nativeEvent.contentOffset.x / containerWidth
-    );
-    setActiveIndex(slide);
+  useEffect(() => {
+    setActiveIndexes(Array(data.length).fill(0));
+  }, [data]);
+
+
+  const handleScroll = (event: any, cardIndex: number) => {
+    const slide = Math.round(event.nativeEvent.contentOffset.x / containerWidth);
+    setActiveIndexes(prev => {
+      const updated = [...prev];
+      updated[cardIndex] = slide;
+      return updated;
+    });
   };
 
   const hidePost = (indexToHide: number, id: number, hiden: boolean) => {
@@ -115,19 +122,22 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({ data, setData }) => {
                       horizontal
                       pagingEnabled
                       showsHorizontalScrollIndicator={false}
-                      onScroll={handleScroll}
+                      onScroll={(e) => handleScroll(e, index)}
                       scrollEventThrottle={16}
                     >
-                      {value.images.map((item: any, index: number) => (
-                        <Image
-                          key={index}
-                          source={{ uri: item.image }}
-                          style={{
-                            borderRadius: 12,
-                            width: containerWidth,
-                          }}
-                        />
-                      ))}
+                      {value.images.map((item: any, index: number) => {
+                        return (
+                          <Image
+                            key={index}
+                            source={{ uri: item.image }}
+                            style={{
+                              borderRadius: 12,
+                              width: containerWidth,
+                              height: containerWidth
+                            }}
+                          />
+                        )
+                      })}
                     </ScrollView>
 
                     {/* Indicator */}
@@ -142,7 +152,7 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({ data, setData }) => {
                       }}
                     >
                       <Text className="text-white text-xs text-center py-1">
-                        {activeIndex + 1}/{value.images.length}
+                        {activeIndexes[index] + 1}/{value.images.length}
                       </Text>
                     </View>
                   </View>
