@@ -39,7 +39,8 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
         }}
         activeOpacity={1}
         onPressOut={() => setModalVisible(false)}
-      >
+      ></TouchableOpacity>
+      <View style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
         <View
           className="px-4"
           style={{
@@ -126,7 +127,7 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
             icon={<NotInterestedIcons width={32} height={32} />}
           />
         </View>
-      </TouchableOpacity>
+      </View>
     </Modal>
   );
 };
