@@ -17,11 +17,17 @@ import {
   Image,
   TextInput,
   ScrollView,
+  Alert,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import ModalAudiencePost from '@/components/ui/sosial-media/modal-audience-post';
+import { useMutation } from '@tanstack/react-query';
+import api from '@/utils/api/api';
 
 const CreatePostMedia = () => {
   const [textInput, setTextInput] = useState<string>('');
+  const [textAdience, setTextAudience] = useState<string>("Public")
+  const [modalAudience, setModalAudience] = useState<boolean>(false)
   const [images, setImages] = useState<any[]>([]);
 
   const pickImages = async (setImages: (images: any[]) => void) => {
@@ -59,6 +65,56 @@ const CreatePostMedia = () => {
     }
   };
 
+  const mutation = useMutation({
+    mutationFn: async () => {
+      try {
+        const formData = new FormData();
+        formData.append('content', textInput);
+
+        images.forEach((image, index) => {
+          const uriParts = image.uri.split('.');
+          const fileType = uriParts[uriParts.length - 1];
+
+          formData.append('images', {
+            uri: image.uri,
+            name: `image_${index}.${fileType}`,
+            type: `image/${fileType}`,
+          } as any);
+        });
+
+        const res = await api.post('/social-media/posts/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        return res.data;
+      } catch (err) {
+        throw err;
+      }
+    },
+
+    onSuccess: (res) => {
+      if (res?.content) {
+        router.replace(`/(tabs)/sosmed`);
+      } else if (res?.error) {
+        Alert.alert('Gagal Posting', res.error || 'Terjadi kesalahan pada server');
+      } else {
+        Alert.alert('Gagal Posting', 'Respon tidak sesuai format yang diharapkan');
+      }
+    },
+
+    onError: (error: any) => {
+      const errorMsg =
+        error?.response?.data?.message ||
+        error?.message ||
+        'Terjadi kesalahan saat mengirim postingan';
+
+      Alert.alert('Error', errorMsg);
+    }
+  });
+
+
   return (
     <SafeAreaView className="flex-1 bg-white mt-10">
       <StatusBar
@@ -89,12 +145,17 @@ const CreatePostMedia = () => {
               style={{
                 height: 36,
                 width: 65,
-                backgroundColor: '#D7FCE8',
+                backgroundColor: (textInput?.trim()?.length > 0 || images?.length > 0) ? '#D7FCE8' : '#F4F4F4',
                 borderRadius: 16,
               }}
+              onPress={() => mutation.mutate()}
+              disabled={!(textInput?.trim()?.length > 0 || images?.length > 0)}
               className="justify-center items-center"
             >
-              <Text className="text-primary font-semibold text-[14px]">
+              <Text
+                className="font-semibold text-[14px]"
+                style={{ color: (textInput?.trim()?.length > 0 || images?.length > 0) ? '#169953' : '#C8C8C8', }}
+              >
                 Post
               </Text>
             </TouchableOpacity>
@@ -109,12 +170,13 @@ const CreatePostMedia = () => {
             <View className="ml-2">
               <Text className="font-semibold text-[14px]">Maman</Text>
               <TouchableOpacity
+                onPress={() => setModalAudience(true)}
                 className="flex-row justify-between items-center bg-[#D7FCE8] px-2 mt-1"
-                style={{ width: 95, height: 25 }}
+                style={{ width: 95, height: 25, borderRadius: 6 }}
               >
                 <FriendsIcons width={12} height={12} />
                 <Text className="text-primary font-semibold text-[12px]">
-                  Friends
+                  {textAdience}
                 </Text>
                 <DownArrowDirectionIcons width={10} height={7} />
               </TouchableOpacity>
@@ -225,6 +287,17 @@ const CreatePostMedia = () => {
           </View>
         </View>
       </View>
+
+      {
+        modalAudience && (
+          <ModalAudiencePost
+            modalAudience={modalAudience}
+            setModalAudience={setModalAudience}
+            setTextAudience={setTextAudience}
+            textAudience={textAdience}
+          />
+        )
+      }
     </SafeAreaView>
   );
 };

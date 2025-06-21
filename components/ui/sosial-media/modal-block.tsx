@@ -4,7 +4,7 @@ import NotificationBlockIcons from '@/assets/icons/sosial-media/notification-blo
 import SettingIcons from '@/assets/icons/sosial-media/setting-icons';
 import CustomButton from '@/components/ui/component-globals/button-primary';
 import React from 'react';
-import { TouchableOpacity, Modal, Text, View, Image } from 'react-native';
+import { TouchableOpacity, Modal, Text, View, Image, StatusBar } from 'react-native';
 
 interface BlockScrinerProps {
   modalBlock: boolean;
@@ -32,13 +32,15 @@ const BlockScriner: React.FC<BlockScrinerProps> = ({
         activeOpacity={1}
         onPressOut={() => setModalBlock(false)}
       >
+      </TouchableOpacity>
+      <View style={{backgroundColor: 'rgba(0,0,0,0.5)',}}>
         <View
           className="py-5 px-4"
           style={{
             backgroundColor: '#fff',
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
-            height: 410,
+            height: 430,
           }}
         >
           <View style={{ alignItems: 'center', marginVertical: 20 }}>
@@ -83,7 +85,7 @@ const BlockScriner: React.FC<BlockScrinerProps> = ({
                 </Text>
               </View>
             </View>
-            <View className="mt-5">
+            <View className="mt-5" style={{ paddingBottom: 50 }}>
               <CustomButton
                 title="Block"
                 className="py-[10px]"
@@ -94,7 +96,7 @@ const BlockScriner: React.FC<BlockScrinerProps> = ({
             </View>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     </Modal>
   );
 };
