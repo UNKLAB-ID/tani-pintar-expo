@@ -1,5 +1,7 @@
 # **TaniVerse Mobile App 🌱🚀**
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9da42ce5-9d21-409a-abf4-04f0e4be21c0/deploy-status)](https://app.netlify.com/projects/tani-pintar/deploys) [![Lint](https://github.com/UNKLAB-ID/tani-pintar-expo/actions/workflows/lint.yml/badge.svg)](https://github.com/UNKLAB-ID/tani-pintar-expo/actions/workflows/lint.yml)
+
 **TaniVerse** is a digital agriculture platform designed to empower farmers by connecting them to global markets and enhancing productivity through cutting-edge technology. Built with **Expo** and leveraging **AI, IoT, and e-commerce**, TaniVerse provides farmers with real-time market insights, smart farming tools, and seamless digital transactions to modernize agriculture and boost efficiency.
 
 ## **🌟 Key Features**
@@ -9,6 +11,12 @@
 🔹 **Real-Time Market Insights** – Stay updated with the latest agricultural news, research, and business opportunities.  
 🔹 **Digital Distribution Network** – Manage and track product distribution in real time for better supply chain efficiency.  
 🔹 **Community & Partnerships** – Build strong networks with companies, stakeholders, and fellow farmers for mutual growth.
+
+## **📱 Platform Support**
+
+🔹 **Mobile-First Design** – Optimized for iOS and Android devices with native performance.  
+🔹 **Web Responsive** – Web version maintains mobile-like experience with centered layout (max-width: 414px) for consistency across platforms.  
+🔹 **Cross-Platform** – Single codebase runs seamlessly on mobile and web.
 
 ## **📲 Getting Started**
 
@@ -26,9 +34,9 @@ npx expo start
 
 3️⃣ Open the app using:
 
-- Expo Go
+- **Mobile**: Expo Go app or development build
+- **Web**: Browser at http://localhost:8081 (responsive design maintains mobile experience)
 - Android Emulator / iOS Simulator
-- Development Build
 
 ## **🎯 Vision & Mission**
 
