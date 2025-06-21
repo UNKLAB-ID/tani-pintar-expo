@@ -26,8 +26,8 @@ import api from '@/utils/api/api';
 
 const CreatePostMedia = () => {
   const [textInput, setTextInput] = useState<string>('');
-  const [textAdience, setTextAudience] = useState<string>("Public")
-  const [modalAudience, setModalAudience] = useState<boolean>(false)
+  const [textAdience, setTextAudience] = useState<string>('Public');
+  const [modalAudience, setModalAudience] = useState<boolean>(false);
   const [images, setImages] = useState<any[]>([]);
 
   const pickImages = async (setImages: (images: any[]) => void) => {
@@ -94,13 +94,19 @@ const CreatePostMedia = () => {
       }
     },
 
-    onSuccess: (res) => {
+    onSuccess: res => {
       if (res?.content) {
         router.replace(`/(tabs)/sosmed`);
       } else if (res?.error) {
-        Alert.alert('Gagal Posting', res.error || 'Terjadi kesalahan pada server');
+        Alert.alert(
+          'Gagal Posting',
+          res.error || 'Terjadi kesalahan pada server'
+        );
       } else {
-        Alert.alert('Gagal Posting', 'Respon tidak sesuai format yang diharapkan');
+        Alert.alert(
+          'Gagal Posting',
+          'Respon tidak sesuai format yang diharapkan'
+        );
       }
     },
 
@@ -111,9 +117,8 @@ const CreatePostMedia = () => {
         'Terjadi kesalahan saat mengirim postingan';
 
       Alert.alert('Error', errorMsg);
-    }
+    },
   });
-
 
   return (
     <SafeAreaView className="flex-1 bg-white mt-10">
@@ -145,7 +150,10 @@ const CreatePostMedia = () => {
               style={{
                 height: 36,
                 width: 65,
-                backgroundColor: (textInput?.trim()?.length > 0 || images?.length > 0) ? '#D7FCE8' : '#F4F4F4',
+                backgroundColor:
+                  textInput?.trim()?.length > 0 || images?.length > 0
+                    ? '#D7FCE8'
+                    : '#F4F4F4',
                 borderRadius: 16,
               }}
               onPress={() => mutation.mutate()}
@@ -154,7 +162,12 @@ const CreatePostMedia = () => {
             >
               <Text
                 className="font-semibold text-[14px]"
-                style={{ color: (textInput?.trim()?.length > 0 || images?.length > 0) ? '#169953' : '#C8C8C8', }}
+                style={{
+                  color:
+                    textInput?.trim()?.length > 0 || images?.length > 0
+                      ? '#169953'
+                      : '#C8C8C8',
+                }}
               >
                 Post
               </Text>
@@ -288,16 +301,14 @@ const CreatePostMedia = () => {
         </View>
       </View>
 
-      {
-        modalAudience && (
-          <ModalAudiencePost
-            modalAudience={modalAudience}
-            setModalAudience={setModalAudience}
-            setTextAudience={setTextAudience}
-            textAudience={textAdience}
-          />
-        )
-      }
+      {modalAudience && (
+        <ModalAudiencePost
+          modalAudience={modalAudience}
+          setModalAudience={setModalAudience}
+          setTextAudience={setTextAudience}
+          textAudience={textAdience}
+        />
+      )}
     </SafeAreaView>
   );
 };

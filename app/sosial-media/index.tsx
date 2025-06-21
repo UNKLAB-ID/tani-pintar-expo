@@ -38,7 +38,7 @@ const SosialMediaIndex = () => {
     data: postsList,
     isLoading,
     error,
-    refetch
+    refetch,
   } = useQuery({
     queryKey: ['postsList'],
     queryFn: fetchPostsList,
@@ -121,7 +121,7 @@ const SosialMediaIndex = () => {
         renderItem={({ item, index }) => (
           <CardSosialMedia
             data={[item]}
-            setData={(updated) => {
+            setData={updated => {
               const newList = [...dataPosts];
               newList[index] = updated[0];
               setDataPosts(newList);
@@ -129,14 +129,14 @@ const SosialMediaIndex = () => {
           />
         )}
         // Beri padding atas sesuai tinggi header
-        contentContainerStyle={{ paddingTop: 120, paddingBottom: 5}}
+        contentContainerStyle={{ paddingTop: 120, paddingBottom: 5 }}
         initialNumToRender={5}
         maxToRenderPerBatch={5}
         windowSize={10}
         removeClippedSubviews
         showsVerticalScrollIndicator={false}
-        refreshing={refreshing}        
-        onRefresh={handleRefresh} 
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
       />
     </SafeAreaView>
   );

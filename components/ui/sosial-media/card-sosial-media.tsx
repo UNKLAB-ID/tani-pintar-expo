@@ -17,7 +17,7 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({ data, setData }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalBlock, setModalBlock] = useState(false);
   const [modalComment, setModalComment] = useState(false);
-  const [id, setId] = useState<string>("");
+  const [id, setId] = useState<string>('');
   const [slugComent, setSlugComment] = useState('');
   const [index, setIndex] = useState(0);
   const [activeIndexes, setActiveIndexes] = useState<number[]>([]);

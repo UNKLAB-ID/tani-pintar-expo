@@ -7,41 +7,41 @@ import PointIcons from '@/assets/icons/sosial-media/point-icons';
 import ShereIcons from '@/assets/icons/sosial-media/shere-icons';
 
 interface UserProfile {
-    full_name: string;
-  }
-  
-  interface User {
-    profile: UserProfile;
-  }
-  
-  interface ImageItem {
-    image: string;
-  }
+  full_name: string;
+}
+
+interface User {
+  profile: UserProfile;
+}
+
+interface ImageItem {
+  image: string;
+}
 
 interface PostItem {
-    id: number;
-    user: User;
-    content: string;
-    slug: string;
-    images: ImageItem[];
-    likes_count: number;
-    comments_count: number;
-    shared_count: number;
-  }
+  id: number;
+  user: User;
+  content: string;
+  slug: string;
+  images: ImageItem[];
+  likes_count: number;
+  comments_count: number;
+  shared_count: number;
+}
 
 interface RenderPostCardProps {
-    item: PostItem;
-    index: number;
-    containerWidth: number;
-    setContainerWidth: (width: number) => void;
-    activeIndexes: number[];
-    setActiveIndexes: React.Dispatch<React.SetStateAction<number[]>>;
-    setId: (id: string) => void;
-    setIndex: (index: number) => void;
-    setModalVisible: (visible: boolean) => void;
-    setSlugComment: (slug: string) => void;
-    setModalComment: (visible: boolean) => void;
-  }
+  item: PostItem;
+  index: number;
+  containerWidth: number;
+  setContainerWidth: (width: number) => void;
+  activeIndexes: number[];
+  setActiveIndexes: React.Dispatch<React.SetStateAction<number[]>>;
+  setId: (id: string) => void;
+  setIndex: (index: number) => void;
+  setModalVisible: (visible: boolean) => void;
+  setSlugComment: (slug: string) => void;
+  setModalComment: (visible: boolean) => void;
+}
 
 const RenderPostCard: React.FC<RenderPostCardProps> = ({
   item,
@@ -54,12 +54,14 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
   setIndex,
   setModalVisible,
   setSlugComment,
-  setModalComment
+  setModalComment,
 }) => {
   const scrollRef = useRef(null);
 
   const handleScroll = (event: any) => {
-    const slide = Math.round(event.nativeEvent.contentOffset.x / containerWidth);
+    const slide = Math.round(
+      event.nativeEvent.contentOffset.x / containerWidth
+    );
     setActiveIndexes((prev: number[]) => {
       const updated = [...prev];
       updated[index] = slide;
@@ -88,7 +90,6 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
         </View>
         <TouchableOpacity
           onPress={() => {
-            console.log("============================>", item.slug)
             setId(item.slug);
             setIndex(index);
             setModalVisible(true);
@@ -127,7 +128,7 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
                 style={{
                   borderRadius: 12,
                   width: containerWidth,
-                  height: containerWidth
+                  height: containerWidth,
                 }}
               />
             ))}
