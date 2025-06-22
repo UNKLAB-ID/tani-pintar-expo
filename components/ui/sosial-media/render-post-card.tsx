@@ -5,6 +5,7 @@ import PointThreeHorizontal from '@/assets/icons/global/point-three-horizontal';
 import KomentarIcons from '@/assets/icons/sosial-media/komentar-icons';
 import PointIcons from '@/assets/icons/sosial-media/point-icons';
 import ShereIcons from '@/assets/icons/sosial-media/shere-icons';
+import { router, useLocalSearchParams } from 'expo-router';
 
 interface UserProfile {
   full_name: string;
@@ -57,6 +58,7 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
   setModalComment,
 }) => {
   const scrollRef = useRef(null);
+  const { query } = useLocalSearchParams();
 
   const handleScroll = (event: any) => {
     const slide = Math.round(
@@ -74,10 +76,14 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
       {/* Header */}
       <View className="flex-row items-center justify-between mb-2">
         <View className="flex-row items-center">
-          <Image
-            source={require('../../../assets/images/Image-success-otp.png')}
-            className="w-[40px] h-[40px] rounded-full"
-          />
+          <TouchableOpacity
+            onPress={() => router.push('/sosial-media/profile-sosial-media')}
+          >
+            <Image
+              source={require('../../../assets/images/Image-success-otp.png')}
+              className="w-[40px] h-[40px] rounded-full"
+            />
+          </TouchableOpacity>
           <View className="ml-3 flex-row items-center">
             <Text className="text-[16px] font-semibold text-text-primary">
               {item.user.profile.full_name.length > 170

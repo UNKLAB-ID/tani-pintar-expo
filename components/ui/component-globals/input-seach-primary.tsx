@@ -15,6 +15,7 @@ interface InputSearchProps
   borderColor?: string;
   coloricon?: string;
   iconPosition?: 'left' | 'right';
+  disable?: boolean;
 }
 
 const InputSearchPrimary: React.FC<InputSearchProps> = ({
@@ -31,6 +32,7 @@ const InputSearchPrimary: React.FC<InputSearchProps> = ({
   borderColor = Colors.color.border,
   coloricon = Colors.color.border,
   iconPosition = 'left',
+  disable = true,
 }) => {
   return (
     <View
@@ -49,6 +51,7 @@ const InputSearchPrimary: React.FC<InputSearchProps> = ({
         placeholderTextColor={colorPlaceholder}
         value={value}
         onChangeText={onChangeText}
+        editable={disable}
       />
       {iconPosition === 'right' && (
         <SearchIconPrimary color={coloricon} style={{ marginLeft: 6 }} />
