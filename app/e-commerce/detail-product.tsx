@@ -11,13 +11,14 @@ import {
   NativeSyntheticEvent,
   FlatList,
 } from "react-native";
+import { router } from "expo-router";
 
 import CartIcons from "@/assets/icons/e-commerce/cart-icons";
 import BackIcons from "@/assets/icons/global/back-icons";
 import Share2Icons from "@/assets/icons/e-commerce/share-detail-icons";
 import MenuVerticalIcons from "@/assets/icons/e-commerce/menu-dots-vertikal-icons";
 import ProductDetailCard from "@/components/ui/e-commerce/detail/card-product-detail";
-import { router } from "expo-router";
+import AddToCartModal from "@/components/ui/e-commerce/detail/modal-detail";
 import ProductSpecifications from "@/components/ui/e-commerce/detail/product-specifications";
 import ProductDescription from "@/components/ui/e-commerce/detail/product-description";
 import StoreInfo from "@/components/ui/e-commerce/detail/store-info";
@@ -26,10 +27,29 @@ import ButtonPlusPrimaryIcons from "@/assets/icons/e-commerce/button-plus-primar
 import MessageIcons from "@/assets/icons/global/message-icons";
 
 const { width } = Dimensions.get("window");
-const imageProduct = [
-  { id: 1, image: require("@/assets/images/trash/image25.png") },
-  { id: 2, image: require("@/assets/images/trash/bottle.png") },
-  { id: 3, image: require("@/assets/images/trash/Banner-Promotion.png") },
+const products = [
+  {
+    id: 1,
+    name: "INSEKTISIDA GRACIA 103 EC - Perlindungan Optimal",
+    price: 765000,
+    discount: 15,
+    originalPrice: 900000,
+    sold: 60,
+    rating: 4.8,
+    totalReview: 30,
+    photoReview: 10,
+    images: [
+      { id: 1, image: require("@/assets/images/trash/image25.png") },
+      { id: 2, image: require("@/assets/images/trash/image18.png") },
+      { id: 3, image: require("@/assets/images/trash/Banner-Promotion.png") },
+    ],
+    variants: [
+      { size: "100 ml", stock: 10 },
+      { size: "200 ml", stock: 5 },
+      { size: "500 ml", stock: 2 },
+    ],
+    defaultVariant: "100 ml",
+  },
 ];
 
 const ProductSpesifikasi = {
@@ -61,17 +81,6 @@ Kegunaan :
 * Sebelum dipakai bisa dicharge karena menggunakan baterai (Automatic), bisa manual dengan diengkol/handle samping.
 * Terbuat dari bahan plastik murni dan tebal. Kualitas tidak perlu diragukan karena produksi pabrikan besar.
 Konsultasikan kebutuhan alat teknik anda di SOSMED kami untuk mengetahui produk baru dan promo nya`,
-};
-
-const product = {
-  name: "Alat Penyemprot Hama H&L – Alat penyemprot listrik manual 2 in 1 berkapasitas 16 liter",
-  price: 765000,
-  discount: 15,
-  originalPrice: 900000,
-  sold: 60,
-  rating: 4.8,
-  totalReview: 30,
-  photoReview: 10,
 };
 
 const toko = {
@@ -113,35 +122,51 @@ export const otherProducts = [
   },
 ];
 
-export default function ProductDetailScreen() {
+const ProductDetailScreen = () => {
   const flatListRef = useRef<FlatList>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [currentIndex, setCurrentIndex] = useState(1);
+  const product = products[0];
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(
+    product.defaultVariant
+  );
+  const [quantity, setQuantity] = useState(1);
 
   const productImagesWithBuffer = [
-    { ...imageProduct[imageProduct.length - 1], id: 999 },
-    ...imageProduct,
-    { ...imageProduct[0], id: 1000 },
-  ];
+    product.images[product.images.length - 1],
+    ...product.images,
+    product.images[0],
+  ].map((img, idx) => ({ ...img, id: idx }));
 
   const onScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetX = e.nativeEvent.contentOffset.x;
-    const width = e.nativeEvent.layoutMeasurement.width;
-    let index = Math.round(offsetX / width);
+    const layoutWidth = e.nativeEvent.layoutMeasurement.width;
+    let index = Math.round(offsetX / layoutWidth);
 
     let realIndex = index - 1;
-    if (index === 0) realIndex = imageProduct.length - 1;
+    if (index === 0) realIndex = product.images.length - 1;
     else if (index === productImagesWithBuffer.length - 1) realIndex = 0;
 
     setActiveIndex(realIndex);
 
-    if (index === 0) {
-      flatListRef.current?.scrollToIndex({
-        index: imageProduct.length,
-        animated: false,
-      });
-    } else if (index === productImagesWithBuffer.length - 1) {
-      flatListRef.current?.scrollToIndex({ index: 1, animated: false });
+    // Handle infinite scroll buffer repositioning
+    if (flatListRef.current) {
+      if (index === 0) {
+        try {
+          flatListRef.current.scrollToIndex({
+            index: product.images.length,
+            animated: false,
+          });
+        } catch {
+          // ignore error out of range
+        }
+      } else if (index === productImagesWithBuffer.length - 1) {
+        try {
+          flatListRef.current.scrollToIndex({ index: 1, animated: false });
+        } catch {
+          // ignore error out of range
+        }
+      }
     }
   };
 
@@ -220,6 +245,7 @@ export default function ProductDetailScreen() {
               </Text>
             </TouchableOpacity>
           </View>
+
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {otherProducts.map((item) => (
               <OtherProductCard
@@ -231,31 +257,59 @@ export default function ProductDetailScreen() {
               />
             ))}
           </ScrollView>
-          <View className="mt-4 flex-row space-x-3">
-            <TouchableOpacity className="border border-[#169953] w-[40px] h-[40px] mr-2 ml-3 rounded-2xl flex-row justify-center items-center py-2">
-              <View>
-                <MessageIcons width={18} height={18} color={"#169953"} />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity className="flex-1 w-[146px] h-[40px] border border-[#169953] rounded-2xl flex-row justify-center items-center py-2">
-              <View className="flex-row items-center ">
-                <View className="mt-3">
-                  <ButtonPlusPrimaryIcons width={24} height={24} />
-                </View>
-                <Text className="text-[#169953] font-semibold text-[14px]">
-                  Add to Cart
-                </Text>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity className="flex-1 bg-[#169953] w-[148px] h-[40px] mr-2 ml-3 rounded-2xl flex-row justify-center items-center py-2">
-              <Text className="text-white font-semibold text-[14px]">
-                Checkout
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </ScrollView>
+
+      <View className="border-t border-gray-200 bg-white px-4 py-3">
+        <View className="mt-4 flex-row space-x-3 ">
+          <TouchableOpacity className="border border-[#169953] w-[40px] h-[40px] mr-2 ml-3 rounded-2xl flex-row justify-center items-center py-2">
+            <View>
+              <MessageIcons width={18} height={18} color={"#169953"} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            className="flex-1 w-[146px] h-[40px] border border-[#169953] rounded-2xl flex-row justify-center items-center py-2"
+          >
+            <View className="flex-row items-center ">
+              <View className="mt-3">
+                <ButtonPlusPrimaryIcons width={24} height={24} />
+              </View>
+              <Text className="text-[#169953] font-semibold text-[14px]">
+                Add to Cart
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity className="flex-1 bg-[#169953] w-[148px] h-[40px] mr-2 ml-3 rounded-2xl flex-row justify-center items-center py-2">
+            <Text className="text-white font-semibold text-[14px]">
+              Checkout
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <AddToCartModal
+        visible={isModalVisible}
+        onClose={() => setModalVisible(false)}
+        onAdd={() => {
+          console.log("Added to cart:", {
+            name: product.name,
+            variant: selectedVariant,
+            quantity,
+          });
+          setModalVisible(false);
+        }}
+        image={product.images[0].image}
+        name={product.name}
+        price={`Rp${product.price.toLocaleString()}`}
+        variants={product.variants}
+        selectedVariant={selectedVariant}
+        setSelectedVariant={setSelectedVariant}
+        quantity={quantity}
+        setQuantity={setQuantity}
+      />
     </SafeAreaView>
   );
-}
+};
+
+export default ProductDetailScreen;

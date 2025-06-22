@@ -14,19 +14,22 @@ import {
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import InputSearchPrimary from "@/components/ui/component-globals/input-seach-primary";
-import MessageIcons from "@/assets/icons/global/message-icons";
-import CartIcons from "@/assets/icons/e-commerce/cart-icons";
-import ArrowRightIcons from "@/assets/icons/e-commerce/arrow-right-icons";
-import FlashSaleCard from "@/components/ui/e-commerce/card-flashsale";
-import ProductCard from "@/components/ui/e-commerce/card-product";
-import BackIcons from "@/assets/icons/global/back-icons";
-import TaniPaysCard from "@/components/ui/e-commerce/card-tanipay";
+
+//ui
 import MainCategoryCard from "@/components/ui/e-commerce/main-category";
 import LocationInfo from "@/components/ui/e-commerce/location-info";
+import InputSearchPrimary from "@/components/ui/component-globals/input-seach-primary";
+import MessageIcons from "@/assets/icons/global/message-icons";
+import FlashSaleCard from "@/components/ui/e-commerce/card-flashsale";
+import ProductCard from "@/components/ui/e-commerce/card-product";
+
+//icons
+import CartIcons from "@/assets/icons/e-commerce/cart-icons";
+import ArrowRightIcons from "@/assets/icons/e-commerce/arrow-right-icons";
 import VoucherIcons from "@/assets/icons/global/voucher-icons";
 import Wallet2Icons from "@/assets/icons/global/wallet2-icons";
 import WalletIcons from "@/assets/icons/global/wallet-icons";
+import LocationIcons from "@/assets/icons/e-commerce/locations-icons";
 
 const { width } = Dimensions.get("window");
 
@@ -48,15 +51,18 @@ const realBanners = [
   },
 ];
 
-const userAddress = {
-  id: 1,
-  label: "Rumah",
-  street: "Jl. Pangeran Diponegoro No. 45",
-  city: "Jakarta Pusat",
-  province: "DKI Jakarta",
-  postalCode: "10110",
-  country: "Indonesia",
-};
+const userAddress = [
+  {
+    id: 1,
+    label: "Rumah",
+    street: "Jl. Pangeran Diponegoro No. 45",
+    city: "Jakarta Pusat",
+    province: "DKI Jakarta",
+    postalCode: "10110",
+    country: "Indonesia",
+  },
+];
+const firstAddress = userAddress.length > 0 ? userAddress[0] : null;
 
 const productData = [
   {
@@ -107,11 +113,6 @@ const productData = [
     location: "jakarta",
   },
 ];
-
-const taniPaysData = {
-  saldo: "Rp20.000",
-  statusPinjam: "Activate Now",
-};
 
 const mainCategoryData = [
   {
@@ -227,7 +228,7 @@ const EcommerceIndex = () => {
 
   return (
     <ScrollView
-      contentContainerStyle={{ paddingBottom: 70, backgroundColor: "white" }}
+      contentContainerStyle={{ paddingBottom: 25, backgroundColor: "white" }}
       showsVerticalScrollIndicator={false}
       bounces={true}
       alwaysBounceVertical={true}
@@ -252,7 +253,30 @@ const EcommerceIndex = () => {
         </View>
 
         {/* Location */}
-        <LocationInfo address={`${userAddress.street}`} />
+        {userAddress.map((item) => (
+          <TouchableOpacity
+            key={`address-${item.id}`}
+            // onPress={onPress}
+            activeOpacity={0.8}
+            className="px-5"
+          >
+            <View className="flex-row items-center justify-between">
+              <View className="flex-row items-center">
+                <LocationIcons width={25} height={25} color="#28a745" />
+                <View className="ml-2 flex-row">
+                  <Text className="text-smfont-bold  text-[#C8C8C8]">
+                    Ship to
+                  </Text>
+                  <Text className="text-sm font-bold text-[#2b2b2b] ml-2">
+                    {item.street},...
+                  </Text>
+                </View>
+              </View>
+              <ArrowRightIcons width={18} height={18} />
+            </View>
+          </TouchableOpacity>
+        ))}
+
         <View className="mt-4 ">
           <FlatList
             ref={flatListRef}
