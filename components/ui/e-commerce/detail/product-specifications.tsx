@@ -25,7 +25,7 @@ export default function ProductSpecifications({ data }: SpecificationProps) {
       </Text>
       <View className="flex-row items-center mt-2">
         <ReturnBox width={20} height={20} />
-        <Text className="text-[14px] ml-1" style={{ color: "#2F8E6E" }}>
+        <Text className="text-[14px] ml-1" style={{ color: '#2F8E6E' }}>
           Free 14 Days Returns (conditional)
         </Text>
       </View>
