@@ -120,20 +120,45 @@ const Reviews = () => {
     const reviewer = user.find(u => u.id === msg.userId);
     const showReply = expandedReplies[msg.id];
     return (
-      <View key={msg.id} className="bg-white px-5 py-4 rounded-md mt-2">
+      <View key={msg.id} className="bg-white px-5  py-4 rounded-md mt-2">
         {/* Header */}
-        <View className="flex-row items-center">
-          <Image
-            source={{ uri: reviewer?.image }}
-            className="w-[32px] h-[32px] rounded-full mr-3"
-          />
-          <View>
-            <Text className="text-[14px] font-semibold">{reviewer?.name}</Text>
-            <Text className="text-[12px] text-[#999999]">
-              {timeAgo(msg.date)}
-            </Text>
+        <View className="flex-row items-center ">
+          <View
+            className="flex-row items-center "
+            style={{
+              height: 36,
+              width: 358,
+              position: 'relative',
+              paddingRight: 40,
+            }}
+          >
+            <Image
+              source={{ uri: reviewer?.image }}
+              className="w-[32px] h-[32px] rounded-full mr-3"
+            />
+            <View className="flex-1">
+              <Text className="text-[14px] font-semibold">
+                {reviewer?.name}
+              </Text>
+              <Text className="text-[12px] text-[#999999]">
+                {timeAgo(msg.date)}
+              </Text>
+            </View>
           </View>
-          <PointThreeHorizontal style={{ marginLeft: 'auto' }} />
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={{
+              width: 40,
+              height: 40,
+              position: 'absolute',
+              left: 330,
+              top: '50%',
+              transform: [{ translateY: -12 }],
+              padding: 8,
+            }}
+          >
+            <PointThreeHorizontal />
+          </TouchableOpacity>
         </View>
 
         {/* Star Rating */}
