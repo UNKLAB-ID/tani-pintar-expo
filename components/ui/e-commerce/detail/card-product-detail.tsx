@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -8,9 +8,10 @@ import {
   useWindowDimensions,
   NativeSyntheticEvent,
   NativeScrollEvent,
-} from "react-native";
-import LoveIcons from "@/assets/icons/global/love-icons";
-import StarIcons from "@/assets/icons/e-commerce/stars-icons";
+} from 'react-native';
+import { router } from 'expo-router';
+import LoveIcons from '@/assets/icons/global/love-icons';
+import StarIcons from '@/assets/icons/e-commerce/stars-icons';
 
 interface ProductImage {
   id: number;
@@ -35,6 +36,7 @@ interface ProductDetailCardProps {
   activeIndex: number;
   flatListRef: React.RefObject<FlatList<any>>;
   onScrollEnd: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
+  imageProduct: ProductImage[];
 }
 
 export default function ProductDetailCard({
@@ -42,6 +44,7 @@ export default function ProductDetailCard({
   activeIndex,
   flatListRef,
   onScrollEnd,
+  imageProduct,
 }: ProductDetailCardProps) {
   const { width } = useWindowDimensions();
 
@@ -51,8 +54,8 @@ export default function ProductDetailCard({
       <View className="bg-[#F0F5EF] w-full h-[335px] items-center">
         <FlatList
           ref={flatListRef}
-          data={product.images}
-          keyExtractor={(item) => item.id.toString()}
+          data={imageProduct}
+          keyExtractor={item => item.id.toString()}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
@@ -67,8 +70,7 @@ export default function ProductDetailCard({
               <TouchableOpacity activeOpacity={0.8} style={{ flex: 1 }}>
                 <Image
                   source={item.image}
-                 
-                  style={{ width: "100%", height: 335 }}
+                  style={{ width: '100%', height: 335 }}
                   resizeMode="cover"
                 />
               </TouchableOpacity>
@@ -76,84 +78,101 @@ export default function ProductDetailCard({
           )}
         />
         {/* Dot Indicator */}
-        
-        <View className="absolute  flex items-center"
+        <View
           style={{
-            
-            bottom: 12,          
-            left: 0,             
-            right: 0,            
-            
+            position: 'absolute',
+            bottom: 12,
+            left: 0,
+            right: 0,
+            alignItems: 'center',
           }}
         >
-          {/* "Pill" yang berisi titik-titik indikator */}
-          <View className="flex-row justify-center bg-white p-1 rounded-full shadow-sm">
-           
+          <View className="flex-row bg-white px-2 py-1 rounded-full">
             {product.images.map((_, index) => (
               <View
                 key={index}
                 className={`mx-[2px] rounded-full ${
                   index === activeIndex
-                    ? "bg-[#28a745] w-[20px]" 
-                    : "bg-[#dcdcdc] w-[8px]" 
+                    ? 'bg-[#28a745] w-[20px]'
+                    : 'bg-[#dcdcdc] w-[8px]'
                 } h-[8px]`}
               />
             ))}
           </View>
         </View>
       </View>
+
       {/* Product Info Section */}
       <View className="px-4 pt-4 pb-4 bg-white">
         <View className="flex-row justify-between items-start">
           <View className="flex-1">
             <Text className="text-[24px] font-bold text-black">
-              Rp{product.price.toLocaleString("id-ID")}
+              Rp{product.price.toLocaleString('id-ID')}
             </Text>
             {product.discount && product.originalPrice && (
               <View className="flex-row items-center space-x-2 mt-1">
-                <View className=" px-2 py-0.5 rounded-full items-center justify-center " 
-                style={{ backgroundColor: "#FF0808", width: 45, height: 24, marginRight: 5 }}>
+                <View
+                  className=" px-2 py-0.5 rounded-full items-center justify-center "
+                  style={{
+                    backgroundColor: '#FF0808',
+                    width: 45,
+                    height: 24,
+                    marginRight: 5,
+                  }}
+                >
                   <Text className="text-white text-[14px] font-semibold">
                     {product.discount}%
                   </Text>
                 </View>
-                <Text className="text-[14px] text-gray-500"
-                  style={{ textDecorationLine: "line-through" }}>
-                  Rp{product.originalPrice.toLocaleString("id-ID")}
+                <Text className="text-[14px] text-gray-500 line-through">
+                  Rp{product.originalPrice.toLocaleString('id-ID')}
                 </Text>
               </View>
             )}
           </View>
           <TouchableOpacity className="mt-1 ml-2" activeOpacity={0.7}>
-            <LoveIcons width={25} height={24} color={"#C8C8C8"} />
+            <LoveIcons width={25} height={24} color={'#C8C8C8'} />
           </TouchableOpacity>
         </View>
 
         {/* Product Title */}
-        <Text className="mt-3  text-black leading-6 font-semibold" style={{ fontSize: 20 }}>
+        <Text
+          className="mt-3  text-black leading-6 font-semibold"
+          style={{ fontSize: 20 }}
+        >
           {product.name}
         </Text>
 
         {/* Rating & Reviews */}
-        <View className="flex-row items-center mt-4  flex-wrap">
+        <View className="flex-row items-center mt-4  ">
           <Text className="text-[14px] text-gray-600">Sold {product.sold}</Text>
 
-          <View className="flex-row w-[153px] h-[36px] items-center border border-gray-300 rounded-full ml-2 px-3 py-1">
+          <TouchableOpacity
+            onPress={() => {
+              router.push('/e-commerce/review');
+            }}
+            className="flex-row w-[153px] h-[36px] items-center border border-gray-300 rounded-full ml-2 px-3 py-1"
+          >
             <StarIcons width={16} height={16} />
             <Text className="ml-1 text-[14px] text-black font-semibold">
               {product.rating}
             </Text>
-            <Text className="ml-2 px-2 text-[14px] text-gray-600">
+            <Text className="ml-2  text-[14px] text-gray-600">
               ({product.totalReview} Reviews)
             </Text>
-          </View>
+          </TouchableOpacity>
 
-          <View className="flex-row w-[144px] h-[36px] items-center border border-gray-300 rounded-full ml-2 px-3 py-1">
+          <TouchableOpacity
+            onPress={() => {
+              router.push('/e-commerce/review');
+            }}
+            className="flex-row w-[144px] h-[36px] items-center border border-gray-300 rounded-full ml-2 px-3 py-1"
+          >
             <Text className="text-[14px] text-black font-semibold">Photo</Text>
             <Text className="ml-1 text-[14px] text-gray-600">
               ({product.photoReview} Reviews)
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     </>

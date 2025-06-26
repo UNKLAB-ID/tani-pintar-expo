@@ -1,4 +1,4 @@
-import EcommerceScreen from "../e-commerce";
+import EcommerceScreen from '../e-commerce';
 
 const Ecommerce = () => {
   return <EcommerceScreen />;

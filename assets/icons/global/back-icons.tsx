@@ -1,12 +1,12 @@
-import * as React from "react";
-import Svg, { SvgProps, Path } from "react-native-svg";
+import * as React from 'react';
+import Svg, { SvgProps, Path } from 'react-native-svg';
 
 type IconProps = SvgProps & {
   size?: number;
   color?: string;
 };
 
-const BackIcons = ({ size = 24, color = "#000", ...props }: IconProps) => (
+const BackIcons = ({ size = 24, color = '#000', ...props }: IconProps) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 18 16"

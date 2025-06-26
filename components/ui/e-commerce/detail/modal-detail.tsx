@@ -1,14 +1,15 @@
-import React from "react";
+import React from 'react';
 import {
-  View,
-  Text,
   Modal,
+  Text,
   TouchableOpacity,
+  View,
   Image,
   ScrollView,
   Dimensions,
-} from "react-native";
-import { X } from "lucide-react-native";
+  Pressable,
+} from 'react-native';
+import { X } from 'lucide-react-native';
 
 interface Variant {
   size: string;
@@ -18,7 +19,6 @@ interface Variant {
 interface AddToCartModalProps {
   visible: boolean;
   onClose: () => void;
-  onAdd: () => void;
   image: any;
   name: string;
   price: string;
@@ -29,12 +29,11 @@ interface AddToCartModalProps {
   setQuantity: (qty: number) => void;
 }
 
-const { height } = Dimensions.get("window");
+const { height } = Dimensions.get('window');
 
 const AddToCartModal: React.FC<AddToCartModalProps> = ({
   visible,
   onClose,
-  onAdd,
   image,
   name,
   price,
@@ -45,90 +44,242 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
   setQuantity,
 }) => {
   return (
-    <Modal visible={visible} transparent animationType="fade">
-      <View className="flex-1">
-        {/* Background overlay */}
-        <TouchableOpacity
-          activeOpacity={1}
-          className="absolute inset-0 bg-black/50"
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent
+      statusBarTranslucent
+      onRequestClose={onClose}
+    >
+      <View style={{ flex: 1 }}>
+        {/* Overlay - hanya menutupi area di atas footer */}
+        <Pressable
           onPress={onClose}
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            paddingBottom: 70,
+          }}
         />
 
-        {/* Floating Modal Above Navbar */}
+        {/* Modal Content */}
         <View
-          className="absolute bottom-[80px] left-4 right-4 bg-white rounded-2xl pt-4 px-4 pb-6 shadow-2xl"
-          style={{ maxHeight: height * 0.65 }}
+          style={{
+            position: 'absolute',
+            bottom: 70,
+            left: 0,
+            right: 0,
+            backgroundColor: '#fff',
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+
+            paddingTop: 20,
+            maxHeight: height * 0.6,
+          }}
         >
           {/* Close Button */}
           <TouchableOpacity
             onPress={onClose}
-            className="absolute right-3 top-3 z-10"
+            style={{ position: 'absolute', top: 10, right: 16, zIndex: 10 }}
           >
-            <X size={20} color="#000" />
+            <X size={24} color="#000" />
           </TouchableOpacity>
 
-          {/* Product Image and Info */}
-          <View className="flex-row items-center mt-2">
-            <Image source={image} className="w-20 h-20 rounded" />
-            <View className="ml-4 flex-1">
-              <Text
-                className="text-black font-semibold text-base"
-                numberOfLines={2}
-              >
-                {name}
-              </Text>
-              <Text className="text-[#169953] text-lg font-bold mt-1">
-                {price}
-              </Text>
-            </View>
-          </View>
-
-          {/* Product Variants */}
-          <Text className="mt-5 font-semibold text-black">Size</Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            className="mt-2"
-          >
-            {variants.map((v, i) => (
-              <TouchableOpacity
-                key={i}
-                onPress={() => setSelectedVariant(v.size)}
-                className={`border px-4 py-2 rounded-xl mr-2 ${
-                  selectedVariant === v.size
-                    ? "border-[#169953] bg-[#e6f5ef]"
-                    : "border-gray-300"
-                }`}
-              >
-                <Text className="text-black text-sm">{v.size}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-
-          {/* Quantity Controls */}
-          <Text className="mt-5 font-semibold text-black">Quantity</Text>
-          <View className="flex-row items-center mt-3 space-x-5">
-            <TouchableOpacity
-              onPress={() => quantity > 1 && setQuantity(quantity - 1)}
-              className="w-10 h-10 rounded-full border border-gray-400 justify-center items-center"
-            >
-              <Text className="text-lg font-bold">-</Text>
-            </TouchableOpacity>
-            <Text className="text-black font-semibold text-lg w-6 text-center">
-              {quantity}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                const maxStock =
-                  variants.find((v) => v.size === selectedVariant)?.stock || 1;
-                if (quantity < maxStock) setQuantity(quantity + 1);
+          {/* ScrollView to handle content overflow */}
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {/* Image & Info */}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 10,
+                paddingHorizontal: 16,
+                paddingBottom: 8,
               }}
-              className="w-10 h-10 rounded-full border border-gray-400 justify-center items-center"
             >
-              <Text className="text-lg font-bold">+</Text>
-            </TouchableOpacity>
-          </View>
+              <Image
+                source={image}
+                style={{ width: 80, height: 80, borderRadius: 8 }}
+              />
+              <View style={{ marginLeft: 12, flex: 1 }}>
+                <Text
+                  style={{ fontWeight: '600', fontSize: 16, color: '#000' }}
+                  numberOfLines={2}
+                >
+                  {name}
+                </Text>
+                <Text
+                  style={{
+                    color: '#169953',
+                    fontSize: 18,
+                    fontWeight: '700',
+                    marginTop: 4,
+                  }}
+                >
+                  {price}
+                </Text>
+                <Text style={{ fontSize: 13, marginTop: 4, color: '#666' }}>
+                  Available:{' '}
+                  {variants.find(v => v.size === selectedVariant)?.stock || 0}
+                </Text>
+              </View>
+            </View>
+
+            {/* Size Section */}
+            <Text
+              style={{
+                fontWeight: '600',
+                fontSize: 14,
+                color: '#000',
+                marginTop: 20,
+                marginLeft: 16,
+              }}
+            >
+              Size
+            </Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={{ marginTop: 12 }}
+            >
+              {variants.map((v, i) => {
+                const isSelected = selectedVariant === v.size;
+                return (
+                  <TouchableOpacity
+                    key={i}
+                    onPress={() => setSelectedVariant(v.size)}
+                    style={{
+                      width: 108,
+                      height: 40,
+                      borderWidth: 1,
+                      borderColor: isSelected ? '#169953' : '#ccc',
+                      backgroundColor: isSelected ? '#E6F5EF' : '#F4F4F4',
+                      borderRadius: 12,
+                      paddingVertical: 8,
+                      paddingHorizontal: 16,
+                      marginLeft: 8,
+                      marginRight: 8,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: isSelected ? '#169953' : '#666',
+                        fontWeight: '600',
+                        marginRight: 8,
+                      }}
+                    >
+                      {v.size}
+                    </Text>
+                    <Image
+                      source={image}
+                      style={{ width: 30, height: 30, borderRadius: 6 }}
+                    />
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+
+            {/* Quantity */}
+            <View
+              style={{
+                borderTopWidth: 1,
+                borderBottomWidth: 1,
+                borderColor: '#C8C8C8',
+                marginTop: 24,
+                paddingTop: 16,
+                paddingBottom: 12,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 4,
+                  marginLeft: 16,
+                  marginRight: 16,
+                }}
+              >
+                <Text style={{ fontWeight: '600', fontSize: 16 }}>
+                  Quantity
+                </Text>
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    backgroundColor: '#F4F4F4',
+                    borderRadius: 8,
+                    paddingHorizontal: 8,
+                    height: 36,
+                    width: 120,
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => quantity > 1 && setQuantity(quantity - 1)}
+                    style={{
+                      width: 32,
+                      height: 32,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 22,
+                        fontWeight: 'bold',
+                        color: '#999',
+                      }}
+                    >
+                      −
+                    </Text>
+                  </TouchableOpacity>
+
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: '600',
+                      color: '#000',
+                    }}
+                  >
+                    {quantity}
+                  </Text>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      const maxStock =
+                        variants.find(v => v.size === selectedVariant)?.stock ||
+                        1;
+                      if (quantity < maxStock) setQuantity(quantity + 1);
+                    }}
+                    style={{
+                      width: 32,
+                      height: 32,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 22,
+                        fontWeight: 'bold',
+                        color: '#169953',
+                      }}
+                    >
+                      +
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
         </View>
+
+        {/* Transparent area for footer - tidak ada overlay di sini */}
+        <View style={{ height: 70, backgroundColor: 'transparent' }} />
       </View>
     </Modal>
   );

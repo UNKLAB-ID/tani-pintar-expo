@@ -1,10 +1,10 @@
-import SearchIconPrimary from "@/assets/icons/global/search-icons";
-import React from "react";
-import { View, TextInput, TextInputProps } from "react-native";
-import { Colors } from "@/constants/Colors";
+import SearchIconPrimary from '@/assets/icons/global/search-icons';
+import React from 'react';
+import { View, TextInput, TextInputProps } from 'react-native';
+import { Colors } from '@/constants/Colors';
 
 interface InputSearchProps
-  extends Pick<TextInputProps, "value" | "onChangeText" | "placeholder"> {
+  extends Pick<TextInputProps, 'value' | 'onChangeText' | 'placeholder'> {
   colorPlaceholder?: string;
   className?: string;
   error?: boolean;
@@ -14,14 +14,14 @@ interface InputSearchProps
   rounded?: number;
   borderColor?: string;
   coloricon?: string;
-  iconPosition?: "left" | "right";
+  iconPosition?: 'left' | 'right';
 }
 
 const InputSearchPrimary: React.FC<InputSearchProps> = ({
   value,
   onChangeText,
-  placeholder = "Search...",
-  className = "",
+  placeholder = 'Search...',
+  className = '',
   error = false,
   //   onFocus,
   //   onBlur,
@@ -30,7 +30,7 @@ const InputSearchPrimary: React.FC<InputSearchProps> = ({
   rounded = 12,
   borderColor = Colors.color.border,
   coloricon = Colors.color.border,
-  iconPosition = "left",
+  iconPosition = 'left',
 }) => {
   return (
     <View
@@ -41,7 +41,7 @@ const InputSearchPrimary: React.FC<InputSearchProps> = ({
         borderColor: borderColor,
       }}
     >
-      {iconPosition === "left" && <SearchIconPrimary color={coloricon} />}
+      {iconPosition === 'left' && <SearchIconPrimary color={coloricon} />}
 
       <TextInput
         className="ml-2 flex-1 text-base text-text-primary"
@@ -50,7 +50,7 @@ const InputSearchPrimary: React.FC<InputSearchProps> = ({
         value={value}
         onChangeText={onChangeText}
       />
-      {iconPosition === "right" && (
+      {iconPosition === 'right' && (
         <SearchIconPrimary color={coloricon} style={{ marginLeft: 6 }} />
       )}
     </View>

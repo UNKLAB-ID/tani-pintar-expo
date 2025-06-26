@@ -1,7 +1,7 @@
-import ArrowRightIcons from "@/assets/icons/e-commerce/arrow-right-icons";
-import LocationIcons from "@/assets/icons/e-commerce/locations-icons";
-import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import ArrowRightIcons from '@/assets/icons/e-commerce/arrow-right-icons';
+import LocationIcons from '@/assets/icons/e-commerce/locations-icons';
+import React from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 
 interface LocationInfoProps {
   address: string;

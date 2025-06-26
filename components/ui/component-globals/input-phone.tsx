@@ -1,6 +1,13 @@
 import { Colors } from '@/constants/Colors';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TextInputProps, Image, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TextInputProps,
+  Image,
+  StyleSheet,
+} from 'react-native';
 
 interface PhoneInputProps extends TextInputProps {
   value: string;
@@ -24,7 +31,10 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
       : Colors.color.border;
 
   return (
-    <View className={`flex-row items-center py[16px] h-[48px] ${className} `} style={[styles.input, { borderColor }]}>
+    <View
+      className={`flex-row items-center py[16px] h-[48px] ${className} `}
+      style={[styles.input, { borderColor }]}
+    >
       <Image
         source={{ uri: 'https://flagcdn.com/w40/id.png' }}
         style={{ width: 24, height: 16, marginRight: 8 }}

@@ -1,28 +1,29 @@
-import React, { useState } from "react";
+import React from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   SafeAreaView,
   Alert,
-} from "react-native";
-import { useRouter } from "expo-router";
-import PhoneInput from "@/components/ui/component-globals/input-phone";
-import CustomButton from "@/components/ui/component-globals/button-primary";
-import { useForm, Controller } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import api from "@/utils/api/api";
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import PhoneInput from '@/components/ui/component-globals/input-phone';
+import CustomButton from '@/components/ui/component-globals/button-primary';
+import { useForm, Controller } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import api from '@/utils/api/api';
 
 const LoginScreen = () => {
   const router = useRouter();
   const {
     control,
     handleSubmit,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     formState: { errors },
     setError,
   } = useForm({
     defaultValues: {
-      phone_number: "",
+      phone_number: '',
     },
   });
 
@@ -30,26 +31,26 @@ const LoginScreen = () => {
     mutationFn: async (data: { phone_number: string }) => {
       //  API call for login
 
-      return api.post("/accounts/login/", { phone_number: data.phone_number });
+      return api.post('/accounts/login/', { phone_number: data.phone_number });
     },
 
     onSuccess: (res, variables) => {
       if (res.success) {
         router.replace(`/otp?back=login&phone=${variables.phone_number}`);
       } else if (res.error) {
-        Object.keys(res.error).forEach((field) => {
+        Object.keys(res.error).forEach(field => {
           setError(field as keyof typeof errors, {
-            type: "server",
+            type: 'server',
             message: res.error[field][0], // Ambil pesan error pertama
           });
         });
       } else {
-        Alert.alert("Login Failed", res.message || "An error occurred");
+        Alert.alert('Login Failed', res.message || 'An error occurred');
       }
     },
 
-    onError: (error) => {
-      Alert.alert("Login Failed", error.message);
+    onError: error => {
+      Alert.alert('Login Failed', error.message);
     },
   });
 
@@ -62,7 +63,7 @@ const LoginScreen = () => {
   };
 
   const handleRegister = () => {
-    router.push("/register");
+    router.push('/register');
   };
 
   return (
@@ -89,7 +90,7 @@ const LoginScreen = () => {
         <Controller
           control={control}
           name="phone_number"
-          rules={{ required: "Phone number is required" }}
+          rules={{ required: 'Phone number is required' }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <>
               <PhoneInput
@@ -115,7 +116,7 @@ const LoginScreen = () => {
       {/* Footer */}
       <View className="flex-row justify-center mt-10">
         <Text className="text-xl text-text-secondary">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{' '}
         </Text>
         <TouchableOpacity onPress={handleRegister}>
           <Text className="text-xl text-primary underline">Register</Text>

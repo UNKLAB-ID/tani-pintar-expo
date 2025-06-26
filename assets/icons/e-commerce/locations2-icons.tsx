@@ -1,5 +1,5 @@
-import * as React from "react";
-import Svg, { SvgProps, Path } from "react-native-svg";
+import * as React from 'react';
+import Svg, { SvgProps, Path } from 'react-native-svg';
 
 const Location2Icons = ({ width = 16, height = 16, ...props }: SvgProps) => (
   <Svg

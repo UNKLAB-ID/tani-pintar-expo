@@ -1,39 +1,40 @@
-import React, { useEffect } from "react";
+import React from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   SafeAreaView,
   Alert,
-} from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { useRouter } from "expo-router";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+} from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from 'expo-router';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 // Components Global
-import CustomButton from "@/components/ui/component-globals/button-primary";
-import CustomTextInput from "@/components/ui/component-globals/input-text";
-import PhoneInput from "@/components/ui/component-globals/input-phone";
-import ImagePickerInput from "@/components/ui/component-globals/input-images";
-import BackIcons from "@/assets/icons/global/back-icons";
-import { Controller, useForm } from "react-hook-form";
+import CustomButton from '@/components/ui/component-globals/button-primary';
+import CustomTextInput from '@/components/ui/component-globals/input-text';
+import PhoneInput from '@/components/ui/component-globals/input-phone';
+import ImagePickerInput from '@/components/ui/component-globals/input-images';
+import BackIcons from '@/assets/icons/global/back-icons';
+import { Controller, useForm } from 'react-hook-form';
 
 // React Query
-import { useMutation } from "@tanstack/react-query";
-import api from "@/utils/api/api";
+import { useMutation } from '@tanstack/react-query';
+import api from '@/utils/api/api';
 
 const RegisterScreen = () => {
   const router = useRouter();
   const {
     control,
     handleSubmit,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     formState: { errors },
     setError,
   } = useForm({
     defaultValues: {
-      name: "",
-      email: "",
-      phone_number: "",
+      name: '',
+      email: '',
+      phone_number: '',
       id_card_file: null,
     },
   });
@@ -48,22 +49,22 @@ const RegisterScreen = () => {
       const formData = new FormData();
 
       // Tambahkan data ke FormData
-      formData.append("name", data.name);
-      formData.append("email", data.email);
-      formData.append("phone_number", data.phone_number);
+      formData.append('name', data.name);
+      formData.append('email', data.email);
+      formData.append('phone_number', data.phone_number);
 
       // Tambahkan file ke FormData
       if (data.id_card_file) {
-        formData.append("id_card_file", {
+        formData.append('id_card_file', {
           uri: data.id_card_file.uri,
-          name: data.id_card_file.fileName || "id_card.jpg",
-          type: data.id_card_file.mimeType || "image/jpeg",
+          name: data.id_card_file.fileName || 'id_card.jpg',
+          type: data.id_card_file.mimeType || 'image/jpeg',
         } as any);
       }
 
-      return api.post("/accounts/register/", formData, {
+      return api.post('/accounts/register/', formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       });
     },
@@ -71,20 +72,20 @@ const RegisterScreen = () => {
       if (res.success) {
         router.replace(`/otp?back=register&phone=${variables.phone_number}`);
       } else if (res.error) {
-        Object.keys(res.error).forEach((field) => {
+        Object.keys(res.error).forEach(field => {
           setError(field as keyof typeof errors, {
-            type: "server",
+            type: 'server',
             message: res.error[field][0], // Ambil pesan error pertama
           });
         });
       } else {
-        Alert.alert("Register Failed", res.message);
+        Alert.alert('Register Failed', res.message);
       }
     },
     onError: (error: any) => {
       Alert.alert(
-        "Registration Failed",
-        error.message || "An error occurred during registration."
+        'Registration Failed',
+        error.message || 'An error occurred during registration.'
       );
     },
   });
@@ -111,7 +112,7 @@ const RegisterScreen = () => {
         contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 50 }}
       >
         <TouchableOpacity className="mb-3" onPress={() => router.back()}>
-          <BackIcons width={24} height={24} color={"#1F1F1F"} />
+          <BackIcons width={24} height={24} color={'#1F1F1F'} />
         </TouchableOpacity>
         <Text className="text-4xl font-bold text-primary">Register</Text>
         <Text
@@ -126,7 +127,7 @@ const RegisterScreen = () => {
           <Controller
             control={control}
             name="name"
-            rules={{ required: "Name is required" }}
+            rules={{ required: 'Name is required' }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <>
                 <CustomTextInput
@@ -150,7 +151,7 @@ const RegisterScreen = () => {
               required: true,
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Invalid email format",
+                message: 'Invalid email format',
               },
             }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -173,7 +174,7 @@ const RegisterScreen = () => {
           <Controller
             control={control}
             name="id_card_file"
-            rules={{ required: "KTP photo is required" }}
+            rules={{ required: 'KTP photo is required' }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <>
                 <ImagePickerInput
@@ -198,7 +199,7 @@ const RegisterScreen = () => {
           <Controller
             control={control}
             name="phone_number"
-            rules={{ required: "Phone number is required" }}
+            rules={{ required: 'Phone number is required' }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <>
                 <Text className={`mb-2 text-lg text-black`}>Phone Number</Text>
@@ -228,11 +229,11 @@ const RegisterScreen = () => {
             className="text-xl text-text-secondary"
             style={{ fontWeight: 500 }}
           >
-            Already have an account?{" "}
+            Already have an account?{' '}
           </Text>
           <TouchableOpacity
             onPress={() => {
-              router.push("/login");
+              router.push('/login');
             }}
           >
             <Text

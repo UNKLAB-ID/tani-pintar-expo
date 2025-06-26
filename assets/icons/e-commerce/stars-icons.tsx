@@ -1,7 +1,15 @@
-import * as React from "react";
-import Svg, { SvgProps, Path } from "react-native-svg";
-const StarIcons = (props: SvgProps) => (
-  <Svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+import * as React from 'react';
+import Svg, { SvgProps, Path } from 'react-native-svg';
+
+const StarIcons = ({ width = 24, height = 24, ...props }: SvgProps) => (
+  <Svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={width}
+    height={height}
+    viewBox="0 0 16 16"
+    fill="none"
+    {...props}
+  >
     <Path
       fill="#FCB72E"
       fillRule="evenodd"
@@ -10,4 +18,5 @@ const StarIcons = (props: SvgProps) => (
     />
   </Svg>
 );
+
 export default StarIcons;

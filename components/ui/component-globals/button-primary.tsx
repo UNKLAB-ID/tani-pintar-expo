@@ -1,6 +1,11 @@
 import { Colors } from '@/constants/Colors';
 import React from 'react';
-import { TouchableOpacity, Text, GestureResponderEvent, StyleSheet } from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  GestureResponderEvent,
+  StyleSheet,
+} from 'react-native';
 
 interface CustomButtonProps {
   title: string;
@@ -17,12 +22,12 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   textClassName = '',
   disabled = false,
 }) => {
- const borderColor = disabled?Colors.color.border : Colors.color.primary ;
+  const borderColor = disabled ? Colors.color.border : Colors.color.primary;
 
   return (
     <TouchableOpacity
       className={`w-full rounded-lg items-center ${className}`}
-      style={[styles.button, { backgroundColor: borderColor }, ]}
+      style={[styles.button, { backgroundColor: borderColor }]}
       onPress={onPress}
       disabled={disabled}
     >
@@ -34,10 +39,9 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 };
 
 const styles = StyleSheet.create({
-    button: {
-      borderRadius: 12,
-    },
-  });
-
+  button: {
+    borderRadius: 12,
+  },
+});
 
 export default CustomButton;

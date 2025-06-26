@@ -1,8 +1,8 @@
-import React from "react";
-import { View, Text } from "react-native";
-import WalletIcons from "@/assets/icons/global/wallet-icons";
-import Wallet2Icons from "@/assets/icons/global/wallet2-icons";
-import VoucherIcons from "@/assets/icons/global/voucher-icons";
+import React from 'react';
+import { View, Text } from 'react-native';
+import WalletIcons from '@/assets/icons/global/wallet-icons';
+import Wallet2Icons from '@/assets/icons/global/wallet2-icons';
+import VoucherIcons from '@/assets/icons/global/voucher-icons';
 
 interface TaniPaysCardProps {
   saldo?: string;
@@ -10,8 +10,8 @@ interface TaniPaysCardProps {
 }
 
 const TaniPaysCard: React.FC<TaniPaysCardProps> = ({
-  saldo = "Rp0",
-  statusPinjam = "Not Active",
+  saldo = 'Rp0',
+  statusPinjam = 'Not Active',
 }) => {
   return (
     <View className="flex-row bg-[#F9F9F9] rounded-xl px-5 py-4 mx-5 mt-5 space-x-4">
