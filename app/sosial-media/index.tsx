@@ -74,10 +74,16 @@ const SosialMediaIndex = () => {
         {/* Header */}
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center justify-between">
-            <Image
-              source={require('../../assets/images/Image-success-otp.png')}
-              className="w-[40px] h-[40px] rounded-full"
-            />
+            <TouchableOpacity
+              onPress={() =>
+                router.push('/sosial-media/profile-sosial-media?query=profile')
+              }
+            >
+              <Image
+                source={require('../../assets/images/Image-success-otp.png')}
+                className="w-[40px] h-[40px] rounded-full"
+              />
+            </TouchableOpacity>
             <View className="ml-3">
               <Text className="text-[12px] text-text-secondary">
                 {getGreeting()},
