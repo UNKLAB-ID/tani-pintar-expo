@@ -46,12 +46,13 @@ const InputSearchPrimary: React.FC<InputSearchProps> = ({
       {iconPosition === 'left' && <SearchIconPrimary color={coloricon} />}
 
       <TextInput
-        className="ml-2 flex-1 text-base text-text-primary"
+        className="ml-2 flex-1 text-text-primary"
         placeholder={placeholder}
         placeholderTextColor={colorPlaceholder}
         value={value}
         onChangeText={onChangeText}
         editable={disable}
+        textAlignVertical="center"
       />
       {iconPosition === 'right' && (
         <SearchIconPrimary color={coloricon} style={{ marginLeft: 6 }} />

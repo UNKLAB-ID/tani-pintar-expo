@@ -13,6 +13,8 @@ interface CustomButtonProps {
   className?: string;
   textClassName?: string;
   disabled?: boolean;
+  rounded?: number;
+  fontSize?: number;
 }
 
 const CustomButtonSecundary: React.FC<CustomButtonProps> = ({
@@ -21,24 +23,30 @@ const CustomButtonSecundary: React.FC<CustomButtonProps> = ({
   className = '',
   textClassName = '',
   disabled = false,
+  rounded = 12,
+  fontSize = 14,
 }) => {
   const borderColor = disabled ? Colors.color.border : '#fff';
 
   return (
     <TouchableOpacity
-      className={`w-full rounded-lg items-center ${className}`}
+      className={`w-full items-center ${className}`}
       style={[
         styles.button,
         {
           backgroundColor: borderColor,
           borderWidth: 1,
           borderColor: '#169953',
+          borderRadius: rounded,
         },
       ]}
       onPress={onPress}
       disabled={disabled}
     >
-      <Text className={`text-primary text-xl font-bold ${textClassName}`}>
+      <Text
+        className={`text-primary font-bold ${textClassName}`}
+        style={{ fontSize: fontSize }}
+      >
         {title}
       </Text>
     </TouchableOpacity>

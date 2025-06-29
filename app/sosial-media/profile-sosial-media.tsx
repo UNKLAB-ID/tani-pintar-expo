@@ -7,6 +7,7 @@ import CustomButton from '@/components/ui/component-globals/button-primary';
 import CustomButtonSecundary from '@/components/ui/component-globals/button-secundary';
 import InputSearchPrimary from '@/components/ui/component-globals/input-seach-primary';
 import CardSosialMedia from '@/components/ui/sosial-media/card-sosial-media';
+import { useProfile } from '@/hooks/useProfile';
 import api from '@/utils/api/api';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -23,7 +24,8 @@ import {
 
 const ProfileSosialMedia = () => {
   const [dataPosts, setDataPosts] = useState<any[]>([]);
-  const { query } = useLocalSearchParams();
+  const [dataProfile, setDataProfile] = useState<any>({});
+  const { query, id } = useLocalSearchParams();
 
   const fetchPostsList = async () => {
     const response = await api.get('/social-media/posts/');
@@ -40,6 +42,36 @@ const ProfileSosialMedia = () => {
     queryFn: fetchPostsList,
     refetchOnWindowFocus: false,
   });
+
+  const fetchProfileById = async () => {
+    const response = await api.get(`/accounts/profile/${id}/`);
+    return response.data;
+  };
+
+  const {
+    data: profileById,
+    isLoading: loadingById,
+    error: errorById,
+  } = useQuery({
+    queryKey: ['profileById', id],
+    queryFn: fetchProfileById,
+    enabled: !!id,
+    refetchOnWindowFocus: true,
+  });
+
+  const {
+    data: profile,
+    isError: errorUser,
+    isLoading: lodingUser,
+  } = useProfile();
+
+  useEffect(() => {
+    if (query === 'profile' && !id) {
+      setDataProfile(profile);
+    } else if (query === 'user' && id) {
+      setDataProfile(profileById);
+    }
+  }, [profile, profileById]);
 
   useEffect(() => {
     setDataPosts(postsList?.results || []);
@@ -67,6 +99,7 @@ const ProfileSosialMedia = () => {
               placeholder="Find what you’re looking for..."
               className="px-[12px] h-[39px]"
               disable={false}
+              value={dataProfile?.full_name}
             />
           </View>
           <MenuProfileIcons width={25} height={25} />
@@ -78,7 +111,7 @@ const ProfileSosialMedia = () => {
             source={require('../../assets/images/trash/bg-profile.png')}
             style={{ height: 130, width: '100%' }}
           />
-          <View
+          <TouchableOpacity
             style={{
               position: 'absolute',
               top: 90,
@@ -87,17 +120,25 @@ const ProfileSosialMedia = () => {
               alignItems: 'center',
               zIndex: 10,
             }}
+            onPress={() => router.push('/sosial-media/picture-profile')}
+            disabled={query !== 'profile'}
           >
             <Image
-              source={require('../../assets/images/trash/image18.png')}
+              source={
+                dataProfile?.profile_picture_url
+                  ? {
+                      uri: dataProfile.profile_picture_url,
+                    }
+                  : require('../../assets/images/profile-default.png')
+              }
               style={{
                 height: 100,
                 width: 100,
                 borderRadius: 50,
               }}
             />
-          </View>
-          {query && (
+          </TouchableOpacity>
+          {query === 'profile' && (
             <TouchableOpacity
               className="bg-white rounded-full flex-row items-center justify-center"
               style={{
@@ -122,15 +163,15 @@ const ProfileSosialMedia = () => {
         {/* Info user */}
         <View style={{ paddingTop: 55, backgroundColor: '#fff' }}>
           <Text className="text-center font-semibold" style={{ fontSize: 18 }}>
-            Mambaus Baus
+            {dataProfile?.full_name}
           </Text>
           <View className="flex-row justify-center items-center my-2">
             <Text className="text-primary font-semibold mr-2">
-              150 followers
+              {dataProfile?.followers_count} followers
             </Text>
             <PointIcons width={4} height={4} />
             <Text className="text-primary font-semibold ml-2">
-              50 following
+              {dataProfile?.following_count} following
             </Text>
           </View>
           <Text className="text-center">
@@ -146,7 +187,7 @@ const ProfileSosialMedia = () => {
 
         {/* Button dan About */}
         <View className="px-4 py-4 flex-row justify-between items-center bg-white">
-          {query ? (
+          {query === 'profile' ? (
             <View style={{ width: 310 }}>
               <CustomButton
                 title="Edit profile"
@@ -191,7 +232,7 @@ const ProfileSosialMedia = () => {
             >
               About
             </Text>
-            {query && (
+            {query === 'profile' && (
               <TouchableOpacity className="flex-row items-center justify-center">
                 <EditBgImagesSosialMediaIcons
                   width={16}
@@ -207,6 +248,25 @@ const ProfileSosialMedia = () => {
             semakin maju dan berkembang. gasken bos!!
           </Text>
         </View>
+
+        {query === 'profile' && (
+          <View
+            className="flex-row justify-between items-center bg-white px-4 pt-3"
+            style={{ marginBottom: -3 }}
+          >
+            <Text className="font-semibold" style={{ fontSize: 16 }}>
+              Post
+            </Text>
+            <View style={{ width: 100 }}>
+              <CustomButtonSecundary
+                title="Write a post"
+                onPress={() => router.push('/sosial-media/create-post-media')}
+                className="py-[8px]"
+                rounded={15}
+              />
+            </View>
+          </View>
+        )}
 
         {/* List Posts */}
         <View style={{ paddingBottom: 50 }}>
