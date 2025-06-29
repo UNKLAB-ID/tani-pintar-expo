@@ -23,12 +23,15 @@ import * as ImagePicker from 'expo-image-picker';
 import ModalAudiencePost from '@/components/ui/sosial-media/modal-audience-post';
 import { useMutation } from '@tanstack/react-query';
 import api from '@/utils/api/api';
+import { useProfile } from '@/hooks/useProfile';
 
 const CreatePostMedia = () => {
   const [textInput, setTextInput] = useState<string>('');
   const [textAdience, setTextAudience] = useState<string>('Public');
   const [modalAudience, setModalAudience] = useState<boolean>(false);
   const [images, setImages] = useState<any[]>([]);
+
+  const { data: profile, isLoading, isError } = useProfile();
 
   const pickImages = async (setImages: (images: any[]) => void) => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -177,11 +180,15 @@ const CreatePostMedia = () => {
           {/* Profile */}
           <View className="py-3 flex-row items-center">
             <Image
-              source={require('../../assets/images/Image-success-otp.png')}
+             source={
+              profile?.profile_picture_url
+                ? { uri: profile.profile_picture_url }
+                : require('../../assets/images/profile-default.png')
+            }
               className="w-[48px] h-[48px] rounded-full"
             />
             <View className="ml-2">
-              <Text className="font-semibold text-[14px]">Maman</Text>
+              <Text className="font-semibold text-[14px]">{profile?.full_name}</Text>
               <TouchableOpacity
                 onPress={() => setModalAudience(true)}
                 className="flex-row justify-between items-center bg-[#D7FCE8] px-2 mt-1"

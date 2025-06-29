@@ -6,13 +6,25 @@ import KomentarIcons from '@/assets/icons/sosial-media/komentar-icons';
 import PointIcons from '@/assets/icons/sosial-media/point-icons';
 import ShereIcons from '@/assets/icons/sosial-media/shere-icons';
 import { router, useLocalSearchParams } from 'expo-router';
+import PoinVertialIcons from '@/assets/icons/sosial-media/poin-vertical-icons';
+import StatusPublickProfileIcons from '@/assets/icons/sosial-media/status-publick-profile-icons';
 
 interface UserProfile {
+  created_at: string;
+  email: string;
   full_name: string;
+  id: number;
+  id_card_validation_status: string;
+  phone_number: string;
+  profile_type: string;
+  updated_at: string;
 }
 
 interface User {
+  date_joined: string;
+  id: number;
   profile: UserProfile;
+  username: string;
 }
 
 interface ImageItem {
@@ -20,14 +32,16 @@ interface ImageItem {
 }
 
 interface PostItem {
-  id: number;
-  user: User;
+  comments_count: number;
   content: string;
-  slug: string;
+  created_at: string;
   images: ImageItem[];
   likes_count: number;
-  comments_count: number;
   shared_count: number;
+  slug: string;
+  updated_at: string;
+  user: User;
+  views_count: number;
 }
 
 interface RenderPostCardProps {
@@ -77,22 +91,41 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
       <View className="flex-row items-center justify-between mb-2">
         <View className="flex-row items-center">
           <TouchableOpacity
-            onPress={() => router.push('/sosial-media/profile-sosial-media')}
+            onPress={() => router.push(`/sosial-media/profile-sosial-media?id=${item.user.profile.id}&query=user`)}
+            disabled={query === 'user' || query === 'profile'}
           >
             <Image
-              source={require('../../../assets/images/Image-success-otp.png')}
+              source={require('../../../assets/images/profile-default.png')}
               className="w-[40px] h-[40px] rounded-full"
+              style={{ marginLeft: -6 }}
             />
           </TouchableOpacity>
-          <View className="ml-3 flex-row items-center">
-            <Text className="text-[16px] font-semibold text-text-primary">
-              {item.user.profile.full_name.length > 170
-                ? `${item.user.profile.full_name.slice(0, 170)}...`
-                : item.user.profile.full_name}
-            </Text>
-            <PointIcons width={6} height={6} style={{ marginHorizontal: 5 }} />
-            <Text className="text-[14px] text-text-secondary">1 hour ago</Text>
-          </View>
+          {
+            query ? (
+              <View className="ml-3">
+                <Text className="text-[16px] font-semibold text-text-primary">
+                  {item.user.profile.full_name.length > 170
+                    ? `${item.user.profile.full_name.slice(0, 170)}...`
+                    : item.user.profile.full_name}
+                </Text>
+                <View className='flex-row items-center'>
+                <Text className="text-[14px] text-text-secondary">1 hour ago</Text>
+                  <PointIcons width={6} height={6} style={{ marginHorizontal: 5 }} />
+                  <StatusPublickProfileIcons width={12} height={13} />
+                </View>
+              </View>
+            ) : (
+              <View className="ml-3 flex-row items-center">
+                <Text className="text-[16px] font-semibold text-text-primary">
+                  {item.user.profile.full_name.length > 170
+                    ? `${item.user.profile.full_name.slice(0, 170)}...`
+                    : item.user.profile.full_name}
+                </Text>
+                <PointIcons width={6} height={6} style={{ marginHorizontal: 5 }} />
+                <Text className="text-[14px] text-text-secondary">1 hour ago</Text>
+              </View>
+            )
+          }
         </View>
         <TouchableOpacity
           onPress={() => {
@@ -101,7 +134,13 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
             setModalVisible(true);
           }}
         >
-          <PointThreeHorizontal width={24} height={24} />
+          {
+            query ? (
+              <PoinVertialIcons width={26} height={26} />
+            ) : (
+              <PointThreeHorizontal width={24} height={24} />
+            )
+          }
         </TouchableOpacity>
       </View>
 
