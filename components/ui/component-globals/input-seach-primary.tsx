@@ -52,7 +52,7 @@ const InputSearchPrimary: React.FC<InputSearchProps> = ({
         value={value}
         onChangeText={onChangeText}
         editable={disable}
-        textAlignVertical='center'
+        textAlignVertical="center"
       />
       {iconPosition === 'right' && (
         <SearchIconPrimary color={coloricon} style={{ marginLeft: 6 }} />

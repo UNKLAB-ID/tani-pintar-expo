@@ -91,7 +91,11 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
       <View className="flex-row items-center justify-between mb-2">
         <View className="flex-row items-center">
           <TouchableOpacity
-            onPress={() => router.push(`/sosial-media/profile-sosial-media?id=${item.user.profile.id}&query=user`)}
+            onPress={() =>
+              router.push(
+                `/sosial-media/profile-sosial-media?id=${item.user.profile.id}&query=user`
+              )
+            }
             disabled={query === 'user' || query === 'profile'}
           >
             <Image
@@ -100,32 +104,42 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
               style={{ marginLeft: -6 }}
             />
           </TouchableOpacity>
-          {
-            query ? (
-              <View className="ml-3">
-                <Text className="text-[16px] font-semibold text-text-primary">
-                  {item.user.profile.full_name.length > 170
-                    ? `${item.user.profile.full_name.slice(0, 170)}...`
-                    : item.user.profile.full_name}
+          {query ? (
+            <View className="ml-3">
+              <Text className="text-[16px] font-semibold text-text-primary">
+                {item.user.profile.full_name.length > 170
+                  ? `${item.user.profile.full_name.slice(0, 170)}...`
+                  : item.user.profile.full_name}
+              </Text>
+              <View className="flex-row items-center">
+                <Text className="text-[14px] text-text-secondary">
+                  1 hour ago
                 </Text>
-                <View className='flex-row items-center'>
-                <Text className="text-[14px] text-text-secondary">1 hour ago</Text>
-                  <PointIcons width={6} height={6} style={{ marginHorizontal: 5 }} />
-                  <StatusPublickProfileIcons width={12} height={13} />
-                </View>
+                <PointIcons
+                  width={6}
+                  height={6}
+                  style={{ marginHorizontal: 5 }}
+                />
+                <StatusPublickProfileIcons width={12} height={13} />
               </View>
-            ) : (
-              <View className="ml-3 flex-row items-center">
-                <Text className="text-[16px] font-semibold text-text-primary">
-                  {item.user.profile.full_name.length > 170
-                    ? `${item.user.profile.full_name.slice(0, 170)}...`
-                    : item.user.profile.full_name}
-                </Text>
-                <PointIcons width={6} height={6} style={{ marginHorizontal: 5 }} />
-                <Text className="text-[14px] text-text-secondary">1 hour ago</Text>
-              </View>
-            )
-          }
+            </View>
+          ) : (
+            <View className="ml-3 flex-row items-center">
+              <Text className="text-[16px] font-semibold text-text-primary">
+                {item.user.profile.full_name.length > 170
+                  ? `${item.user.profile.full_name.slice(0, 170)}...`
+                  : item.user.profile.full_name}
+              </Text>
+              <PointIcons
+                width={6}
+                height={6}
+                style={{ marginHorizontal: 5 }}
+              />
+              <Text className="text-[14px] text-text-secondary">
+                1 hour ago
+              </Text>
+            </View>
+          )}
         </View>
         <TouchableOpacity
           onPress={() => {
@@ -134,13 +148,11 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
             setModalVisible(true);
           }}
         >
-          {
-            query ? (
-              <PoinVertialIcons width={26} height={26} />
-            ) : (
-              <PointThreeHorizontal width={24} height={24} />
-            )
-          }
+          {query ? (
+            <PoinVertialIcons width={26} height={26} />
+          ) : (
+            <PointThreeHorizontal width={24} height={24} />
+          )}
         </TouchableOpacity>
       </View>
 

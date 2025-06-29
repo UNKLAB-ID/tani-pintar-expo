@@ -13,7 +13,7 @@ interface CustomButtonProps {
   className?: string;
   textClassName?: string;
   disabled?: boolean;
-  fontSize?: number
+  fontSize?: number;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -22,7 +22,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   className = '',
   textClassName = '',
   disabled = false,
-  fontSize= 14,
+  fontSize = 14,
 }) => {
   const borderColor = disabled ? Colors.color.border : Colors.color.primary;
 
@@ -33,7 +33,10 @@ const CustomButton: React.FC<CustomButtonProps> = ({
       onPress={onPress}
       disabled={disabled}
     >
-      <Text className={`text-white font-bold ${textClassName}`} style={{fontSize:14}}>
+      <Text
+        className={`text-white font-bold ${textClassName}`}
+        style={{ fontSize: 14 }}
+      >
         {title}
       </Text>
     </TouchableOpacity>

@@ -180,15 +180,17 @@ const CreatePostMedia = () => {
           {/* Profile */}
           <View className="py-3 flex-row items-center">
             <Image
-             source={
-              profile?.profile_picture_url
-                ? { uri: profile.profile_picture_url }
-                : require('../../assets/images/profile-default.png')
-            }
+              source={
+                profile?.profile_picture_url
+                  ? { uri: profile.profile_picture_url }
+                  : require('../../assets/images/profile-default.png')
+              }
               className="w-[48px] h-[48px] rounded-full"
             />
             <View className="ml-2">
-              <Text className="font-semibold text-[14px]">{profile?.full_name}</Text>
+              <Text className="font-semibold text-[14px]">
+                {profile?.full_name}
+              </Text>
               <TouchableOpacity
                 onPress={() => setModalAudience(true)}
                 className="flex-row justify-between items-center bg-[#D7FCE8] px-2 mt-1"

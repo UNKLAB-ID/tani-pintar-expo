@@ -83,11 +83,15 @@ const SosialMediaIndex = () => {
               }
             >
               <Image
-                source={profile?.profile_picture_url ? {
-                  uri: profile.profile_picture_url
-                }:require('../../assets/images/profile-default.png')}
+                source={
+                  profile?.profile_picture_url
+                    ? {
+                        uri: profile.profile_picture_url,
+                      }
+                    : require('../../assets/images/profile-default.png')
+                }
                 className="w-[40px] h-[40px] rounded-full"
-                style={{marginLeft:-6}}
+                style={{ marginLeft: -6 }}
               />
             </TouchableOpacity>
             <View className="ml-3">
@@ -99,7 +103,10 @@ const SosialMediaIndex = () => {
               </Text>
             </View>
           </View>
-          <View className="flex-row items-center justify-between" style={{marginRight:-1}}>
+          <View
+            className="flex-row items-center justify-between"
+            style={{ marginRight: -1 }}
+          >
             <TouchableOpacity className="rounded-full bg-primary h-[32px] w-[32px] items-center justify-center">
               <MessageIcons width={18} height={18} color={'#fff'} />
             </TouchableOpacity>
