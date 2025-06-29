@@ -8,7 +8,6 @@ import {
   ScrollView,
   Dimensions,
   Pressable,
-  Alert,
 } from 'react-native';
 import { router } from 'expo-router';
 import { X } from 'lucide-react-native';

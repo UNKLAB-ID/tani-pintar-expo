@@ -115,17 +115,21 @@ const CartScreen = () => {
     const maxQty = item?.stock ?? 99;
     if (currentQty >= maxQty) return;
 
-    setItemQuantities(prev => ({
-      ...prev,
-      [itemId]: currentQty + 1,
-    }));
+    setItemQuantities(
+      (prev: ItemQuantities): ItemQuantities => ({
+        ...prev,
+        [itemId]: currentQty + 1,
+      })
+    );
   };
 
   const decreaseQuantity = (itemId: string) => {
-    setItemQuantities(prev => ({
-      ...prev,
-      [itemId]: Math.max((prev[itemId] || 0) - 1, 0),
-    }));
+    setItemQuantities(
+      (prev: ItemQuantities): ItemQuantities => ({
+        ...prev,
+        [itemId]: Math.max((prev[itemId] || 0) - 1, 0),
+      })
+    );
   };
 
   const renderItem = ({ item }: { item: CartItem }) => {
