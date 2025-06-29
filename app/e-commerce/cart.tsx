@@ -13,7 +13,29 @@ import RecomendationCard from '@/components/ui/e-commerce/card-recomendation';
 import ModalDelete from '@/components/ui/e-commerce/cart/modal-delete';
 import ModalCheckout from '@/components/ui/e-commerce/cart/modal-checkout';
 
-export const otherProducts = [
+interface CartItem {
+  id: string;
+  image: any;
+  name: string;
+  price: string;
+  discount: string;
+  stock: number;
+  variants?: { size: string }[];
+}
+
+interface ItemQuantities {
+  [key: string]: number;
+}
+
+type GetDiscountedPrice = (priceString: string, discount: string) => number;
+
+const getDiscountedPrice: GetDiscountedPrice = (priceString, discount) => {
+  const priceNumber = parseInt(priceString.replace(/[^\d]/g, ''), 10);
+  const discountAmount = (priceNumber * parseInt(discount, 10)) / 100;
+  return Math.round(priceNumber - discountAmount);
+};
+
+export const otherProducts: CartItem[] = [
   {
     id: '1',
     image: require('@/assets/images/trash/image25.png'),
@@ -45,20 +67,15 @@ const storeList = [
   },
 ];
 
-interface CartItem {
-  id: string;
-  image: any;
-  name: string;
-  price: string;
-  discount: string;
-  variants?: { size: string }[];
-}
-
 const CartScreen = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [itemQuantities, setItemQuantities] = useState<{
-    [key: string]: number;
-  }>({});
+  const [itemQuantities, setItemQuantities] = useState<ItemQuantities>(
+    otherProducts.reduce((acc, product) => {
+      acc[product.id] = 1;
+      return acc;
+    }, {} as ItemQuantities)
+  );
+
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [cartData, setCartData] = useState(otherProducts);
@@ -86,44 +103,33 @@ const CartScreen = () => {
       if (!item) return total;
 
       const quantity = itemQuantities[item.id] || 1;
-      const priceNumber = parseInt(item.price.replace(/[^\d]/g, ''), 10);
-      const discount = parseInt(item.discount, 10);
-      const discountedPrice = priceNumber - (priceNumber * discount) / 100;
+      const discountedPrice = getDiscountedPrice(item.price, item.discount);
 
       return total + discountedPrice * quantity;
     }, 0);
   };
 
+  const increaseQuantity = (itemId: string) => {
+    const item = cartData.find(i => i.id === itemId);
+    const currentQty = itemQuantities[itemId] || 0;
+    const maxQty = item?.stock ?? 99;
+    if (currentQty >= maxQty) return;
+
+    setItemQuantities(prev => ({
+      ...prev,
+      [itemId]: currentQty + 1,
+    }));
+  };
+
+  const decreaseQuantity = (itemId: string) => {
+    setItemQuantities(prev => ({
+      ...prev,
+      [itemId]: Math.max((prev[itemId] || 0) - 1, 0),
+    }));
+  };
+
   const renderItem = ({ item }: { item: CartItem }) => {
     const isSelected = selectedItems.includes(item.id);
-
-    interface GetDiscountedPrice {
-      (priceString: string, discount: string): number;
-    }
-
-    const getDiscountedPrice: GetDiscountedPrice = (priceString, discount) => {
-      const priceNumber = parseInt(priceString.replace(/[^\d]/g, ''), 10);
-      const discountAmount = (priceNumber * parseInt(discount, 10)) / 100;
-      return Math.round(priceNumber - discountAmount);
-    };
-
-    interface IncreaseQuantity {
-      (itemId: string): void;
-    }
-
-    const increaseQuantity: IncreaseQuantity = itemId => {
-      const item = cartData.find(i => i.id === itemId);
-      const currentQty = itemQuantities[itemId] || 0;
-      const maxQty = item?.stock ?? 99;
-
-      // Cegah penambahan jika sudah mencapai batas
-      if (currentQty >= maxQty) return;
-
-      setItemQuantities((prev: ItemQuantities) => ({
-        ...prev,
-        [itemId]: currentQty + 1,
-      }));
-    };
 
     interface ItemQuantities {
       [key: string]: number;

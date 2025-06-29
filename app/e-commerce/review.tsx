@@ -81,7 +81,7 @@ const message = [
 const timeAgo = (dateString: string) => {
   const now = new Date();
   const past = new Date(dateString);
-  const seconds = Math.floor((now - past) / 1000);
+  const seconds = Math.floor((now.getTime() - past.getTime()) / 1000);
 
   const intervals = [
     { label: 'year', seconds: 31536000 },
@@ -104,10 +104,31 @@ const timeAgo = (dateString: string) => {
 };
 
 const Reviews = () => {
-  const [expandedReplies, setExpandedReplies] = useState({});
+  const [expandedReplies, setExpandedReplies] = useState<
+    Record<string, boolean>
+  >({});
 
-  const toggleReply = id => {
-    setExpandedReplies(prev => ({
+  interface User {
+    id: string;
+    name: string;
+    image: string;
+  }
+
+  interface Message {
+    id: string;
+    userId: string;
+    text: string;
+    image?: string;
+    reply?: string;
+    replyDate?: string;
+    rating: number;
+    date: string;
+  }
+
+  type ExpandedReplies = Record<string, boolean>;
+
+  const toggleReply = (id: string) => {
+    setExpandedReplies((prev: ExpandedReplies) => ({
       ...prev,
       [id]: !prev[id],
     }));
@@ -116,9 +137,28 @@ const Reviews = () => {
   const handleBack = () => {
     router.push('/e-commerce/detail-product');
   };
-  const renderReview = msg => {
-    const reviewer = user.find(u => u.id === msg.userId);
-    const showReply = expandedReplies[msg.id];
+  interface Reviewer {
+    id: string;
+    name: string;
+    image: string;
+  }
+
+  interface ReviewMessage {
+    id: string;
+    userId: string;
+    text: string;
+    image?: string;
+    reply?: string;
+    replyDate?: string;
+    rating: number;
+    date: string;
+  }
+
+  const renderReview = (msg: ReviewMessage): React.ReactElement => {
+    const reviewer: Reviewer | undefined = user.find(
+      (u: Reviewer) => u.id === msg.userId
+    );
+    const showReply: boolean = expandedReplies[msg.id];
     return (
       <View key={msg.id} className="bg-white px-5  py-4 rounded-md mt-2">
         {/* Header */}
@@ -135,7 +175,7 @@ const Reviews = () => {
             <Image
               source={{ uri: reviewer?.image }}
               className="w-[32px] h-[32px] rounded-full mr-3"
-              onError={error =>
+              onError={(error: unknown) =>
                 console.warn('Failed to load user avatar:', error)
               }
             />
@@ -166,7 +206,7 @@ const Reviews = () => {
 
         {/* Star Rating */}
         <View className="flex-row mb-2 mt-4">
-          {Array.from({ length: 5 }).map((_, i) => (
+          {Array.from({ length: 5 }).map((_, i: number) => (
             <StarIcons
               key={i}
               width={16}
