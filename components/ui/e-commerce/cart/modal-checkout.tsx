@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
+import { formatPrice } from '@/utils/format-currency/currency';
 
 interface ModalCheckoutProps {
   isVisible: boolean;
@@ -27,13 +28,6 @@ const ModalCheckout: React.FC<ModalCheckoutProps> = ({
   if (!isVisible) return null;
 
   const total = subtotal + platformFee;
-
-  const formatPrice = (number: number): string =>
-    'Rp' +
-    number.toLocaleString('id-ID', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
 
   return (
     <View style={styles.container}>

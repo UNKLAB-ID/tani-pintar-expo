@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { formatPrice } from '@/utils/format-currency/currency';
 
 import TrashIcons from '@/assets/icons/e-commerce/trash-icons';
 import BoxPlusCartIcons from '@/assets/icons/e-commerce/plus-box-icons';
@@ -19,6 +20,7 @@ export const otherProducts = [
     name: 'H&L Semprotan S...',
     price: 'Rp36.000',
     discount: '20',
+    stock: 100,
     variants: [{ size: '50 ml' }],
   },
   {
@@ -27,16 +29,9 @@ export const otherProducts = [
     name: 'Electric Sprayer...',
     price: 'Rp250.000',
     discount: '17',
+    stock: 100,
     variants: [{ size: '100 ml' }],
   },
-  // {
-  //   id: '3',
-  //   image: require('@/assets/images/trash/image18.png'),
-  //   name: 'Electric Sprayer...',
-  //   price: 'Rp250.000',
-  //   discount: '17',
-  //   variants: [{ size: '100 ml' }],
-  // },
 ];
 
 const storeList = [
@@ -49,18 +44,26 @@ const storeList = [
     image: require('@/assets/images/trash/bottle.png'),
   },
 ];
+
+interface CartItem {
+  id: string;
+  image: any;
+  name: string;
+  price: string;
+  discount: string;
+  variants?: { size: string }[];
+}
+
 const CartScreen = () => {
-  const [liked, setLiked] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [itemQuantities, setItemQuantities] = useState<Record<string, number>>(
-    {}
-  );
+  const [itemQuantities, setItemQuantities] = useState<{
+    [key: string]: number;
+  }>({});
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [cartData, setCartData] = useState(otherProducts);
   const [isCheckoutVisible, setCheckoutVisible] = useState(false);
 
-  const handleLove = () => setLiked(prev => !prev);
   const handleBack = () => router.push('/(tabs)/ecommerce');
 
   const toggleSelect = (id: string) => {
@@ -91,15 +94,6 @@ const CartScreen = () => {
     }, 0);
   };
 
-  interface CartItem {
-    id: string;
-    image: any;
-    name: string;
-    price: string;
-    discount: string;
-    variants?: { size: string }[];
-  }
-
   const renderItem = ({ item }: { item: CartItem }) => {
     const isSelected = selectedItems.includes(item.id);
 
@@ -113,25 +107,21 @@ const CartScreen = () => {
       return Math.round(priceNumber - discountAmount);
     };
 
-    interface FormatPrice {
-      (number: number): string;
-    }
-
-    const formatPrice: FormatPrice = (number: number): string =>
-      'Rp' +
-      number.toLocaleString('id-ID', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      });
-
     interface IncreaseQuantity {
       (itemId: string): void;
     }
 
     const increaseQuantity: IncreaseQuantity = itemId => {
+      const item = cartData.find(i => i.id === itemId);
+      const currentQty = itemQuantities[itemId] || 0;
+      const maxQty = item?.stock ?? 99;
+
+      // Cegah penambahan jika sudah mencapai batas
+      if (currentQty >= maxQty) return;
+
       setItemQuantities((prev: ItemQuantities) => ({
         ...prev,
-        [itemId]: (prev[itemId] || 0) + 1,
+        [itemId]: currentQty + 1,
       }));
     };
 
@@ -191,11 +181,7 @@ const CartScreen = () => {
               </Text>
               <View className="flex-row space-x-3">
                 <TouchableOpacity style={{ marginLeft: 10 }}>
-                  <LoveIcons
-                    width={20}
-                    height={20}
-                    color={liked ? '#FF3B30' : '#B0B0B0'}
-                  />
+                  <LoveIcons width={20} height={20} />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{ marginLeft: 20 }}
@@ -284,12 +270,8 @@ const CartScreen = () => {
           <BackIcons width={24} height={24} />
         </TouchableOpacity>
         <Text className="text-xl font-semibold">Cart</Text>
-        <TouchableOpacity onPress={handleLove}>
-          <LoveIcons
-            width={24}
-            height={24}
-            color={liked ? '#FF3B30' : '#000'} // Warna berubah saat diklik
-          />
+        <TouchableOpacity>
+          <LoveIcons width={24} height={24} />
         </TouchableOpacity>
       </View>
 

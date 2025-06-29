@@ -3,13 +3,7 @@ import StarIcons from '@/assets/icons/e-commerce/stars-icons';
 import Location2Icons from '@/assets/icons/e-commerce/locations2-icons';
 import ButtonPlusPrimaryIcons from '@/assets/icons/e-commerce/button-plus-primary-icons';
 import { useState } from 'react';
-
-const formatPrice = (num: number) =>
-  'Rp' +
-  num.toLocaleString('id-ID', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
+import { formatPrice } from '@/utils/format-currency/currency';
 
 const products = [
   {
@@ -52,29 +46,17 @@ const products = [
     location: 'Bandung',
     image: require('@/assets/images/trash/image25.png'),
   },
-  {
-    id: '5',
-    name: 'Simodis 100EC Insektisida',
-    price: 152000,
-    originalPrice: 160000,
-    discount: 5,
-    rating: 4.6,
-    location: 'Bandung',
-    image: require('@/assets/images/trash/image25.png'),
-  },
-  {
-    id: '6',
-    name: 'Simodis 100EC Insektisida',
-    price: 152000,
-    originalPrice: 160000,
-    discount: 5,
-    rating: 4.6,
-    location: 'Bandung',
-    image: require('@/assets/images/trash/image25.png'),
-  },
 ];
 
-const RecomendationCard = () => {
+interface RecomendationCardProps {
+  products?: typeof products;
+  title?: string;
+}
+
+const RecomendationCard: React.FC<RecomendationCardProps> = ({
+  products: propProducts = products,
+  title = 'Produk Rekomendasi',
+}) => {
   const [visibleCount, setVisibleCount] = useState(4);
 
   const handleLoadMore = () => {
@@ -89,11 +71,11 @@ const RecomendationCard = () => {
         className="font-semibold text-black mb-4 ml-4"
         style={{ fontSize: 18 }}
       >
-        Recommended Product
+        {title}
       </Text>
 
       <View className="flex-row flex-wrap mx-3 justify-between">
-        {products.slice(0, visibleCount).map(product => (
+        {propProducts.map(product => (
           <View key={product.id} className=" mb-2 bg-white rounded-lg">
             <Image
               source={product.image}
@@ -147,19 +129,18 @@ const RecomendationCard = () => {
           </View>
         ))}
       </View>
-      {visibleCount < products.length && (
-        <View className="items-center mt-4">
-          <TouchableOpacity
-            className="border-2 items-center bg-primary border-primary rounded-2xl p-2"
-            style={{ width: 131, height: 38 }}
-            onPress={handleLoadMore}
-          >
-            <Text className="text-white font-semibold text-[16px]">
-              Load More...
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
+
+      <View className="items-center mt-4">
+        <TouchableOpacity
+          className="border-2 items-center bg-primary border-primary rounded-2xl p-2"
+          style={{ width: 131, height: 38 }}
+          onPress={handleLoadMore}
+        >
+          <Text className="text-white font-semibold text-[16px]">
+            Load More...
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

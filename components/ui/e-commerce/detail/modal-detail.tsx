@@ -48,17 +48,6 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
   setQuantity,
 }) => {
   const handleAddToCart = () => {
-    // const cartItem = {
-    //   name,
-    //   image,
-    //   price,
-    //   size: selectedVariant,
-    //   quantity,
-    // };
-
-    // // Simulasikan simpan ke global state atau context
-    // console.log('Item ditambahkan ke cart:', cartItem);
-
     onClose();
     router.push('/e-commerce/cart');
   };

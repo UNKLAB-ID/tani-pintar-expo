@@ -22,7 +22,7 @@ const ModalDelete: React.FC<ModalDeleteProps> = ({
       onRequestClose={onClose}
     >
       <View
-        className="flex-1 justify-center  items-center"
+        className="flex-1 justify-center items-center"
         style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       >
         <View

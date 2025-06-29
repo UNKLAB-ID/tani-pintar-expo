@@ -12,8 +12,6 @@ const BackIcons = ({ size = 24, color = '#000', ...props }: IconProps) => (
     viewBox="0 0 18 16"
     width={size}
     height={size}
-    stroke={color}
-    strokeWidth={0.1}
     fill="none"
     {...props}
   >
