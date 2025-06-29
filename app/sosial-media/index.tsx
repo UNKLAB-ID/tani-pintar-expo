@@ -3,6 +3,7 @@ import NotifcationIcons from '@/assets/icons/global/notification-icons';
 import ButtonPlusIcons from '@/assets/icons/sosial-media/button-plus-icons';
 import InputSearchPrimary from '@/components/ui/component-globals/input-seach-primary';
 import CardSosialMedia from '@/components/ui/sosial-media/card-sosial-media';
+import { useProfile } from '@/hooks/useProfile';
 import api from '@/utils/api/api';
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
@@ -20,6 +21,8 @@ import {
 const SosialMediaIndex = () => {
   const [dataPosts, setDataPosts] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+
+  const { data: profile, isLoading: loading, isError } = useProfile();
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -80,8 +83,15 @@ const SosialMediaIndex = () => {
               }
             >
               <Image
-                source={require('../../assets/images/Image-success-otp.png')}
+                source={
+                  profile?.profile_picture_url
+                    ? {
+                        uri: profile.profile_picture_url,
+                      }
+                    : require('../../assets/images/profile-default.png')
+                }
                 className="w-[40px] h-[40px] rounded-full"
+                style={{ marginLeft: -6 }}
               />
             </TouchableOpacity>
             <View className="ml-3">
@@ -89,11 +99,14 @@ const SosialMediaIndex = () => {
                 {getGreeting()},
               </Text>
               <Text className="text-[16px] font-semibold text-text-primary">
-                Mambaus Baus
+                {profile?.full_name}
               </Text>
             </View>
           </View>
-          <View className="flex-row items-center justify-between">
+          <View
+            className="flex-row items-center justify-between"
+            style={{ marginRight: -1 }}
+          >
             <TouchableOpacity className="rounded-full bg-primary h-[32px] w-[32px] items-center justify-center">
               <MessageIcons width={18} height={18} color={'#fff'} />
             </TouchableOpacity>
