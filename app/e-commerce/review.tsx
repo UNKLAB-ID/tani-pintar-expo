@@ -78,7 +78,7 @@ const message = [
   },
 ];
 
-const timeAgo = dateString => {
+const timeAgo = (dateString: string) => {
   const now = new Date();
   const past = new Date(dateString);
   const seconds = Math.floor((now - past) / 1000);
@@ -135,6 +135,9 @@ const Reviews = () => {
             <Image
               source={{ uri: reviewer?.image }}
               className="w-[32px] h-[32px] rounded-full mr-3"
+              onError={error =>
+                console.warn('Failed to load user avatar:', error)
+              }
             />
             <View className="flex-1">
               <Text className="text-[14px] font-semibold">
@@ -176,10 +179,6 @@ const Reviews = () => {
         {/* Images */}
         {msg.image && (
           <View className="flex-row mb-2" style={{ gap: 8 }}>
-            <Image
-              source={{ uri: msg.image }}
-              className="w-[80px] h-[80px] rounded-md"
-            />
             <Image
               source={{ uri: msg.image }}
               className="w-[80px] h-[80px] rounded-md"

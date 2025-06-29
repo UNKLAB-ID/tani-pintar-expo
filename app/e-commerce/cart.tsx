@@ -317,7 +317,7 @@ const CartScreen = () => {
           data={cartData}
           keyExtractor={item => item.id}
           renderItem={renderItem}
-          contentContainerStyle={{ paddingVertical: 16, paddingBottom: 120 }}
+          contentContainerStyle={{ paddingVertical: 16 }}
           ListHeaderComponent={
             selectedItems.length > 0 ? (
               <View

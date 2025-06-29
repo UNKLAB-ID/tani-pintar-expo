@@ -304,7 +304,7 @@ const EcommerceIndex = () => {
               <View className="flex-row items-center">
                 <LocationIcons width={25} height={25} color="#28a745" />
                 <View className="ml-2 flex-row">
-                  <Text className="text-smfont-bold  text-[#C8C8C8]">
+                  <Text className="text-sm font-bold text-[#C8C8C8]">
                     Ship to
                   </Text>
                   <Text className="text-sm font-bold text-[#2b2b2b] ml-2">
