@@ -8,8 +8,12 @@ import {
   ScrollView,
   Dimensions,
   Pressable,
+  Alert,
 } from 'react-native';
+import { router } from 'expo-router';
 import { X } from 'lucide-react-native';
+import ButtonPlusPrimaryIcons from '@/assets/icons/e-commerce/button-plus-primary-icons';
+import MessageIcons from '@/assets/icons/global/message-icons';
 
 interface Variant {
   size: string;
@@ -43,6 +47,21 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
   quantity,
   setQuantity,
 }) => {
+  const handleAddToCart = () => {
+    // const cartItem = {
+    //   name,
+    //   image,
+    //   price,
+    //   size: selectedVariant,
+    //   quantity,
+    // };
+
+    // // Simulasikan simpan ke global state atau context
+    // console.log('Item ditambahkan ke cart:', cartItem);
+
+    onClose();
+    router.push('/e-commerce/cart');
+  };
   return (
     <Modal
       visible={visible}
@@ -52,46 +71,50 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
       onRequestClose={onClose}
     >
       <View style={{ flex: 1 }}>
-        {/* Overlay - hanya menutupi area di atas footer */}
+        {/* Overlay */}
         <Pressable
           onPress={onClose}
           style={{
             flex: 1,
             backgroundColor: 'rgba(0,0,0,0.5)',
-            paddingBottom: 70,
           }}
         />
 
         {/* Modal Content */}
         <View
+          className=" absolute "
           style={{
-            position: 'absolute',
-            bottom: 70,
+            bottom: 0,
             left: 0,
             right: 0,
             backgroundColor: '#fff',
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
-
             paddingTop: 20,
-            maxHeight: height * 0.6,
+            maxHeight: height * 0.85,
           }}
         >
+          <Text
+            className="ml-5 pb-3"
+            style={{ fontSize: 16, fontWeight: '600', color: '#000' }}
+          >
+            Product Variants
+          </Text>
           {/* Close Button */}
           <TouchableOpacity
             onPress={onClose}
-            style={{ position: 'absolute', top: 10, right: 16, zIndex: 10 }}
+            className="absolute "
+            style={{ top: 17, right: 16, zIndex: 10 }}
           >
             <X size={24} color="#000" />
           </TouchableOpacity>
 
-          {/* ScrollView to handle content overflow */}
+          {/* Scrollable Content */}
           <ScrollView showsVerticalScrollIndicator={false}>
-            {/* Image & Info */}
+            {/* Product Info */}
             <View
+              className="flex-row items-center"
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
                 marginTop: 10,
                 paddingHorizontal: 16,
                 paddingBottom: 8,
@@ -125,7 +148,7 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
               </View>
             </View>
 
-            {/* Size Section */}
+            {/* Size Selection */}
             <Text
               style={{
                 fontWeight: '600',
@@ -148,6 +171,7 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
                   <TouchableOpacity
                     key={i}
                     onPress={() => setSelectedVariant(v.size)}
+                    className="flex-row items-center"
                     style={{
                       width: 108,
                       height: 40,
@@ -159,8 +183,6 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
                       paddingHorizontal: 16,
                       marginLeft: 8,
                       marginRight: 8,
-                      flexDirection: 'row',
-                      alignItems: 'center',
                     }}
                   >
                     <Text
@@ -181,22 +203,17 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
               })}
             </ScrollView>
 
-            {/* Quantity */}
+            {/* Quantity Selection */}
             <View
+              className=" mt-6 pt-4 pb-3 bg-white"
               style={{
                 borderTopWidth: 1,
-                borderBottomWidth: 1,
-                borderColor: '#C8C8C8',
-                marginTop: 24,
-                paddingTop: 16,
-                paddingBottom: 12,
+                borderColor: '#e7e7e7',
               }}
             >
               <View
+                className="flex-row items-center justify-between"
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
                   paddingHorizontal: 4,
                   marginLeft: 16,
                   marginRight: 16,
@@ -205,7 +222,6 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
                 <Text style={{ fontWeight: '600', fontSize: 16 }}>
                   Quantity
                 </Text>
-
                 <View
                   style={{
                     flexDirection: 'row',
@@ -276,10 +292,46 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
               </View>
             </View>
           </ScrollView>
-        </View>
 
-        {/* Transparent area for footer - tidak ada overlay di sini */}
-        <View style={{ height: 70, backgroundColor: 'transparent' }} />
+          {/* Footer Buttons */}
+          <View
+            className="bg-white px-3 py-3"
+            style={{
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: -2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 12,
+            }}
+          >
+            <View className="mt-4 flex-row space-x-3 ">
+              <TouchableOpacity className="border border-[#169953] w-[40px] h-[40px] mr-2 ml-3 rounded-2xl flex-row justify-center items-center py-2">
+                <View>
+                  <MessageIcons width={18} height={18} color={'#169953'} />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleAddToCart}
+                className="flex-1 w-[146px] h-[40px] border border-[#169953] rounded-2xl flex-row justify-center items-center py-2"
+              >
+                <View className="flex-row items-center ">
+                  <View className="mt-3">
+                    <ButtonPlusPrimaryIcons width={24} height={24} />
+                  </View>
+                  <Text className="text-[#169953] font-semibold text-[14px]">
+                    Add to Cart
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity className="flex-1 bg-[#169953] w-[148px] h-[40px] mr-2 ml-3 rounded-2xl flex-row justify-center items-center py-2">
+                <Text className="text-white font-semibold text-[14px]">
+                  Checkout
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       </View>
     </Modal>
   );

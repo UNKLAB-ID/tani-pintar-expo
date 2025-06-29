@@ -34,7 +34,7 @@ interface Product {
 interface ProductDetailCardProps {
   product: Product;
   activeIndex: number;
-  flatListRef: React.RefObject<FlatList<any>>;
+  flatListRef: React.RefObject<FlatList<any> | null>;
   onScrollEnd: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
   imageProduct: ProductImage[];
 }

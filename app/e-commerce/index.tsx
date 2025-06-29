@@ -178,26 +178,34 @@ const EcommerceIndex = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [timeLeftMs, setTimeLeftMs] = useState(3600 * 1000);
-  const intervalRef = useRef(null);
+  const intervalRef = useRef<number | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     if (timeLeftMs <= 0) {
-      clearInterval(intervalRef.current);
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current as any);
+      }
       return;
     }
 
     intervalRef.current = setInterval(() => {
       setTimeLeftMs(prev => {
         if (prev <= 100) {
-          clearInterval(intervalRef.current);
+          if (intervalRef.current !== null) {
+            clearInterval(intervalRef.current);
+          }
           return 0;
         }
         return prev - 100;
       });
     }, 100);
 
-    return () => clearInterval(intervalRef.current);
+    return () => {
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current);
+      }
+    };
   }, []);
 
   const handleFlashsale = () => {
@@ -207,7 +215,7 @@ const EcommerceIndex = () => {
     router.push('/e-commerce/detail-product');
   };
 
-  const formatTime = ms => {
+  const formatTime = (ms: number) => {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
@@ -274,10 +282,12 @@ const EcommerceIndex = () => {
               />
             </View>
             <View className="flex-row">
-              <View className="mr-[9]">
-                <MessageIcons width={28} height={28} />
+              <View className="mr-[9] mt-1">
+                <MessageIcons width={23} height={23} />
               </View>
-              <CartIcons width={28} height={28} />
+              <TouchableOpacity onPress={() => router.push('/e-commerce/cart')}>
+                <CartIcons width={28} height={28} />
+              </TouchableOpacity>
             </View>
           </View>
         </View>

@@ -194,7 +194,7 @@ const ProductDetailScreen = () => {
             </TouchableOpacity>
 
             <View className="flex-row items-center ">
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => router.push('/e-commerce/cart')}>
                 <CartIcons width={26} height={26} color="#7D7D7D" />
               </TouchableOpacity>
               <TouchableOpacity className="ml-4">
@@ -285,7 +285,7 @@ const ProductDetailScreen = () => {
                 <View className="mt-3">
                   <ButtonPlusPrimaryIcons width={24} height={24} />
                 </View>
-                <Text className="text-[#169953] font-semibold text-[14px]">
+                <Text className="text-[#169953] font-semibold text-[16px]">
                   Add to Cart
                 </Text>
               </View>
