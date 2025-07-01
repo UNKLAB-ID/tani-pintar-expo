@@ -4,6 +4,7 @@ import Location2Icons from '@/assets/icons/e-commerce/locations2-icons';
 import ButtonPlusPrimaryIcons from '@/assets/icons/e-commerce/button-plus-primary-icons';
 import { useState } from 'react';
 import { formatPrice } from '@/utils/format-currency/currency';
+import { router } from 'expo-router';
 
 const products = [
   {
@@ -60,7 +61,12 @@ const RecomendationCard: React.FC<RecomendationCardProps> = ({
   const [visibleCount, setVisibleCount] = useState(4);
 
   const handleLoadMore = () => {
-    setVisibleCount(prev => prev + 4);
+    router.push('/(tabs)/ecommerce');
+  };
+
+  const handleAddToCart = (product: (typeof products)[0]) => {
+    console.log('Added to cart:', product);
+    // bisa diubah jadi dispatch atau setState nanti
   };
   return (
     <View
@@ -116,7 +122,10 @@ const RecomendationCard: React.FC<RecomendationCardProps> = ({
               <Location2Icons width={12.44} height={12.44} /> {product.location}
             </Text>
 
-            <TouchableOpacity className="border-2 border-primary rounded-xl mt-2 items-center">
+            <TouchableOpacity
+              className="border-2 border-primary rounded-xl mt-2 items-center"
+              onPress={() => handleAddToCart(product)}
+            >
               <View className="flex-row items-center ">
                 <View className="mt-3">
                   <ButtonPlusPrimaryIcons width={24} height={24} />

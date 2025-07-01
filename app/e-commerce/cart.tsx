@@ -17,8 +17,8 @@ interface CartItem {
   id: string;
   image: any;
   name: string;
-  price: string;
-  discount: string;
+  price: number;
+  discount: number;
   stock: number;
   variants?: { size: string }[];
 }
@@ -27,12 +27,9 @@ interface ItemQuantities {
   [key: string]: number;
 }
 
-type GetDiscountedPrice = (priceString: string, discount: string) => number;
-
-const getDiscountedPrice: GetDiscountedPrice = (priceString, discount) => {
-  const priceNumber = parseInt(priceString.replace(/[^\d]/g, ''), 10);
-  const discountAmount = (priceNumber * parseInt(discount, 10)) / 100;
-  return Math.round(priceNumber - discountAmount);
+const getDiscountedPrice = (price: number, discount: number) => {
+  const discountAmount = (price * discount) / 100;
+  return Math.round(price - discountAmount);
 };
 
 export const otherProducts: CartItem[] = [
@@ -40,8 +37,8 @@ export const otherProducts: CartItem[] = [
     id: '1',
     image: require('@/assets/images/trash/image25.png'),
     name: 'H&L Semprotan S...',
-    price: 'Rp36.000',
-    discount: '20',
+    price: 36000,
+    discount: 20,
     stock: 100,
     variants: [{ size: '50 ml' }],
   },
@@ -49,8 +46,8 @@ export const otherProducts: CartItem[] = [
     id: '2',
     image: require('@/assets/images/trash/image18.png'),
     name: 'Electric Sprayer...',
-    price: 'Rp250.000',
-    discount: '17',
+    price: 250000,
+    discount: 17,
     stock: 100,
     variants: [{ size: '100 ml' }],
   },
@@ -233,7 +230,7 @@ const CartScreen = () => {
               </View>
             </View>
             <Text className="text-xs line-through text-[#bcbcbc] mt-1">
-              {item.price}
+              {formatPrice(item.price)}
             </Text>
           </View>
         </View>

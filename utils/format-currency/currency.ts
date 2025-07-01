@@ -1,6 +1,6 @@
-export const formatPrice = (number: number): string =>
-  'Rp' +
-  number.toLocaleString('id-ID', {
-    minimumFractionDigits: 0,
+export const formatPrice = (amount: number) =>
+  new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
     maximumFractionDigits: 0,
-  });
+  }).format(amount);

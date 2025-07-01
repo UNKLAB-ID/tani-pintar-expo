@@ -9,7 +9,7 @@ interface IconProps extends SvgProps {
 
 const ChevronDownIcon = ({
   width = 12,
-  height = 12,
+  height = 8,
   color = '#7D7D7D',
   ...props
 }: IconProps) => (

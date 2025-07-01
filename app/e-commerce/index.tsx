@@ -184,8 +184,9 @@ const EcommerceIndex = () => {
   useEffect(() => {
     if (timeLeftMs <= 0) {
       if (intervalRef.current !== null) {
-        clearInterval(intervalRef.current as any);
+        clearInterval(intervalRef.current);
       }
+
       return;
     }
 
@@ -282,7 +283,7 @@ const EcommerceIndex = () => {
               />
             </View>
             <View className="flex-row">
-              <View className="mr-[9] mt-1">
+              <View className="mr-[9px] mt-1">
                 <MessageIcons width={23} height={23} />
               </View>
               <TouchableOpacity onPress={() => router.push('/e-commerce/cart')}>

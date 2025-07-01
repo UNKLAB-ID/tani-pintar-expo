@@ -194,7 +194,7 @@ const Reviews = () => {
               width: 40,
               height: 40,
               position: 'absolute',
-              left: 330,
+              right: 0,
               top: '50%',
               transform: [{ translateY: -12 }],
               padding: 8,

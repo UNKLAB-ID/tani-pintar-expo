@@ -37,6 +37,7 @@ interface ProductDetailCardProps {
   flatListRef: React.RefObject<FlatList<any> | null>;
   onScrollEnd: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
   imageProduct: ProductImage[];
+  imageOriginal: ProductImage[];
 }
 
 export default function ProductDetailCard({
@@ -45,6 +46,7 @@ export default function ProductDetailCard({
   flatListRef,
   onScrollEnd,
   imageProduct,
+  imageOriginal,
 }: ProductDetailCardProps) {
   const { width } = useWindowDimensions();
 
@@ -88,7 +90,7 @@ export default function ProductDetailCard({
           }}
         >
           <View className="flex-row bg-white px-2 py-1 rounded-full">
-            {product.images.map((_, index) => (
+            {imageOriginal.map((_, index) => (
               <View
                 key={index}
                 className={`mx-[2px] rounded-full ${

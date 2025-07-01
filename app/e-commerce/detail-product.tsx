@@ -132,6 +132,15 @@ export const otherProducts = [
 ];
 
 const ProductDetailScreen = () => {
+  if (products.length === 0) {
+    return (
+      <SafeAreaView>
+        <Text className="text-center mt-10 text-black">
+          Produk tidak tersedia
+        </Text>
+      </SafeAreaView>
+    );
+  }
   const flatListRef = useRef<FlatList>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const product = products[0];
@@ -198,7 +207,7 @@ const ProductDetailScreen = () => {
                 <CartIcons width={26} height={26} color="#7D7D7D" />
               </TouchableOpacity>
               <TouchableOpacity className="ml-4">
-                <Share2Icons width={26} height={26} />
+                <Share2Icons width={30} height={30} color="#7D7D7D" />
               </TouchableOpacity>
               <TouchableOpacity className="ml-4">
                 <MenuVerticalIcons width={26} height={26} />
@@ -209,6 +218,7 @@ const ProductDetailScreen = () => {
           <ProductDetailCard
             product={product}
             imageProduct={productImagesWithBuffer}
+            imageOriginal={product.images}
             activeIndex={activeIndex}
             flatListRef={flatListRef}
             onScrollEnd={onScrollEnd}
@@ -226,10 +236,13 @@ const ProductDetailScreen = () => {
             <View className=" px-4 py-3 flex-row">
               <Text className="font-semibold text-[16px]">Product Details</Text>
             </View>
-            <ProductDescription description={productDeskripsi[0].description} />
+            <ProductDescription
+              description={productDeskripsi[0]?.description || ''}
+            />
           </View>
           <View className="bg-white h-[148px] w-[390px] px-4 pt-4 pb-4 mt-4">
-            <StoreInfo toko={storeList[0]} />
+            {storeList[0] && <StoreInfo toko={storeList[0]} />}
+
             <View className="mt-4 flex-row justify-around">
               <TouchableOpacity className="border border-[#169953] w-[173px] h-[40px] rounded-xl px-6 py-2 flex-1 mr-2 items-center">
                 <Text className="text-[#169953] text-[16px] font-semibold">
