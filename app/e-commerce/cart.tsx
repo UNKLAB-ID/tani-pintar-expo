@@ -32,7 +32,7 @@ const getDiscountedPrice = (price: number, discount: number) => {
   return Math.round(price - discountAmount);
 };
 
-export const otherProducts: CartItem[] = [
+const otherProducts: CartItem[] = [
   {
     id: '1',
     image: require('@/assets/images/trash/image25.png'),
@@ -87,11 +87,7 @@ const CartScreen = () => {
   };
 
   useEffect(() => {
-    if (selectedItems.length > 0) {
-      setCheckoutVisible(true);
-    } else {
-      setCheckoutVisible(false);
-    }
+    setCheckoutVisible(selectedItems.length > 0);
   }, [selectedItems]);
 
   const calculateSubtotal = () => {
@@ -112,51 +108,30 @@ const CartScreen = () => {
     const maxQty = item?.stock ?? 99;
     if (currentQty >= maxQty) return;
 
-    setItemQuantities(
-      (prev: ItemQuantities): ItemQuantities => ({
-        ...prev,
-        [itemId]: currentQty + 1,
-      })
-    );
+    setItemQuantities(prev => ({ ...prev, [itemId]: currentQty + 1 }));
   };
 
   const decreaseQuantity = (itemId: string) => {
-    setItemQuantities(
-      (prev: ItemQuantities): ItemQuantities => ({
-        ...prev,
-        [itemId]: Math.max((prev[itemId] || 0) - 1, 0),
-      })
-    );
+    setItemQuantities(prev => ({
+      ...prev,
+      [itemId]: Math.max((prev[itemId] || 0) - 1, 0),
+    }));
   };
 
   const renderItem = ({ item }: { item: CartItem }) => {
     const isSelected = selectedItems.includes(item.id);
 
-    interface ItemQuantities {
-      [key: string]: number;
-    }
-
-    const decreaseQuantity = (itemId: string) => {
-      setItemQuantities((prev: ItemQuantities) => ({
-        ...prev,
-        [itemId]: Math.max((prev[itemId] || 0) - 1, 0),
-      }));
-    };
-
     return (
-      <View className="bg-white p-3 ">
-        {/* Toko */}
+      <View className="bg-white p-3">
         <View className="flex-row items-center mb-2 mt-2">
           <TouchableOpacity onPress={() => toggleSelect(item.id)}>
             <View
               style={{ width: 24, height: 24 }}
-              className={` rounded border-2 mr-2 ${
+              className={`rounded border-2 mr-2 ${
                 isSelected ? 'bg-primary border-primary' : 'border-gray-400'
               } items-center justify-center`}
             >
-              {isSelected && (
-                <Text className="text-white text-xs font-bold">✓</Text>
-              )}
+              {isSelected && <Text className="text-white text-xs font-bold">✓</Text>}
             </View>
           </TouchableOpacity>
           <Image
@@ -168,22 +143,17 @@ const CartScreen = () => {
             {storeList[0]?.name ?? 'Unknown Store'}
           </Text>
         </View>
-        {/* Konten Produk */}
+
         <View className="flex-row items-start">
-          {/* Gambar Produk */}
           <Image
             source={item.image}
             className="w-[143px] h-[139px] rounded-xl"
             resizeMode="contain"
           />
 
-          {/* Info Produk */}
           <View className="ml-3 flex-1 justify-between mt-3">
             <View className="flex-row justify-between items-start">
-              <Text
-                className="text-base font-semibold flex-1"
-                numberOfLines={1}
-              >
+              <Text className="text-base font-semibold flex-1" numberOfLines={1}>
                 {item.name}
               </Text>
               <View className="flex-row space-x-3">
@@ -193,8 +163,8 @@ const CartScreen = () => {
                 <TouchableOpacity
                   style={{ marginLeft: 20 }}
                   onPress={() => {
-                    setItemToDelete(item.id); // <-- tangkap item yang akan dihapus
-                    setDeleteModalVisible(true); // munculkan modal
+                    setItemToDelete(item.id);
+                    setDeleteModalVisible(true);
                   }}
                 >
                   <TrashIcons width={20} height={20} color="#C8C8C8" />
@@ -205,26 +175,16 @@ const CartScreen = () => {
               {item.variants?.[0]?.size || 'No size available'}
             </Text>
 
-            {/* Harga */}
-            <View
-              className="flex-row items-center justify-between"
-              style={{ marginTop: 30 }}
-            >
+            <View className="flex-row items-center justify-between" style={{ marginTop: 30 }}>
               <Text className="text-base font-bold text-black mr-2">
                 {formatPrice(getDiscountedPrice(item.price, item.discount))}
               </Text>
-              <View className="flex-row items-center ">
-                <TouchableOpacity
-                  className="items-center"
-                  onPress={() => decreaseQuantity(item.id)}
-                >
+              <View className="flex-row items-center">
+                <TouchableOpacity onPress={() => decreaseQuantity(item.id)}>
                   <BoxMinusCartIcons width={30} height={30} />
                 </TouchableOpacity>
                 <Text className="mx-3">{itemQuantities[item.id] || 1}</Text>
-                <TouchableOpacity
-                  className="items-center"
-                  onPress={() => increaseQuantity(item.id)}
-                >
+                <TouchableOpacity onPress={() => increaseQuantity(item.id)}>
                   <BoxPlusCartIcons width={30} height={30} />
                 </TouchableOpacity>
               </View>
@@ -234,37 +194,10 @@ const CartScreen = () => {
             </Text>
           </View>
         </View>
+
         <View
           className="mt-6"
-          style={{
-            borderBottomWidth: 1,
-            borderColor: '#C8C8C8',
-            marginHorizontal: 12,
-            marginBottom: 12,
-          }}
-        />
-        <ModalDelete
-          isVisible={isDeleteModalVisible}
-          onClose={() => {
-            setDeleteModalVisible(false);
-            setItemToDelete(null);
-          }}
-          onConfirm={() => {
-            if (itemToDelete) {
-              setCartData(prev =>
-                prev.filter(item => item.id !== itemToDelete)
-              );
-              setSelectedItems(prev => prev.filter(id => id !== itemToDelete));
-            } else {
-              setCartData(prev =>
-                prev.filter(item => !selectedItems.includes(item.id))
-              );
-              setSelectedItems([]);
-            }
-            setItemToDelete(null);
-            setDeleteModalVisible(false);
-          }}
-          selectedCount={itemToDelete ? 1 : selectedItems.length}
+          style={{ borderBottomWidth: 1, borderColor: '#C8C8C8', marginHorizontal: 12, marginBottom: 12 }}
         />
       </View>
     );
@@ -272,7 +205,7 @@ const CartScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-[#F8F8F8]">
-      <View className="flex-row justify-between bg-white items-center p-4 ">
+      <View className="flex-row justify-between bg-white items-center p-4">
         <TouchableOpacity onPress={handleBack}>
           <BackIcons width={24} height={24} />
         </TouchableOpacity>
@@ -282,20 +215,16 @@ const CartScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Cart items will be displayed here */}
       {cartData.length === 0 ? (
-        <View className="flex-1 bg-[#f8f8f8]  mt-4 items-center">
+        <View className="flex-1 bg-[#f8f8f8] mt-4 items-center">
           <Image
             source={require('@/assets/images/Empty-Cart.png')}
             className="w-[250px] h-[250px] mt-10"
             resizeMode="contain"
           />
-          <Text className="text-[16px] font-semibold">
-            Oops, your cart is still empty!
-          </Text>
+          <Text className="text-[16px] font-semibold">Oops, your cart is still empty!</Text>
           <Text className="text-[14px] text-gray-500 text-center mt-2 px-6">
-            Come on, hurry up and find your favorite {'\n'} products before they
-            run out!
+            Come on, hurry up and find your favorite {'\n'} products before they run out!
           </Text>
           <View className="mt-6 w-full">
             <RecomendationCard />
@@ -309,32 +238,42 @@ const CartScreen = () => {
           contentContainerStyle={{ paddingVertical: 16 }}
           ListHeaderComponent={
             selectedItems.length > 0 ? (
-              <View
-                className="flex-row items-center justify-between bg-[#fff] px-4 border-b border-[#E0E0E0]"
-                style={{ height: 40 }}
-              >
+              <View className="flex-row items-center justify-between bg-[#fff] px-4 border-b border-[#E0E0E0]" style={{ height: 40 }}>
                 <Text className="text-[12px] text-[#7d7d7d] font-medium">
-                  {selectedItems.length} selected product
-                  {selectedItems.length > 1 ? 's' : ''}
+                  {selectedItems.length} selected product{selectedItems.length > 1 ? 's' : ''}
                 </Text>
                 <TouchableOpacity onPress={() => setDeleteModalVisible(true)}>
-                  <Text className="text-sm text-[#0AAD55] font-semibold">
-                    Wipe
-                  </Text>
+                  <Text className="text-sm text-[#0AAD55] font-semibold">Wipe</Text>
                 </TouchableOpacity>
               </View>
             ) : null
           }
-          ListFooterComponent={
-            <View className="mt-4">
-              <RecomendationCard />
-            </View>
-          }
+          ListFooterComponent={<View className="mt-4"><RecomendationCard /></View>}
         />
       )}
-      {/* Checkout Button */}
+
+      <ModalDelete
+        isVisible={isDeleteModalVisible}
+        onClose={() => {
+          setDeleteModalVisible(false);
+          setItemToDelete(null);
+        }}
+        onConfirm={() => {
+          if (itemToDelete) {
+            setCartData(prev => prev.filter(item => item.id !== itemToDelete));
+            setSelectedItems(prev => prev.filter(id => id !== itemToDelete));
+          } else {
+            setCartData(prev => prev.filter(item => !selectedItems.includes(item.id)));
+            setSelectedItems([]);
+          }
+          setItemToDelete(null);
+          setDeleteModalVisible(false);
+        }}
+        selectedCount={itemToDelete ? 1 : selectedItems.length}
+      />
+
       <ModalCheckout
-        isVisible={selectedItems.length > 0}
+        isVisible={isCheckoutVisible}
         onConfirm={() => {
           console.log('Checkout confirmed');
           setSelectedItems([]);
@@ -346,4 +285,5 @@ const CartScreen = () => {
     </SafeAreaView>
   );
 };
+
 export default CartScreen;

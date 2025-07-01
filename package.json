@@ -25,10 +25,7 @@
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@tanstack/react-query": "^5.77.2",
-    "ajv": "^8.17.1",
-    "ajv-keywords": "^5.1.0",
     "axios": "^1.9.0",
-    "dependencies": "^0.0.1",
     "expo": "^53.0.12",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.6",

@@ -52,14 +52,14 @@ const products = [
 interface RecomendationCardProps {
   products?: typeof products;
   title?: string;
+  onAddToCart?: (productId: string) => void;
 }
 
 const RecomendationCard: React.FC<RecomendationCardProps> = ({
   products: propProducts = products,
   title = 'Produk Rekomendasi',
+  onAddToCart,
 }) => {
-  const [visibleCount, setVisibleCount] = useState(4);
-
   const handleLoadMore = () => {
     router.push('/(tabs)/ecommerce');
   };
@@ -124,7 +124,7 @@ const RecomendationCard: React.FC<RecomendationCardProps> = ({
 
             <TouchableOpacity
               className="border-2 border-primary rounded-xl mt-2 items-center"
-              onPress={() => handleAddToCart(product)}
+              onPress={() => onAddToCart?.(product.id)}
             >
               <View className="flex-row items-center ">
                 <View className="mt-3">
