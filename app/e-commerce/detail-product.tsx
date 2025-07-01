@@ -139,21 +139,22 @@ const ProductDetailScreen = () => {
   const [selectedVariant, setSelectedVariant] = useState('');
   const [quantity, setQuantity] = useState(1);
 
-  if (products.length === 0) {
-    return (
-      <SafeAreaView>
-        <Text className="text-center mt-10 text-black">
-          Produk tidak tersedia
-        </Text>
-      </SafeAreaView>
-    );
-  }
-
-  const product = products[0];
+  const hasProduct = products.length > 0;
+  const product = hasProduct ? products[0] : null;
 
   useEffect(() => {
     if (product?.variants?.[0]?.size) {
       setSelectedVariant(product.variants[0].size);
+    }
+
+    if (products.length === 0) {
+      return (
+        <SafeAreaView>
+          <Text className="text-center mt-10 text-black">
+            Produk tidak tersedia
+          </Text>
+        </SafeAreaView>
+      );
     }
   }, [product]);
 
