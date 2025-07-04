@@ -132,15 +132,6 @@ export const otherProducts = [
 ];
 
 const ProductDetailScreen = () => {
-  if (products.length === 0) {
-    return (
-      <SafeAreaView>
-        <Text className="text-center mt-10 text-black">
-          Produk tidak tersedia
-        </Text>
-      </SafeAreaView>
-    );
-  }
   const flatListRef = useRef<FlatList>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const product = products[0];
@@ -150,6 +141,15 @@ const ProductDetailScreen = () => {
   );
   const [quantity, setQuantity] = useState(1);
 
+  if (products.length === 0) {
+    return (
+      <SafeAreaView>
+        <Text className="text-center mt-10 text-black">
+          Produk tidak tersedia
+        </Text>
+      </SafeAreaView>
+    );
+  }
   const productImagesWithBuffer = [
     product.images[product.images.length - 1],
     ...product.images,
