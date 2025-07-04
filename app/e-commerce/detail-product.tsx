@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -14,15 +14,14 @@ import {
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// icons
+//icons
 import CartIcons from '@/assets/icons/e-commerce/cart-icons';
 import BackIcons from '@/assets/icons/global/back-icons';
 import Share2Icons from '@/assets/icons/e-commerce/share-detail-icons';
 import MenuVerticalIcons from '@/assets/icons/e-commerce/menu-dots-vertikal-icons';
 import ButtonPlusPrimaryIcons from '@/assets/icons/e-commerce/button-plus-primary-icons';
 import MessageIcons from '@/assets/icons/global/message-icons';
-
-// ui
+//ui
 import ProductDetailCard from '@/components/ui/e-commerce/detail/card-product-detail';
 import AddToCartModal from '@/components/ui/e-commerce/detail/modal-detail';
 import ProductSpecifications from '@/components/ui/e-commerce/detail/product-specifications';
@@ -31,7 +30,6 @@ import StoreInfo from '@/components/ui/e-commerce/detail/store-info';
 import OtherProductCard from '@/components/ui/e-commerce/detail/card-other-product';
 
 const { width } = Dimensions.get('window');
-
 const products = [
   {
     id: 1,
@@ -62,6 +60,7 @@ const ProductSpesifikasi = {
   specifications: {
     brand: 'H&L',
     category: 'Other Garden Supplies',
+
     function: 'Spray Machine',
     dimensions: '30×30×30',
     weight: '7000',
@@ -135,29 +134,22 @@ export const otherProducts = [
 const ProductDetailScreen = () => {
   const flatListRef = useRef<FlatList>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const product = products[0];
   const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedVariant, setSelectedVariant] = useState('');
+  const [selectedVariant, setSelectedVariant] = useState(
+    product.variants[0]?.size || ''
+  );
   const [quantity, setQuantity] = useState(1);
 
-  const hasProduct = products.length > 0;
-  const product = hasProduct ? products[0] : null;
-
-  useEffect(() => {
-    if (product?.variants?.[0]?.size) {
-      setSelectedVariant(product.variants[0].size);
-    }
-
-    if (products.length === 0) {
-      return (
-        <SafeAreaView>
-          <Text className="text-center mt-10 text-black">
-            Produk tidak tersedia
-          </Text>
-        </SafeAreaView>
-      );
-    }
-  }, [product]);
-
+  if (products.length === 0) {
+    return (
+      <SafeAreaView>
+        <Text className="text-center mt-10 text-black">
+          Produk tidak tersedia
+        </Text>
+      </SafeAreaView>
+    );
+  }
   const productImagesWithBuffer = [
     product.images[product.images.length - 1],
     ...product.images,
@@ -175,6 +167,7 @@ const ProductDetailScreen = () => {
 
     setActiveIndex(realIndex);
 
+    // Reposition if hit buffer edge
     if (flatListRef.current) {
       if (index === 0) {
         flatListRef.current.scrollToIndex({
@@ -225,12 +218,12 @@ const ProductDetailScreen = () => {
           <ProductDetailCard
             product={product}
             imageProduct={productImagesWithBuffer}
-            imageOriginal={product.images}
             activeIndex={activeIndex}
             flatListRef={flatListRef}
             onScrollEnd={onScrollEnd}
           />
 
+          {/* Product Specification Section */}
           <View className="mt-4 px-4 bg-white pb-6">
             <Text className="text-[16px] font-semibold mb-3 text-black">
               Product Specifications
@@ -238,17 +231,17 @@ const ProductDetailScreen = () => {
             <ProductSpecifications data={ProductSpesifikasi.specifications} />
           </View>
 
-          <View className="bg-white">
-            <View className="px-4 py-3 flex-row">
+          <View className="bg-white  ">
+            <View className=" px-4 py-3 flex-row">
               <Text className="font-semibold text-[16px]">Product Details</Text>
             </View>
             <ProductDescription
               description={productDeskripsi[0]?.description || ''}
             />
           </View>
-
           <View className="bg-white h-[148px] w-[390px] px-4 pt-4 pb-4 mt-4">
             {storeList[0] && <StoreInfo toko={storeList[0]} />}
+
             <View className="mt-4 flex-row justify-around">
               <TouchableOpacity className="border border-[#169953] w-[173px] h-[40px] rounded-xl px-6 py-2 flex-1 mr-2 items-center">
                 <Text className="text-[#169953] text-[16px] font-semibold">
@@ -292,7 +285,9 @@ const ProductDetailScreen = () => {
         <View className="border-t border-gray-200 bg-white px-4 py-3">
           <View className="mt-4 flex-row space-x-3 ">
             <TouchableOpacity className="border border-[#169953] w-[40px] h-[40px] mr-2 ml-3 rounded-2xl flex-row justify-center items-center py-2">
-              <MessageIcons width={18} height={18} color={'#169953'} />
+              <View>
+                <MessageIcons width={18} height={18} color={'#169953'} />
+              </View>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setModalVisible(true)}
@@ -307,6 +302,7 @@ const ProductDetailScreen = () => {
                 </Text>
               </View>
             </TouchableOpacity>
+
             <TouchableOpacity className="flex-1 bg-[#169953] w-[148px] h-[40px] mr-2 ml-3 rounded-2xl flex-row justify-center items-center py-2">
               <Text className="text-white font-semibold text-[14px]">
                 Checkout
@@ -314,7 +310,6 @@ const ProductDetailScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
-
         <AddToCartModal
           visible={isModalVisible}
           onClose={() => setModalVisible(false)}
