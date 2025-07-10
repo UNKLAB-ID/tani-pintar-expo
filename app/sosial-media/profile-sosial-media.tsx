@@ -7,7 +7,9 @@ import CustomButton from '@/components/ui/component-globals/button-primary';
 import CustomButtonSecundary from '@/components/ui/component-globals/button-secundary';
 import InputSearchPrimary from '@/components/ui/component-globals/input-seach-primary';
 import CardSosialMedia from '@/components/ui/sosial-media/card-sosial-media';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useProfile } from '@/hooks/useProfile';
+import { useProfileStore } from '@/store/sosial-media/profile-user';
 import api from '@/utils/api/api';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -21,11 +23,22 @@ import {
   Text,
   ScrollView,
 } from 'react-native';
+import ModalUserMenuProfile from '@/components/ui/sosial-media/profile/modal-menu-user-profile';
+import BlockScriner from '@/components/ui/sosial-media/modal-block';
 
 const ProfileSosialMedia = () => {
   const [dataPosts, setDataPosts] = useState<any[]>([]);
   const [dataProfile, setDataProfile] = useState<any>({});
+  const [modalUserMenu, setModalUserMenu] = useState<boolean>(false);
+  const [modalBlock, setModalBlock] = useState<boolean>(false);
+  const [modalReport, setModalReport] = useState<boolean>(false);
+  const [modalMenuEdit, setModalMenuEdit] = useState<boolean>(false);
+  const [modalShare, setModalShare] = useState<boolean>(false);
+  const [modalCopyLink, setModalCopyLink] = useState<boolean>(false);
+  const [modalAboutThisProfile, setModalAboutThisProfile] = useState<boolean>(false);
+  const { profileImage } = useProfileStore();
   const { query, id } = useLocalSearchParams();
+  const insets = useSafeAreaInsets();
 
   const fetchPostsList = async () => {
     const response = await api.get('/social-media/posts/');
@@ -79,8 +92,12 @@ const ProfileSosialMedia = () => {
 
   return (
     <SafeAreaView
-      className="mt-12"
-      style={{ backgroundColor: '#f7f7f7', flex: 1 }}
+      style={{
+        backgroundColor: '#f7f7f7',
+        flex: 1,
+        paddingTop: insets.top,
+        paddingBottom: insets.bottom,
+      }}
     >
       <StatusBar barStyle="dark-content" translucent={false} />
 
@@ -88,7 +105,7 @@ const ProfileSosialMedia = () => {
         {/* Bagian header */}
         <View
           className="px-4 flex-row items-center justify-between"
-          style={{ backgroundColor: '#fff' }}
+          style={{ backgroundColor: '#fff', paddingTop: 10 }}
         >
           <TouchableOpacity onPress={() => router.replace('/(tabs)/sosmed')}>
             <BackIcons size={20} />
@@ -125,11 +142,15 @@ const ProfileSosialMedia = () => {
           >
             <Image
               source={
-                dataProfile?.profile_picture_url
+                profileImage
                   ? {
+                    uri: profileImage.uri,
+                  }
+                  : dataProfile?.profile_picture_url
+                    ? {
                       uri: dataProfile.profile_picture_url,
                     }
-                  : require('../../assets/images/profile-default.png')
+                    : require('../../assets/images/profile-default.png')
               }
               style={{
                 height: 100,
@@ -150,6 +171,7 @@ const ProfileSosialMedia = () => {
                 zIndex: 20,
                 transform: [{ translateX: 18 }, { translateY: 18 }],
               }}
+              onPress={() => router.push('/sosial-media/picture-profile?type=backgroundImages')}
             >
               <EditBgImagesSosialMediaIcons
                 width={16}
@@ -161,15 +183,18 @@ const ProfileSosialMedia = () => {
         </View>
 
         {/* Info user */}
-        <View style={{ paddingTop: 55, backgroundColor: '#fff' }}>
-          <Text className="text-center font-semibold" style={{ fontSize: 18 }}>
+        <View style={{ paddingTop: 40, backgroundColor: '#fff' }}>
+          <Text
+            className="text-center font-semibold"
+            style={{ fontSize: 18, marginTop: 15 }}
+          >
             {dataProfile?.full_name}
           </Text>
           <View className="flex-row justify-center items-center my-2">
             <Text className="text-primary font-semibold mr-2">
               {dataProfile?.followers_count} followers
             </Text>
-            <PointIcons width={4} height={4} />
+            <PointIcons width={6} height={6} />
             <Text className="text-primary font-semibold ml-2">
               {dataProfile?.following_count} following
             </Text>
@@ -191,7 +216,7 @@ const ProfileSosialMedia = () => {
             <View style={{ width: 310 }}>
               <CustomButton
                 title="Edit profile"
-                onPress={() => console.log('tes')}
+                onPress={() => router.push("/sosial-media/update-biodata-profile")}
                 className="py-[9px]"
               />
             </View>
@@ -220,7 +245,11 @@ const ProfileSosialMedia = () => {
             className="border rounded-full flex-row items-center justify-center"
             style={{ width: 39, height: 39, borderColor: '#525252' }}
           >
-            <PointThreeHorizontal width={24} height={24} />
+            <PointThreeHorizontal width={24} height={24}
+              onPress={() => {
+                query === 'profile' ? setModalMenuEdit(true) : setModalUserMenu(true)
+              }}
+            />
           </TouchableOpacity>
         </View>
 
@@ -269,7 +298,7 @@ const ProfileSosialMedia = () => {
         )}
 
         {/* List Posts */}
-        <View style={{ paddingBottom: 50 }}>
+        <View style={{ paddingBottom: 1 }}>
           {dataPosts.map((item, index) => (
             <CardSosialMedia
               key={`${item.id}-${index}`}
@@ -283,6 +312,28 @@ const ProfileSosialMedia = () => {
           ))}
         </View>
       </ScrollView>
+
+      {/* Modal User Menu */}
+      {
+        modalUserMenu && (
+          <ModalUserMenuProfile
+            modalUserMenu={modalUserMenu}
+            setModalUserMenu={setModalUserMenu}
+            setModalAboutThisProfile={setModalAboutThisProfile}
+            setModalBlock={setModalBlock}
+            setModalReport={setModalReport}
+            setModalShare={setModalShare}
+            setModalCopyLink={setModalCopyLink}
+          />
+        )
+      }
+
+      {modalBlock && (
+        <BlockScriner
+          modalBlock={modalBlock}
+          setModalBlock={setModalBlock}
+        />
+      )}
     </SafeAreaView>
   );
 };
