@@ -25,6 +25,7 @@ import {
 } from 'react-native';
 import ModalUserMenuProfile from '@/components/ui/sosial-media/profile/modal-menu-user-profile';
 import BlockScriner from '@/components/ui/sosial-media/modal-block';
+import ModalShare from '@/components/ui/sosial-media/modal-share';
 
 const ProfileSosialMedia = () => {
   const [dataPosts, setDataPosts] = useState<any[]>([]);
@@ -332,6 +333,13 @@ const ProfileSosialMedia = () => {
         <BlockScriner
           modalBlock={modalBlock}
           setModalBlock={setModalBlock}
+        />
+      )}
+
+      {modalShare && (
+        <ModalShare
+          modalShare={modalShare}
+          setModalShare={setModalShare}
         />
       )}
     </SafeAreaView>
