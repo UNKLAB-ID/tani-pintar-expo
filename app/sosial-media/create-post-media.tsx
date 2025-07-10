@@ -6,7 +6,8 @@ import GifIcons from '@/assets/icons/sosial-media/gif-icons';
 import PictureIcons from '@/assets/icons/sosial-media/picture-icons';
 import TagPeopleIcons from '@/assets/icons/sosial-media/tag-people-icons';
 import ButtonPostMedia from '@/components/ui/sosial-media/button-post-media';
-import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import {
   Text,
@@ -30,6 +31,8 @@ const CreatePostMedia = () => {
   const [textAdience, setTextAudience] = useState<string>('Public');
   const [modalAudience, setModalAudience] = useState<boolean>(false);
   const [images, setImages] = useState<any[]>([]);
+  const { query } = useLocalSearchParams();
+  const insets = useSafeAreaInsets();
 
   const { data: profile, isLoading, isError } = useProfile();
 
@@ -41,7 +44,7 @@ const CreatePostMedia = () => {
     });
 
     if (!result.canceled) {
-      setImages(result.assets); // result.assets adalah array gambar/video
+      setImages(result.assets);
     }
   };
 
@@ -124,7 +127,10 @@ const CreatePostMedia = () => {
   });
 
   return (
-    <SafeAreaView className="flex-1 bg-white mt-10">
+    <SafeAreaView
+      className="flex-1 bg-white"
+      style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
+    >
       <StatusBar
         barStyle="dark-content"
         translucent={false}
@@ -135,7 +141,7 @@ const CreatePostMedia = () => {
         <ScrollView
           contentContainerStyle={{
             paddingHorizontal: 16,
-            paddingTop: 8,
+            paddingTop: 4,
             paddingBottom: 16,
           }}
         >
@@ -271,14 +277,11 @@ const CreatePostMedia = () => {
             borderTopLeftRadius: 12,
             borderTopRightRadius: 12,
             backgroundColor: '#fff',
-            // iOS shadow
             shadowColor: '#000',
             shadowOffset: { width: 0, height: -4 },
             shadowOpacity: 0.1,
             shadowRadius: 6,
-            // Android shadow
             elevation: 10,
-            paddingBottom: 60,
           }}
           className="px-4 py-5"
         >
