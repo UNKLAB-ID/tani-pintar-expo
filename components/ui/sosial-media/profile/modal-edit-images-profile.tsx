@@ -6,8 +6,8 @@ import PictureIcons from '@/assets/icons/sosial-media/picture-icons';
 import React from 'react';
 import { Alert, Modal, Text, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { useProfileStore } from '@/store/sosial-media/profile-user';
 import { useLocalSearchParams } from 'expo-router';
+import { useMediaSosial } from '@/store/sosial-media/sosial-media';
 
 interface ModalEditImagesProfileProps {
   modalImagesProfile: boolean;
@@ -19,7 +19,7 @@ const ModalEditImagesProfile: React.FC<ModalEditImagesProfileProps> = ({
   setModalImagesProfile,
 }) => {
   const { type } = useLocalSearchParams();
-  const { setProfileImage } = useProfileStore();
+  const { setProfileImage } = useMediaSosial();
 
   const handleDelete = () => {
     setProfileImage?.(null);

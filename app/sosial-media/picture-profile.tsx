@@ -10,16 +10,16 @@ import BackIcons from '@/assets/icons/global/back-icons';
 import EditBgImagesSosialMediaIcons from '@/assets/icons/sosial-media/edit-bg-images-profile-sosial-media-icons';
 import RotasiImagesProfileIcons from '@/assets/icons/sosial-media/rotasi-images-profile-icons';
 import ModalEditImagesProfile from '@/components/ui/sosial-media/profile/modal-edit-images-profile';
-import { useProfileStore } from '@/store/sosial-media/profile-user';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import ModalCancelImagesProfile from '@/components/ui/sosial-media/profile/modal-cancel-images-profile';
+import { useMediaSosial } from '@/store/sosial-media/sosial-media';
+import ModalCancel from '@/components/ui/sosial-media/modal-cancel';
 
 const PictureProfile = () => {
   const [modalImagesProfile, setModalImagesProfile] = useState<boolean>(false);
   const [showDiscardModal, setShowDiscardModal] = useState<boolean>(false);
-  const { profileImage, setProfileImage } = useProfileStore();
+  const { profileImage, setProfileImage } = useMediaSosial();
   const { type } = useLocalSearchParams();
   const insets = useSafeAreaInsets();
 
@@ -129,7 +129,14 @@ const PictureProfile = () => {
 
       {/* Modal Cancel Images Profile */}
       {showDiscardModal && (
-        <ModalCancelImagesProfile setShowDiscardModal={setShowDiscardModal} />
+        <ModalCancel
+          setShowDiscardModal={setShowDiscardModal}
+          desciption='You have unsaved changes. Do you want to discard them?'
+          headerDescription=''
+          textButtonLeft='Discard'
+          textButtonRight='Cancel'
+          path={"/sosial-media/profile-sosial-media?query=profile"}
+        />
       )}
 
       {/* Modal Edit Images Profile */}

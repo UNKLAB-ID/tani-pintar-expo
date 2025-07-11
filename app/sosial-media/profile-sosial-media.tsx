@@ -9,7 +9,7 @@ import InputSearchPrimary from '@/components/ui/component-globals/input-seach-pr
 import CardSosialMedia from '@/components/ui/sosial-media/card-sosial-media';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useProfile } from '@/hooks/useProfile';
-import { useProfileStore } from '@/store/sosial-media/profile-user';
+import { useMediaSosial } from '@/store/sosial-media/sosial-media';
 import api from '@/utils/api/api';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -26,6 +26,7 @@ import {
 import ModalUserMenuProfile from '@/components/ui/sosial-media/profile/modal-menu-user-profile';
 import BlockScriner from '@/components/ui/sosial-media/modal-block';
 import ModalShare from '@/components/ui/sosial-media/modal-share';
+import ModalDeletePost from '@/components/ui/sosial-media/profile/modal-delete-post-profile';
 
 const ProfileSosialMedia = () => {
   const [dataPosts, setDataPosts] = useState<any[]>([]);
@@ -37,7 +38,7 @@ const ProfileSosialMedia = () => {
   const [modalShare, setModalShare] = useState<boolean>(false);
   const [modalCopyLink, setModalCopyLink] = useState<boolean>(false);
   const [modalAboutThisProfile, setModalAboutThisProfile] = useState<boolean>(false);
-  const { profileImage } = useProfileStore();
+  const { profileImage, modalDeletePost, setModalDeletePost } = useMediaSosial();
   const { query, id } = useLocalSearchParams();
   const insets = useSafeAreaInsets();
 
@@ -247,9 +248,7 @@ const ProfileSosialMedia = () => {
             style={{ width: 39, height: 39, borderColor: '#525252' }}
           >
             <PointThreeHorizontal width={24} height={24}
-              onPress={() => {
-                query === 'profile' ? setModalMenuEdit(true) : setModalUserMenu(true)
-              }}
+              onPress={() => setModalUserMenu(true)}
             />
           </TouchableOpacity>
         </View>
@@ -309,6 +308,7 @@ const ProfileSosialMedia = () => {
                 newList[index] = updated[0];
                 setDataPosts(newList);
               }}
+              typeQuery={String(query)}
             />
           ))}
         </View>
@@ -325,6 +325,7 @@ const ProfileSosialMedia = () => {
             setModalReport={setModalReport}
             setModalShare={setModalShare}
             setModalCopyLink={setModalCopyLink}
+            typeQuery={String(query)}
           />
         )
       }
@@ -340,6 +341,17 @@ const ProfileSosialMedia = () => {
         <ModalShare
           modalShare={modalShare}
           setModalShare={setModalShare}
+        />
+      )}
+
+      {modalDeletePost && (
+        <ModalDeletePost
+          // modalDeletePost={modalDeletePost}
+          setModalDeletePost={setModalDeletePost}
+        // id={id}
+        // index={index}
+        // data={data}
+        // setData={setData}
         />
       )}
     </SafeAreaView>
