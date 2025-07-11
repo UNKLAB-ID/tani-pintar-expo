@@ -62,7 +62,7 @@
     "react-native-svg": "15.11.2",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "^0.20.0",
-    "react-native-webview": "13.13.5",
+    "react-native-webview": "13.15.0",
     "tailwindcss": "^3.4.17",
     "zustand": "^5.0.6"
   },
