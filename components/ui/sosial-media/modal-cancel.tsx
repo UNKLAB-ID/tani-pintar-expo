@@ -4,14 +4,25 @@ import { View, Text, TouchableOpacity } from 'react-native';
 
 interface ModalCancelImagesProfileProps {
   setShowDiscardModal: (visible: boolean) => void;
+  desciption: string;
+  headerDescription?: string;
+  textButtonLeft: string;
+  textButtonRight: string;
+  path: any;
 }
 
-const ModalCancelImagesProfile: React.FC<ModalCancelImagesProfileProps> = ({
+const ModalCancel: React.FC<ModalCancelImagesProfileProps> = ({
   setShowDiscardModal,
+  desciption,
+  headerDescription,
+  textButtonLeft,
+  textButtonRight,
+  path,
 }) => {
   const handleDiscard = () => {
     setShowDiscardModal(false);
-    router.replace('/sosial-media/profile-sosial-media?query=profile');
+    router.replace(path);
+
   };
 
   return (
@@ -32,13 +43,20 @@ const ModalCancelImagesProfile: React.FC<ModalCancelImagesProfileProps> = ({
           backgroundColor: '#fff',
           padding: 20,
           borderRadius: 10,
-          width: '80%',
+          width: '90%',
           alignItems: 'center',
         }}
       >
-        <Text style={{ marginBottom: 20, color: '#434343', fontSize: 14 }}>
-          You have unsaved changes. Do you want to discard them?
-        </Text>
+        <View>
+          {headerDescription && (
+            <Text style={{ marginBottom: 10, color: '#434343', fontSize: 18, fontWeight: 600, textAlign: "left" }}>
+              {headerDescription}
+            </Text>
+          )}
+          <Text style={{ marginBottom: 20, color: '#434343', fontSize: 14 }}>
+            {desciption}
+          </Text>
+        </View>
         <View
           style={{
             flexDirection: 'row',
@@ -50,11 +68,11 @@ const ModalCancelImagesProfile: React.FC<ModalCancelImagesProfileProps> = ({
             <Text
               style={{ color: '#6F6F6F', fontWeight: 500, marginRight: 20 }}
             >
-              Discard
+              {textButtonLeft}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setShowDiscardModal(false)}>
-            <Text style={{ color: '#6F6F6F', fontWeight: 500 }}>Cancel</Text>
+            <Text style={{ color: '#6F6F6F', fontWeight: 500 }}>{textButtonRight}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -62,4 +80,4 @@ const ModalCancelImagesProfile: React.FC<ModalCancelImagesProfileProps> = ({
   );
 };
 
-export default ModalCancelImagesProfile;
+export default ModalCancel;

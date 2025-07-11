@@ -1,6 +1,7 @@
 import CloseIcons from "@/assets/icons/global/close-icons";
 import CustomButton from "@/components/ui/component-globals/button-primary";
 import CustomTextInput from "@/components/ui/component-globals/input-text";
+import ModalCancel from "@/components/ui/sosial-media/modal-cancel";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -8,7 +9,8 @@ import { SafeAreaView, Text, View, TouchableOpacity, StatusBar, KeyboardAvoiding
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const UpdateBiodataProfile = () => {
-    const [selectedCountry, setSelectedCountry] = useState('');
+    const [selectedCountry, setSelectedCountry] = useState<string>('');
+    const [modalCancel, setModalCancel] = useState<boolean>(false);
     const insets = useSafeAreaInsets();
     const {
         control,
@@ -53,7 +55,7 @@ const UpdateBiodataProfile = () => {
                     {/* Header */}
                     <View className="flex-row items-center mb-4">
                         <TouchableOpacity
-                            onPress={() => router.back()}
+                            onPress={() => setModalCancel(true)}
                             className="flex-row items-center justify-center"
                             style={{ marginEnd: 12 }}
                         >
@@ -135,7 +137,7 @@ const UpdateBiodataProfile = () => {
                     <Text style={{ fontWeight: '600', fontSize: 18, color: "#000", marginBottom: 20, marginTop: 10 }}>Location</Text>
 
                     {/* Country */}
-                    <Text style={{ fontWeight: '400', fontSize: 14, color: "#1F1F1F", marginBottom:5 }}>Country / region*</Text>
+                    <Text style={{ fontWeight: '400', fontSize: 14, color: "#1F1F1F", marginBottom: 5 }}>Country / region*</Text>
                     <View className="mb-4">
                         <TouchableOpacity
                             onPress={() => router.push('/sosial-media/address/location-country')}
@@ -154,7 +156,7 @@ const UpdateBiodataProfile = () => {
                     </View>
 
                     {/* City */}
-                    <Text style={{ fontWeight: '400', fontSize: 14, color: "#1F1F1F", marginBottom:5}}>City*</Text>
+                    <Text style={{ fontWeight: '400', fontSize: 14, color: "#1F1F1F", marginBottom: 5 }}>City*</Text>
                     <TouchableOpacity
                         onPress={() => router.push('/sosial-media/address/location-country')}
                         style={{
@@ -181,6 +183,17 @@ const UpdateBiodataProfile = () => {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
+
+            {modalCancel && (
+                <ModalCancel
+                    setShowDiscardModal={setModalCancel}
+                    desciption="These changes will be lost if you exit. Are you sure you want to continue?"
+                    headerDescription="Discard changes"
+                    textButtonLeft="Discard"
+                    textButtonRight="No, thanks"
+                    path={'/sosial-media/profile-sosial-media?query=profile'}
+                />
+            )}
         </SafeAreaView>
     )
 }

@@ -56,6 +56,8 @@ interface RenderPostCardProps {
   setModalVisible: (visible: boolean) => void;
   setSlugComment: (slug: string) => void;
   setModalComment: (visible: boolean) => void;
+  setModalShare: (visible: boolean) => void;
+  setModalPostMenu: (visible: boolean) => void;
 }
 
 const RenderPostCard: React.FC<RenderPostCardProps> = ({
@@ -70,6 +72,8 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
   setModalVisible,
   setSlugComment,
   setModalComment,
+  setModalShare,
+  setModalPostMenu,
 }) => {
   const scrollRef = useRef(null);
   const { query } = useLocalSearchParams();
@@ -143,9 +147,13 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
         </View>
         <TouchableOpacity
           onPress={() => {
-            setId(item.slug);
-            setIndex(index);
-            setModalVisible(true);
+            if (query) {
+              setModalPostMenu(true);
+            } else {
+              setId(item.slug);
+              setIndex(index);
+              setModalVisible(true);
+            }
           }}
         >
           {query ? (
@@ -242,7 +250,7 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
           className="flex-row items-center justify-between"
           style={{ width: 49 }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setModalShare(true)}>
             <ShareIcons width={18} height={18} color={'#434343'} />
           </TouchableOpacity>
           <Text className="text-[14px] text-[#434343] ml-2">

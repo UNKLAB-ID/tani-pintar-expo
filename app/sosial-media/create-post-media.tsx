@@ -25,13 +25,15 @@ import ModalAudiencePost from '@/components/ui/sosial-media/modal-audience-post'
 import { useMutation } from '@tanstack/react-query';
 import api from '@/utils/api/api';
 import { useProfile } from '@/hooks/useProfile';
+import ModalCancel from '@/components/ui/sosial-media/modal-cancel';
 
 const CreatePostMedia = () => {
   const [textInput, setTextInput] = useState<string>('');
   const [textAdience, setTextAudience] = useState<string>('Public');
   const [modalAudience, setModalAudience] = useState<boolean>(false);
+  const [modalCancel, setModalCancel] = useState<boolean>(false);
   const [images, setImages] = useState<any[]>([]);
-  const { query } = useLocalSearchParams();
+  const { typePost } = useLocalSearchParams();
   const insets = useSafeAreaInsets();
 
   const { data: profile, isLoading, isError } = useProfile();
@@ -149,11 +151,17 @@ const CreatePostMedia = () => {
             <View className="flex-row items-center">
               <TouchableOpacity
                 className="me-2 w-[24px] h-[24px] justify-center items-center"
-                onPress={() => router.replace('/(tabs)/sosmed')}
+                onPress={() => {
+                  if(typePost === "update") {
+                    setModalCancel(true)
+                  }else{
+                    router.back()
+                  }
+                }}
               >
                 <CloseIcons width={15} height={15} color="#1F1F1F" />
               </TouchableOpacity>
-              <Text className="font-bold text-[16px]">Creating a Post</Text>
+              <Text className="font-bold text-[16px]">{typePost === "update" ? "Update" : "Creating"} a Post</Text>
             </View>
             <TouchableOpacity
               style={{
@@ -319,6 +327,17 @@ const CreatePostMedia = () => {
           setModalAudience={setModalAudience}
           setTextAudience={setTextAudience}
           textAudience={textAdience}
+        />
+      )}
+
+      {modalCancel && (
+        <ModalCancel
+          setShowDiscardModal={setModalCancel}
+          headerDescription ="Discard edit"
+          desciption="Wait! Your edits aren’t saved yet. Leaving now will discard all your changes—are you sure you want to continue?"
+          textButtonLeft="Discard"
+          textButtonRight="No, thanks"
+          path="/sosial-media/profile-sosial-media?query=profile"
         />
       )}
     </SafeAreaView>
