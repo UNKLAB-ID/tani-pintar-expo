@@ -2,14 +2,7 @@ import * as React from 'react';
 import Svg, { SvgProps, Path } from 'react-native-svg';
 
 const Location2Icons = ({ width = 16, height = 16, ...props }: SvgProps) => (
-  <Svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    width={width}
-    height={height}
-    viewBox="0 0 20 20"
-    {...props}
-  >
+  <Svg fill="none" width={width} height={height} viewBox="0 0 20 20" {...props}>
     <Path
       stroke="#6F6F6F"
       strokeLinecap="round"

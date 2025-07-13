@@ -28,7 +28,7 @@ function DropdownList<T extends any>({
   const [search, setSearch] = useState('');
   const [showClear, setShowClear] = useState(false);
 
-  const filteredData = data.filter((item) =>
+  const filteredData = data.filter(item =>
     getLabel(item).toLowerCase().includes(search.toLowerCase())
   );
 
@@ -42,7 +42,7 @@ function DropdownList<T extends any>({
         <TextInput
           placeholder={placeholder}
           value={search}
-          onChangeText={(text) => {
+          onChangeText={text => {
             setSearch(text);
             setShowClear(text.length > 0);
           }}
@@ -59,10 +59,7 @@ function DropdownList<T extends any>({
         data={filteredData}
         keyExtractor={(item, index) => String(index)}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.item}
-            onPress={() => onSelect(item)}
-          >
+          <TouchableOpacity style={styles.item} onPress={() => onSelect(item)}>
             <Text style={styles.itemText}>{getLabel(item)}</Text>
           </TouchableOpacity>
         )}

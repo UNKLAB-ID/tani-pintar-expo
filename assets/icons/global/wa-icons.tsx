@@ -1,5 +1,5 @@
-import * as React from "react"
-import Svg, { SvgProps, G, Path, Defs, ClipPath } from "react-native-svg"
+import * as React from 'react';
+import Svg, { SvgProps, G, Path, Defs, ClipPath } from 'react-native-svg';
 const WaIcons = (props: SvgProps) => (
   <Svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
     <G clipPath="url(#a)">
@@ -16,5 +16,5 @@ const WaIcons = (props: SvgProps) => (
       </ClipPath>
     </Defs>
   </Svg>
-)
-export default WaIcons
+);
+export default WaIcons;

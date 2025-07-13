@@ -1,15 +1,8 @@
 import * as React from 'react';
 import Svg, { SvgProps, Path } from 'react-native-svg';
 
-const BoxMinusCartIcons = ({ width = 24, height = 24, ...props }: SvgProps) => (
-  <Svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    width={width}
-    height={height}
-    viewBox="0 0 36 36"
-    {...props}
-  >
+const BoxMinusCartIcons = ({ width = 36, height = 36, ...props }: SvgProps) => (
+  <Svg fill="none" width={width} height={height} viewBox="0 0 36 36" {...props}>
     <Path
       stroke="#1F1F1F"
       strokeLinecap="round"

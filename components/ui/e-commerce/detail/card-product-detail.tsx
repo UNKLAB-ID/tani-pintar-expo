@@ -36,7 +36,6 @@ interface ProductDetailCardProps {
   activeIndex: number;
   flatListRef: React.RefObject<FlatList<any> | null>;
   onScrollEnd: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
-  imageProduct: ProductImage[];
 }
 
 export default function ProductDetailCard({
@@ -44,7 +43,6 @@ export default function ProductDetailCard({
   activeIndex,
   flatListRef,
   onScrollEnd,
-  imageProduct,
 }: ProductDetailCardProps) {
   const { width } = useWindowDimensions();
 
@@ -54,12 +52,13 @@ export default function ProductDetailCard({
       <View className="bg-[#F0F5EF] w-full h-[335px] items-center">
         <FlatList
           ref={flatListRef}
-          data={imageProduct}
+          data={product.images}
           keyExtractor={item => item.id.toString()}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={onScrollEnd}
+          initialScrollIndex={1}
           getItemLayout={(_, index) => ({
             length: width,
             offset: width * index,

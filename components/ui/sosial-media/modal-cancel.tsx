@@ -22,7 +22,6 @@ const ModalCancel: React.FC<ModalCancelImagesProfileProps> = ({
   const handleDiscard = () => {
     setShowDiscardModal(false);
     router.replace(path);
-
   };
 
   return (
@@ -49,7 +48,15 @@ const ModalCancel: React.FC<ModalCancelImagesProfileProps> = ({
       >
         <View>
           {headerDescription && (
-            <Text style={{ marginBottom: 10, color: '#434343', fontSize: 18, fontWeight: 600, textAlign: "left" }}>
+            <Text
+              style={{
+                marginBottom: 10,
+                color: '#434343',
+                fontSize: 18,
+                fontWeight: 600,
+                textAlign: 'left',
+              }}
+            >
               {headerDescription}
             </Text>
           )}
@@ -72,7 +79,9 @@ const ModalCancel: React.FC<ModalCancelImagesProfileProps> = ({
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setShowDiscardModal(false)}>
-            <Text style={{ color: '#6F6F6F', fontWeight: 500 }}>{textButtonRight}</Text>
+            <Text style={{ color: '#6F6F6F', fontWeight: 500 }}>
+              {textButtonRight}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -126,7 +126,10 @@ const FlashSaleScreen = () => {
         barStyle="light-content"
         translucent={false}
       />
-      <View className="flex-1 pt-7 bg-primary">
+      <SafeAreaView
+        className="flex-1 pt-3  bg-primary"
+        edges={['top', 'left', 'right']}
+      >
         <View className="bg-primary flex-row items-center justify-center space-x-2 py-2 px-5">
           <TouchableOpacity onPress={handleBackHome} className="p-1 mr-2">
             <BackIcons width={20} height={20} color="#FFF" />
@@ -138,12 +141,16 @@ const FlashSaleScreen = () => {
             iconPosition="right"
           />
           <TouchableOpacity className="p-2">
-            <ShareSquareIcons width={24} height={24} />
+            <ShareSquareIcons
+              width={24}
+              height={24}
+              style={{ marginBottom: 4 }}
+            />
           </TouchableOpacity>
         </View>
 
         {/*content */}
-        <SafeAreaView edges={['top']} style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
           <ScrollView
             contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }}
             className="bg-white rounded-t-xl flex-1"
@@ -215,8 +222,8 @@ const FlashSaleScreen = () => {
               )}
             />
           </ScrollView>
-        </SafeAreaView>
-      </View>
+        </View>
+      </SafeAreaView>
     </>
   );
 };

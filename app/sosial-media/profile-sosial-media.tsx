@@ -37,8 +37,10 @@ const ProfileSosialMedia = () => {
   const [modalMenuEdit, setModalMenuEdit] = useState<boolean>(false);
   const [modalShare, setModalShare] = useState<boolean>(false);
   const [modalCopyLink, setModalCopyLink] = useState<boolean>(false);
-  const [modalAboutThisProfile, setModalAboutThisProfile] = useState<boolean>(false);
-  const { profileImage, modalDeletePost, setModalDeletePost } = useMediaSosial();
+  const [modalAboutThisProfile, setModalAboutThisProfile] =
+    useState<boolean>(false);
+  const { profileImage, modalDeletePost, setModalDeletePost } =
+    useMediaSosial();
   const { query, id } = useLocalSearchParams();
   const insets = useSafeAreaInsets();
 
@@ -146,12 +148,12 @@ const ProfileSosialMedia = () => {
               source={
                 profileImage
                   ? {
-                    uri: profileImage.uri,
-                  }
+                      uri: profileImage.uri,
+                    }
                   : dataProfile?.profile_picture_url
                     ? {
-                      uri: dataProfile.profile_picture_url,
-                    }
+                        uri: dataProfile.profile_picture_url,
+                      }
                     : require('../../assets/images/profile-default.png')
               }
               style={{
@@ -173,7 +175,11 @@ const ProfileSosialMedia = () => {
                 zIndex: 20,
                 transform: [{ translateX: 18 }, { translateY: 18 }],
               }}
-              onPress={() => router.push('/sosial-media/picture-profile?type=backgroundImages')}
+              onPress={() =>
+                router.push(
+                  '/sosial-media/picture-profile?type=backgroundImages'
+                )
+              }
             >
               <EditBgImagesSosialMediaIcons
                 width={16}
@@ -218,7 +224,9 @@ const ProfileSosialMedia = () => {
             <View style={{ width: 310 }}>
               <CustomButton
                 title="Edit profile"
-                onPress={() => router.push("/sosial-media/update-biodata-profile")}
+                onPress={() =>
+                  router.push('/sosial-media/update-biodata-profile')
+                }
                 className="py-[9px]"
               />
             </View>
@@ -247,7 +255,9 @@ const ProfileSosialMedia = () => {
             className="border rounded-full flex-row items-center justify-center"
             style={{ width: 39, height: 39, borderColor: '#525252' }}
           >
-            <PointThreeHorizontal width={24} height={24}
+            <PointThreeHorizontal
+              width={24}
+              height={24}
               onPress={() => setModalUserMenu(true)}
             />
           </TouchableOpacity>
@@ -315,43 +325,35 @@ const ProfileSosialMedia = () => {
       </ScrollView>
 
       {/* Modal User Menu */}
-      {
-        modalUserMenu && (
-          <ModalUserMenuProfile
-            modalUserMenu={modalUserMenu}
-            setModalUserMenu={setModalUserMenu}
-            setModalAboutThisProfile={setModalAboutThisProfile}
-            setModalBlock={setModalBlock}
-            setModalReport={setModalReport}
-            setModalShare={setModalShare}
-            setModalCopyLink={setModalCopyLink}
-            typeQuery={String(query)}
-          />
-        )
-      }
-
-      {modalBlock && (
-        <BlockScriner
-          modalBlock={modalBlock}
+      {modalUserMenu && (
+        <ModalUserMenuProfile
+          modalUserMenu={modalUserMenu}
+          setModalUserMenu={setModalUserMenu}
+          setModalAboutThisProfile={setModalAboutThisProfile}
           setModalBlock={setModalBlock}
+          setModalReport={setModalReport}
+          setModalShare={setModalShare}
+          setModalCopyLink={setModalCopyLink}
+          typeQuery={String(query)}
         />
       )}
 
+      {modalBlock && (
+        <BlockScriner modalBlock={modalBlock} setModalBlock={setModalBlock} />
+      )}
+
       {modalShare && (
-        <ModalShare
-          modalShare={modalShare}
-          setModalShare={setModalShare}
-        />
+        <ModalShare modalShare={modalShare} setModalShare={setModalShare} />
       )}
 
       {modalDeletePost && (
         <ModalDeletePost
           // modalDeletePost={modalDeletePost}
           setModalDeletePost={setModalDeletePost}
-        // id={id}
-        // index={index}
-        // data={data}
-        // setData={setData}
+          // id={id}
+          // index={index}
+          // data={data}
+          // setData={setData}
         />
       )}
     </SafeAreaView>

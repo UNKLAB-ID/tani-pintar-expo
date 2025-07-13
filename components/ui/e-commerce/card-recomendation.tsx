@@ -2,8 +2,8 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import StarIcons from '@/assets/icons/e-commerce/stars-icons';
 import Location2Icons from '@/assets/icons/e-commerce/locations2-icons';
 import ButtonPlusPrimaryIcons from '@/assets/icons/e-commerce/button-plus-primary-icons';
-import { useState } from 'react';
 import { formatPrice } from '@/utils/format-currency/currency';
+import { router } from 'expo-router';
 
 const products = [
   {
@@ -55,12 +55,10 @@ interface RecomendationCardProps {
 
 const RecomendationCard: React.FC<RecomendationCardProps> = ({
   products: propProducts = products,
-  title = 'Produk Rekomendasi',
+  title = 'Recommended Product',
 }) => {
-  const [visibleCount, setVisibleCount] = useState(4);
-
   const handleLoadMore = () => {
-    setVisibleCount(prev => prev + 4);
+    router.push('/e-commerce');
   };
   return (
     <View
@@ -75,7 +73,7 @@ const RecomendationCard: React.FC<RecomendationCardProps> = ({
       </Text>
 
       <View className="flex-row flex-wrap mx-3 justify-between">
-        {propProducts.map(product => (
+        {propProducts.slice(0, 4).map(product => (
           <View key={product.id} className=" mb-2 bg-white rounded-lg">
             <Image
               source={product.image}

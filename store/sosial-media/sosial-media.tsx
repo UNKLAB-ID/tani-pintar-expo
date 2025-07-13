@@ -16,4 +16,3 @@ export const useMediaSosial = create<MediaSosialStore>(set => ({
   modalDeletePost: false,
   setModalDeletePost: visible => set({ modalDeletePost: visible }),
 }));
-
