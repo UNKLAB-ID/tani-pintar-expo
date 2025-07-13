@@ -198,7 +198,7 @@ const SearchPage = () => {
                     No Results Found
                   </Text>
                   <Text className="text-center text-[16px] text-[#525252] mt-1">
-                    Try adjusting your search{'\n'}to find what you're looking
+                    Try adjusting your search{'\n'}to find what {`you're` }looking
                     for
                   </Text>
                   <View
