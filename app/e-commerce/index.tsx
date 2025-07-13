@@ -1,5 +1,4 @@
 import {
-  SafeAreaView,
   View,
   Text,
   Image,
@@ -22,10 +21,10 @@ import FlashSaleCard from '@/components/ui/e-commerce/card-flashsale';
 import ProductCard from '@/components/ui/e-commerce/card-product';
 import MainCategoryCard from '@/components/ui/e-commerce/main-category';
 import LocationInfo from '@/components/ui/e-commerce/location-info';
-import SearchInputPrimary from '@/components/ui/e-commerce/search-input-with-suggestion';
 import VoucherIcons from '@/assets/icons/global/voucher-icons';
 import Wallet2Icons from '@/assets/icons/global/wallet2-icons';
 import WalletIcons from '@/assets/icons/global/wallet-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
@@ -243,8 +242,7 @@ const EcommerceIndex = () => {
         backgroundColor="#ffffff"
         translucent={false}
       />
-
-      <SafeAreaView className="flex-1 w-full ">
+      <SafeAreaView edges={['top', 'right', 'left']} className="flex-1 w-full ">
         <View className="px-5 py-3 pb-4 bg-white">
           <View className="flex-row items-center justify-between">
             <View className="w-[276px] relative">

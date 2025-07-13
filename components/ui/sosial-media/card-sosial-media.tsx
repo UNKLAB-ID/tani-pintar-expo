@@ -15,18 +15,23 @@ interface CardSosialMediaProps {
   typeQuery?: string;
 }
 
-const CardSosialMedia: React.FC<CardSosialMediaProps> = ({ data, setData, typeQuery }) => {
+const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
+  data,
+  setData,
+  typeQuery,
+}) => {
   const [containerWidth, setContainerWidth] = useState<number>(0);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalBlock, setModalBlock] = useState<boolean>(false);
   const [modalComment, setModalComment] = useState<boolean>(false);
-  const [modalMenuPostProfile, setModalMenuPostProfile] = useState<boolean>(false);
+  const [modalMenuPostProfile, setModalMenuPostProfile] =
+    useState<boolean>(false);
   const [modalShare, setModalShare] = useState<boolean>(false);
   const [id, setId] = useState<string>('');
   const [slugComent, setSlugComment] = useState<string>('');
   const [index, setIndex] = useState<number>(0);
   const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
-  const { setModalDeletePost } = useMediaSosial()
+  const { setModalDeletePost } = useMediaSosial();
 
   useEffect(() => {
     setActiveIndexes(Array(data.length).fill(0));
@@ -107,10 +112,7 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({ data, setData, typeQu
       )}
 
       {modalShare && (
-        <ModalShare
-          modalShare={modalShare}
-          setModalShare={setModalShare}
-        />
+        <ModalShare modalShare={modalShare} setModalShare={setModalShare} />
       )}
     </View>
   );

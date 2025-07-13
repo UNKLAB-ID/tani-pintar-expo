@@ -110,16 +110,14 @@ const PictureProfile = () => {
             Cancel
           </Text>
         </TouchableOpacity>
-        {
-          type !== 'backgroundImages' && (
-            <TouchableOpacity
-              onPress={handleRotateAndSave}
-              className="flex-row items-center"
-            >
-              <RotasiImagesProfileIcons width={26} height={26} />
-            </TouchableOpacity>
-          )
-        }
+        {type !== 'backgroundImages' && (
+          <TouchableOpacity
+            onPress={handleRotateAndSave}
+            className="flex-row items-center"
+          >
+            <RotasiImagesProfileIcons width={26} height={26} />
+          </TouchableOpacity>
+        )}
         <TouchableOpacity>
           <Text style={{ color: '#fff', fontWeight: 600, fontSize: 16 }}>
             Done
@@ -131,11 +129,11 @@ const PictureProfile = () => {
       {showDiscardModal && (
         <ModalCancel
           setShowDiscardModal={setShowDiscardModal}
-          desciption='You have unsaved changes. Do you want to discard them?'
-          headerDescription=''
-          textButtonLeft='Discard'
-          textButtonRight='Cancel'
-          path={"/sosial-media/profile-sosial-media?query=profile"}
+          desciption="You have unsaved changes. Do you want to discard them?"
+          headerDescription=""
+          textButtonLeft="Discard"
+          textButtonRight="Cancel"
+          path={'/sosial-media/profile-sosial-media?query=profile'}
         />
       )}
 

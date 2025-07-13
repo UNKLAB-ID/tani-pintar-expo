@@ -29,9 +29,9 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
   type = 'default',
   error = false,
   onChangeText,
-  labelColor = "#1F1F1F",
+  labelColor = '#1F1F1F',
   fontSize = 14,
-  fontWheight = "500",
+  fontWheight = '500',
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -44,7 +44,14 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
   return (
     <View>
       {label && (
-        <Text className={`mb-1`} style={{ fontWeight: fontWheight, fontSize: fontSize, color: labelColor }}>
+        <Text
+          className={`mb-1`}
+          style={{
+            fontWeight: fontWheight,
+            fontSize: fontSize,
+            color: labelColor,
+          }}
+        >
           {label}
         </Text>
       )}

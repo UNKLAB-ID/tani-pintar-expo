@@ -152,16 +152,18 @@ const CreatePostMedia = () => {
               <TouchableOpacity
                 className="me-2 w-[24px] h-[24px] justify-center items-center"
                 onPress={() => {
-                  if(typePost === "update") {
-                    setModalCancel(true)
-                  }else{
-                    router.back()
+                  if (typePost === 'update') {
+                    setModalCancel(true);
+                  } else {
+                    router.back();
                   }
                 }}
               >
                 <CloseIcons width={15} height={15} color="#1F1F1F" />
               </TouchableOpacity>
-              <Text className="font-bold text-[16px]">{typePost === "update" ? "Update" : "Creating"} a Post</Text>
+              <Text className="font-bold text-[16px]">
+                {typePost === 'update' ? 'Update' : 'Creating'} a Post
+              </Text>
             </View>
             <TouchableOpacity
               style={{
@@ -333,7 +335,7 @@ const CreatePostMedia = () => {
       {modalCancel && (
         <ModalCancel
           setShowDiscardModal={setModalCancel}
-          headerDescription ="Discard edit"
+          headerDescription="Discard edit"
           desciption="Wait! Your edits aren’t saved yet. Leaving now will discard all your changes—are you sure you want to continue?"
           textButtonLeft="Discard"
           textButtonRight="No, thanks"
