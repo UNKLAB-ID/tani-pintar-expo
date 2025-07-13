@@ -4,7 +4,7 @@ import LoveIcons from '@/assets/icons/global/love-icons';
 import PointThreeHorizontal from '@/assets/icons/global/point-three-horizontal';
 import KomentarIcons from '@/assets/icons/sosial-media/komentar-icons';
 import PointIcons from '@/assets/icons/sosial-media/point-icons';
-import ShereIcons from '@/assets/icons/sosial-media/shere-icons';
+import ShareIcons from '@/assets/icons/sosial-media/share-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import PoinVertialIcons from '@/assets/icons/sosial-media/poin-vertical-icons';
 import StatusPublickProfileIcons from '@/assets/icons/sosial-media/status-publick-profile-icons';
@@ -56,6 +56,8 @@ interface RenderPostCardProps {
   setModalVisible: (visible: boolean) => void;
   setSlugComment: (slug: string) => void;
   setModalComment: (visible: boolean) => void;
+  setModalShare: (visible: boolean) => void;
+  setModalPostMenu: (visible: boolean) => void;
 }
 
 const RenderPostCard: React.FC<RenderPostCardProps> = ({
@@ -70,6 +72,8 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
   setModalVisible,
   setSlugComment,
   setModalComment,
+  setModalShare,
+  setModalPostMenu,
 }) => {
   const scrollRef = useRef(null);
   const { query } = useLocalSearchParams();
@@ -143,9 +147,13 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
         </View>
         <TouchableOpacity
           onPress={() => {
-            setId(item.slug);
-            setIndex(index);
-            setModalVisible(true);
+            if (query) {
+              setModalPostMenu(true);
+            } else {
+              setId(item.slug);
+              setIndex(index);
+              setModalVisible(true);
+            }
           }}
         >
           {query ? (
@@ -242,8 +250,8 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
           className="flex-row items-center justify-between"
           style={{ width: 49 }}
         >
-          <TouchableOpacity>
-            <ShereIcons width={18} height={18} color={'#434343'} />
+          <TouchableOpacity onPress={() => setModalShare(true)}>
+            <ShareIcons width={18} height={18} color={'#434343'} />
           </TouchableOpacity>
           <Text className="text-[14px] text-[#434343] ml-2">
             {item.shared_count === 0

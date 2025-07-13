@@ -6,6 +6,7 @@ import CardSosialMedia from '@/components/ui/sosial-media/card-sosial-media';
 import { useProfile } from '@/hooks/useProfile';
 import api from '@/utils/api/api';
 import { useQuery } from '@tanstack/react-query';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
@@ -21,7 +22,7 @@ import {
 const SosialMediaIndex = () => {
   const [dataPosts, setDataPosts] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-
+  const insets = useSafeAreaInsets();
   const { data: profile, isLoading: loading, isError } = useProfile();
 
   const getGreeting = () => {
@@ -59,12 +60,12 @@ const SosialMediaIndex = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, paddingTop: insets.top }}>
       <StatusBar barStyle="dark-content" translucent={false} />
 
       {/* HEADER: Absolute dan tetap di atas */}
       <View
-        className="bg-white px-5 py-4"
+        className="bg-white px-5 pt-1 pb-3"
         style={{
           position: 'absolute',
           top: 0,
@@ -148,7 +149,7 @@ const SosialMediaIndex = () => {
           />
         )}
         // Beri padding atas sesuai tinggi header
-        contentContainerStyle={{ paddingTop: 120, paddingBottom: 5 }}
+        contentContainerStyle={{ paddingTop: 66 }}
         initialNumToRender={5}
         maxToRenderPerBatch={5}
         windowSize={10}

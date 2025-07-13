@@ -6,7 +6,8 @@ import GifIcons from '@/assets/icons/sosial-media/gif-icons';
 import PictureIcons from '@/assets/icons/sosial-media/picture-icons';
 import TagPeopleIcons from '@/assets/icons/sosial-media/tag-people-icons';
 import ButtonPostMedia from '@/components/ui/sosial-media/button-post-media';
-import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import {
   Text,
@@ -24,12 +25,16 @@ import ModalAudiencePost from '@/components/ui/sosial-media/modal-audience-post'
 import { useMutation } from '@tanstack/react-query';
 import api from '@/utils/api/api';
 import { useProfile } from '@/hooks/useProfile';
+import ModalCancel from '@/components/ui/sosial-media/modal-cancel';
 
 const CreatePostMedia = () => {
   const [textInput, setTextInput] = useState<string>('');
   const [textAdience, setTextAudience] = useState<string>('Public');
   const [modalAudience, setModalAudience] = useState<boolean>(false);
+  const [modalCancel, setModalCancel] = useState<boolean>(false);
   const [images, setImages] = useState<any[]>([]);
+  const { typePost } = useLocalSearchParams();
+  const insets = useSafeAreaInsets();
 
   const { data: profile, isLoading, isError } = useProfile();
 
@@ -41,7 +46,7 @@ const CreatePostMedia = () => {
     });
 
     if (!result.canceled) {
-      setImages(result.assets); // result.assets adalah array gambar/video
+      setImages(result.assets);
     }
   };
 
@@ -124,7 +129,10 @@ const CreatePostMedia = () => {
   });
 
   return (
-    <SafeAreaView className="flex-1 bg-white mt-10">
+    <SafeAreaView
+      className="flex-1 bg-white"
+      style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
+    >
       <StatusBar
         barStyle="dark-content"
         translucent={false}
@@ -135,7 +143,7 @@ const CreatePostMedia = () => {
         <ScrollView
           contentContainerStyle={{
             paddingHorizontal: 16,
-            paddingTop: 8,
+            paddingTop: 4,
             paddingBottom: 16,
           }}
         >
@@ -143,11 +151,17 @@ const CreatePostMedia = () => {
             <View className="flex-row items-center">
               <TouchableOpacity
                 className="me-2 w-[24px] h-[24px] justify-center items-center"
-                onPress={() => router.replace('/(tabs)/sosmed')}
+                onPress={() => {
+                  if(typePost === "update") {
+                    setModalCancel(true)
+                  }else{
+                    router.back()
+                  }
+                }}
               >
                 <CloseIcons width={15} height={15} color="#1F1F1F" />
               </TouchableOpacity>
-              <Text className="font-bold text-[16px]">Creating a Post</Text>
+              <Text className="font-bold text-[16px]">{typePost === "update" ? "Update" : "Creating"} a Post</Text>
             </View>
             <TouchableOpacity
               style={{
@@ -271,14 +285,11 @@ const CreatePostMedia = () => {
             borderTopLeftRadius: 12,
             borderTopRightRadius: 12,
             backgroundColor: '#fff',
-            // iOS shadow
             shadowColor: '#000',
             shadowOffset: { width: 0, height: -4 },
             shadowOpacity: 0.1,
             shadowRadius: 6,
-            // Android shadow
             elevation: 10,
-            paddingBottom: 60,
           }}
           className="px-4 py-5"
         >
@@ -316,6 +327,17 @@ const CreatePostMedia = () => {
           setModalAudience={setModalAudience}
           setTextAudience={setTextAudience}
           textAudience={textAdience}
+        />
+      )}
+
+      {modalCancel && (
+        <ModalCancel
+          setShowDiscardModal={setModalCancel}
+          headerDescription ="Discard edit"
+          desciption="Wait! Your edits aren’t saved yet. Leaving now will discard all your changes—are you sure you want to continue?"
+          textButtonLeft="Discard"
+          textButtonRight="No, thanks"
+          path="/sosial-media/profile-sosial-media?query=profile"
         />
       )}
     </SafeAreaView>

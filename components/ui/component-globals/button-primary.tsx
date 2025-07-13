@@ -35,7 +35,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
     >
       <Text
         className={`text-white font-bold ${textClassName}`}
-        style={{ fontSize: 14 }}
+        style={{ fontSize: fontSize }}
       >
         {title}
       </Text>

@@ -7,6 +7,7 @@ import {
   Text,
   KeyboardTypeOptions,
   StyleSheet,
+  TextStyle,
 } from 'react-native';
 
 interface CustomTextInputProps extends TextInputProps {
@@ -16,6 +17,9 @@ interface CustomTextInputProps extends TextInputProps {
   type?: KeyboardTypeOptions;
   onChangeText?: (text: string) => void;
   error?: boolean;
+  labelColor?: string;
+  fontSize?: number;
+  fontWheight?: TextStyle['fontWeight'];
 }
 
 const CustomTextInput: React.FC<CustomTextInputProps> = ({
@@ -25,6 +29,9 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
   type = 'default',
   error = false,
   onChangeText,
+  labelColor = "#1F1F1F",
+  fontSize = 14,
+  fontWheight = "500",
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -37,7 +44,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
   return (
     <View>
       {label && (
-        <Text className={`mb-2 text-lg text-black`} style={{ fontWeight: 500 }}>
+        <Text className={`mb-1`} style={{ fontWeight: fontWheight, fontSize: fontSize, color: labelColor }}>
           {label}
         </Text>
       )}
