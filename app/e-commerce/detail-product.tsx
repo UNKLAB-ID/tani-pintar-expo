@@ -161,22 +161,32 @@ const ProductDetailScreen = () => {
     const layoutWidth = e.nativeEvent.layoutMeasurement.width;
     const index = Math.round(offsetX / layoutWidth);
 
-    let realIndex = index - 1;
-    if (index === 0) realIndex = product.images.length - 1;
-    else if (index === productImagesWithBuffer.length - 1) realIndex = 0;
+    const realIndex =
+      index === 0
+        ? product.images.length - 1
+        : index === product.images.length + 1
+          ? 0
+          : index - 1;
 
     setActiveIndex(realIndex);
 
-    // Reposition if hit buffer edge
-    if (flatListRef.current) {
-      if (index === 0) {
-        flatListRef.current.scrollToIndex({
-          index: product.images.length,
-          animated: false,
-        });
-      } else if (index === productImagesWithBuffer.length - 1) {
-        flatListRef.current.scrollToIndex({ index: 1, animated: false });
+    // Auto-loop dengan cek aman
+    try {
+      if (flatListRef.current) {
+        if (index === 0) {
+          flatListRef.current.scrollToIndex({
+            index: product.images.length,
+            animated: false,
+          });
+        } else if (index === product.images.length + 1) {
+          flatListRef.current.scrollToIndex({
+            index: 1,
+            animated: false,
+          });
+        }
       }
+    } catch (err) {
+      console.warn('scrollToIndex error:', err);
     }
   };
 
@@ -193,31 +203,29 @@ const ProductDetailScreen = () => {
       />
       <SafeAreaView
         style={{ flex: 1, backgroundColor: '#f8f8f8' }}
-        edges={['top', 'left', 'right']}
+        edges={['top', 'bottom', 'left', 'right']}
       >
-        <ScrollView>
-          {/* Header */}
-          <View className="flex-row bg-white items-center justify-between px-3 pb-5 pt-6">
-            <TouchableOpacity className="ml-4" onPress={handleBack}>
-              <BackIcons width={20} height={20} color="#7D7D7D" />
+        {/* Header */}
+        <View className="flex-row bg-white items-center justify-between  px-3 pb-5 pt-4">
+          <TouchableOpacity className="ml-4" onPress={handleBack}>
+            <BackIcons width={20} height={20} color="#7D7D7D" />
+          </TouchableOpacity>
+
+          <View className="flex-row items-center ">
+            <TouchableOpacity onPress={() => router.push('/e-commerce/cart')}>
+              <CartIcons width={26} height={26} color="#7D7D7D" />
             </TouchableOpacity>
-
-            <View className="flex-row items-center ">
-              <TouchableOpacity onPress={() => router.push('/e-commerce/cart')}>
-                <CartIcons width={26} height={26} color="#7D7D7D" />
-              </TouchableOpacity>
-              <TouchableOpacity className="ml-4">
-                <Share2Icons width={30} height={30} color="#7D7D7D" />
-              </TouchableOpacity>
-              <TouchableOpacity className="ml-4">
-                <MenuVerticalIcons width={26} height={26} />
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity className="ml-4">
+              <Share2Icons width={24} height={24} color="#7D7D7D" />
+            </TouchableOpacity>
+            <TouchableOpacity className="ml-4">
+              <MenuVerticalIcons width={26} height={26} />
+            </TouchableOpacity>
           </View>
-
+        </View>
+        <ScrollView>
           <ProductDetailCard
             product={product}
-            imageProduct={productImagesWithBuffer}
             activeIndex={activeIndex}
             flatListRef={flatListRef}
             onScrollEnd={onScrollEnd}

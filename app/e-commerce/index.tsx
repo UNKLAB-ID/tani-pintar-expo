@@ -20,10 +20,9 @@ import CartIcons from '@/assets/icons/e-commerce/cart-icons';
 import ArrowRightIcons from '@/assets/icons/e-commerce/arrow-right-icons';
 import FlashSaleCard from '@/components/ui/e-commerce/card-flashsale';
 import ProductCard from '@/components/ui/e-commerce/card-product';
-import BackIcons from '@/assets/icons/global/back-icons';
-import TaniPaysCard from '@/components/ui/e-commerce/card-tanipay';
 import MainCategoryCard from '@/components/ui/e-commerce/main-category';
 import LocationInfo from '@/components/ui/e-commerce/location-info';
+import SearchInputPrimary from '@/components/ui/e-commerce/search-input-with-suggestion';
 import VoucherIcons from '@/assets/icons/global/voucher-icons';
 import Wallet2Icons from '@/assets/icons/global/wallet2-icons';
 import WalletIcons from '@/assets/icons/global/wallet-icons';
@@ -108,11 +107,6 @@ const productData = [
   },
 ];
 
-const taniPaysData = {
-  saldo: 'Rp20.000',
-  statusPinjam: 'Activate Now',
-};
-
 const mainCategoryData = [
   {
     id: 1,
@@ -147,12 +141,14 @@ const EcommerceIndex = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [timeLeftMs, setTimeLeftMs] = useState(3600 * 1000);
-  const intervalRef = useRef(null);
+  const intervalRef = useRef<number | undefined>(undefined);
   const router = useRouter();
 
   useEffect(() => {
     if (timeLeftMs <= 0) {
-      clearInterval(intervalRef.current);
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current!);
+      }
       return;
     }
 
@@ -166,7 +162,11 @@ const EcommerceIndex = () => {
       });
     }, 100);
 
-    return () => clearInterval(intervalRef.current);
+    return () => {
+      if (intervalRef.current !== undefined) {
+        clearInterval(intervalRef.current);
+      }
+    };
   }, []);
 
   const handleFlashsale = () => {
@@ -176,7 +176,18 @@ const EcommerceIndex = () => {
     router.push('/e-commerce/detail-product');
   };
 
-  const formatTime = ms => {
+  const handleMessage = () => {
+    router.push('/e-commerce/message');
+  };
+
+  const handleCart = () => {
+    router.push('/e-commerce/cart');
+  };
+  interface FormatTime {
+    (ms: number): string;
+  }
+
+  const formatTime: FormatTime = ms => {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
@@ -226,231 +237,255 @@ const EcommerceIndex = () => {
   }, [currentIndex]);
 
   return (
-    <ScrollView
-      contentContainerStyle={{ paddingBottom: 70, backgroundColor: 'white' }}
-      showsVerticalScrollIndicator={false}
-      bounces={true}
-      alwaysBounceVertical={true}
-    >
+    <>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        translucent={false}
+      />
+
       <SafeAreaView className="flex-1 w-full ">
-        <View className="px-5 py-3 pb-4">
+        <View className="px-5 py-3 pb-4 bg-white">
           <View className="flex-row items-center justify-between">
-            <View className="w-[276px]">
+            <View className="w-[276px] relative">
               <InputSearchPrimary
                 placeholder="Find what you’re looking for..."
                 className="px-[12px]"
                 coloricon="#000"
               />
+
+              {/* Overlay Touchable di atas input */}
+              <TouchableOpacity
+                onPress={() => router.push('/e-commerce/search')}
+                className="absolute inset-0"
+                activeOpacity={1}
+              />
             </View>
             <View className="flex-row">
-              <View className="mr-[9]">
+              <TouchableOpacity className="mr-[9px]" onPress={handleMessage}>
                 <MessageIcons width={28} height={28} />
-              </View>
-              <CartIcons width={28} height={28} />
-            </View>
-          </View>
-        </View>
-
-        {/* Location */}
-        <LocationInfo address={`${userAddress.street}`} />
-        <View className="mt-4 ">
-          <FlatList
-            ref={flatListRef}
-            data={banners}
-            keyExtractor={(_, i) => i.toString()}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onMomentumScrollEnd={handleScrollEnd}
-            initialScrollIndex={1}
-            getItemLayout={(_, index) => ({
-              length: width,
-              offset: width * index,
-              index,
-            })}
-            renderItem={({ item }) => (
-              <View style={{ width, paddingHorizontal: 20 }}>
-                <TouchableOpacity onPress={handleFlashsale} activeOpacity={0.8}>
-                  <Image
-                    source={item.image}
-                    className="w-full h-[120px] rounded-2xl"
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          />
-
-          {/* Dot Indicator */}
-          <View className="flex-row justify-center mt-2">
-            {realBanners.map((_, index) => (
-              <View
-                key={index}
-                className={`mx-[2px] rounded-full ${
-                  index === activeIndex
-                    ? 'bg-[#28a745] w-[20px]'
-                    : 'bg-[#dcdcdc] w-[8px]'
-                } h-[8px]`}
-              />
-            ))}
-          </View>
-        </View>
-
-        <View className="flex-row w-[355px] h-[83px] bg-[#F0F0F0] justify-center rounded-xl pt-3 pb-3 px-4 py-4 mx-5 mt-5 ">
-          <View className="w-1/3 items-start">
-            <View className="flex-row items-center mb-1 mt-1">
-              <View style={{ marginRight: 3 }}>
-                <WalletIcons width={16} height={16} />
-              </View>
-              <Text className="text-[12px] font-medium text-black">
-                TaniPay
-              </Text>
-            </View>
-            <View className="space-y-1">
-              <Text className="text-[12px] font-bold text-black">Rp20.000</Text>
-              <Text
-                className="text-[10px] text-gray-500"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                Topup minimum...
-              </Text>
-            </View>
-          </View>
-
-          <View className="w-1/3">
-            <View className="flex-row items-center mb-1 mt-1">
-              <View style={{ marginRight: 3 }}>
-                <Wallet2Icons width={16} height={16} />
-              </View>
-              <Text className="text-[12px] font-medium text-black">
-                TaniPinjam
-              </Text>
-            </View>
-            <View className="space-y-1">
-              <Text className="text-[12px] font-bold text-[#28a745]">
-                ActivateNow
-              </Text>
-              <Text
-                className="text-[10px] text-gray-500"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                Limit up to Rp20...
-              </Text>
-            </View>
-          </View>
-
-          <View className="w-1/3">
-            <View className="flex-row items-center mb-1 mt-1">
-              <View style={{ marginRight: 3 }}>
-                <VoucherIcons width={16} height={16} />
-              </View>
-              <Text className="text-[12px] font-medium text-black">
-                Voucher
-              </Text>
-            </View>
-            <View className="space-y-1">
-              <Text className="text-[12px] font-bold text-black">
-                Voucher Discount
-              </Text>
-              <Text
-                className="text-[10px] text-[#28a745]"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                Free Delivery Service
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Kategori Utama */}
-        <View className="mt-6 px-5">
-          <View className="flex-row justify-between items-center space-x-4">
-            {mainCategoryData.map(item => (
-              <MainCategoryCard key={item.id} item={item} />
-            ))}
-          </View>
-        </View>
-
-        {/* card */}
-        <LinearGradient colors={['#FFFFFF', '#F0F0F0']}>
-          <View className="mt-6 px-5">
-            <View className="flex-row justify-between items-center mb-4">
-              <View className="flex-row items-center">
-                <Text className="font-bold text-green-600 text-[17px]">
-                  Flash Sale
-                </Text>
-                <View className="ml-3 px-2.5 py-1 rounded-full  bg-red-500/10">
-                  <Text className="text-red-500 font-semibold text-sm">
-                    {formatTime(timeLeftMs)}
-                  </Text>
-                </View>
-              </View>
-              <TouchableOpacity onPress={handleFlashsale}>
-                <View className="flex-row items-center">
-                  <Text
-                    className="text-sm"
-                    style={{ color: '#525252', marginLeft: 150 }}
-                  >
-                    See All
-                  </Text>
-
-                  <ArrowRightIcons width={20} height={20} />
-                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleCart}>
+                <CartIcons width={28} height={28} />
               </TouchableOpacity>
             </View>
-
-            {/* List Produk: Scroll Horizontal */}
-
+          </View>
+        </View>
+        <ScrollView
+          contentContainerStyle={{
+            paddingBottom: 10,
+            backgroundColor: 'white',
+          }}
+          showsVerticalScrollIndicator={false}
+          bounces={true}
+          alwaysBounceVertical={true}
+        >
+          {/* Location */}
+          <LocationInfo address={`${userAddress.street}`} />
+          <View className="mt-4 ">
             <FlatList
-              data={productData}
-              keyExtractor={item => item.id.toString()}
-              horizontal={true}
+              ref={flatListRef}
+              data={banners}
+              keyExtractor={(_, i) => i.toString()}
+              horizontal
+              pagingEnabled
               showsHorizontalScrollIndicator={false}
+              onMomentumScrollEnd={handleScrollEnd}
+              initialScrollIndex={1}
+              getItemLayout={(_, index) => ({
+                length: width,
+                offset: width * index,
+                index,
+              })}
               renderItem={({ item }) => (
-                <View className="mr-2 pb-3">
-                  <FlashSaleCard
-                    image={item.image}
-                    name={item.name}
-                    price={item.price}
-                    sold={item.sold}
-                    total={item.total}
-                    discount={item.discount}
-                  />
+                <View style={{ width, paddingHorizontal: 20 }}>
+                  <TouchableOpacity
+                    onPress={handleFlashsale}
+                    activeOpacity={0.8}
+                  >
+                    <Image
+                      source={item.image}
+                      className="w-full h-[120px] rounded-2xl"
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
                 </View>
               )}
             />
-          </View>
-        </LinearGradient>
-        <View style={{ backgroundColor: '#F0F0F0' }} className="pt-6">
-          <View className="bg-white rounded-xl pt-2 px-5">
-            <View className="mb-4">
-              <Text className="text-[16px] font-bold py-3">For You!</Text>
-            </View>
 
-            {/* List Produk: Grid 2 Kolom */}
-            <View className="flex-row flex-wrap justify-between -mx-1">
-              {productData.map(item => (
-                <View key={item.id} className="w-1/2 px-1 mb-1">
-                  <ProductCard
-                    image={item.image}
-                    name={item.name}
-                    discount={item.discount}
-                    price={item.price}
-                    rating={item.rating ?? 0}
-                    sold={item.sold}
-                    location={item.location}
-                    onPress={handleProductDetail}
-                  />
-                </View>
+            {/* Dot Indicator */}
+            <View className="flex-row justify-center mt-2">
+              {realBanners.map((_, index) => (
+                <View
+                  key={index}
+                  className={`mx-[2px] rounded-full ${
+                    index === activeIndex
+                      ? 'bg-[#28a745] w-[20px]'
+                      : 'bg-[#dcdcdc] w-[8px]'
+                  } h-[8px]`}
+                />
               ))}
             </View>
           </View>
-        </View>
+
+          <View className="flex-row w-[355px] h-[83px] bg-[#F0F0F0] justify-center rounded-xl pt-3 pb-3 px-4 py-4 mx-5 mt-5 ">
+            <View className="w-1/3 items-start">
+              <View className="flex-row items-center mb-1 mt-1">
+                <View style={{ marginRight: 3 }}>
+                  <WalletIcons width={16} height={16} />
+                </View>
+                <Text className="text-[12px] font-medium text-black">
+                  TaniPay
+                </Text>
+              </View>
+              <View className="space-y-1">
+                <Text className="text-[12px] font-bold text-black">
+                  Rp20.000
+                </Text>
+                <Text
+                  className="text-[10px] text-gray-500"
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  Topup minimum...
+                </Text>
+              </View>
+            </View>
+
+            <View className="w-1/3">
+              <View className="flex-row items-center mb-1 mt-1">
+                <View style={{ marginRight: 3 }}>
+                  <Wallet2Icons width={16} height={16} />
+                </View>
+                <Text className="text-[12px] font-medium text-black">
+                  TaniPinjam
+                </Text>
+              </View>
+              <View className="space-y-1">
+                <Text className="text-[12px] font-bold text-[#28a745]">
+                  ActivateNow
+                </Text>
+                <Text
+                  className="text-[10px] text-gray-500"
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  Limit up to Rp20...
+                </Text>
+              </View>
+            </View>
+
+            <View className="w-1/3">
+              <View className="flex-row items-center mb-1 mt-1">
+                <View style={{ marginRight: 3 }}>
+                  <VoucherIcons width={16} height={16} />
+                </View>
+                <Text className="text-[12px] font-medium text-black">
+                  Voucher
+                </Text>
+              </View>
+              <View className="space-y-1">
+                <Text className="text-[12px] font-bold text-black">
+                  Voucher Discount
+                </Text>
+                <Text
+                  className="text-[10px] text-[#28a745]"
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  Free Delivery Service
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Kategori Utama */}
+          <View className="mt-6 px-5">
+            <View className="flex-row justify-between items-center space-x-4">
+              {mainCategoryData.map(item => (
+                <MainCategoryCard key={item.id} item={item} />
+              ))}
+            </View>
+          </View>
+
+          {/* card */}
+          <LinearGradient colors={['#FFFFFF', '#F0F0F0']}>
+            <View className="mt-6 px-5">
+              <View className="flex-row justify-between items-center mb-4">
+                <View className="flex-row items-center">
+                  <Text className="font-bold text-green-600 text-[17px]">
+                    Flash Sale
+                  </Text>
+                  <View className="ml-3 px-2.5 py-1 rounded-full  bg-red-500/10">
+                    <Text className="text-red-500 font-semibold text-sm">
+                      {formatTime(timeLeftMs)}
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity onPress={handleFlashsale}>
+                  <View className="flex-row items-center">
+                    <Text
+                      className="text-sm"
+                      style={{ color: '#525252', marginLeft: 150 }}
+                    >
+                      See All
+                    </Text>
+
+                    <ArrowRightIcons width={20} height={20} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              {/* List Produk: Scroll Horizontal */}
+
+              <FlatList
+                data={productData}
+                keyExtractor={item => item.id.toString()}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <View className="mr-2 pb-3">
+                    <FlashSaleCard
+                      image={item.image}
+                      name={item.name}
+                      price={item.price}
+                      sold={item.sold}
+                      total={item.total}
+                      discount={item.discount}
+                    />
+                  </View>
+                )}
+              />
+            </View>
+          </LinearGradient>
+          <View style={{ backgroundColor: '#F0F0F0' }} className="pt-6">
+            <View className="bg-white rounded-t-xl pt-2 px-5">
+              <View className="mb-4">
+                <Text className="text-[16px] font-bold py-3">For You!</Text>
+              </View>
+
+              {/* List Produk: Grid 2 Kolom */}
+              <View className="flex-row flex-wrap justify-between -mx-1">
+                {productData.map(item => (
+                  <View key={item.id} className="w-1/2 px-1 mb-1">
+                    <ProductCard
+                      image={item.image}
+                      name={item.name}
+                      discount={item.discount}
+                      price={item.price}
+                      rating={item.rating ?? 0}
+                      sold={item.sold}
+                      location={item.location}
+                      onPress={handleProductDetail}
+                    />
+                  </View>
+                ))}
+              </View>
+            </View>
+          </View>
+        </ScrollView>
       </SafeAreaView>
-    </ScrollView>
+    </>
   );
 };
 

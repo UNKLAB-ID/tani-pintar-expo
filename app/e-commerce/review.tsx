@@ -304,7 +304,7 @@ const Reviews = () => {
         {/* Body */}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 150 }}
+          contentContainerStyle={{ paddingBottom: 15 }}
         >
           {/* Summary */}
           <View className="flex-row items-center bg-white px-5 py-4 mt-1">
