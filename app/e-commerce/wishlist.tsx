@@ -73,7 +73,7 @@ const WishlistScreen = () => {
                 No Wishlist Yet
               </Text>
               <Text className="text-[13px] text-gray-500 text-center mt-1 px-10">
-                You haven't added any products to your wishlist.
+                You {`haven't`} added any products to your wishlist.
               </Text>
             </View>
           ) : (
