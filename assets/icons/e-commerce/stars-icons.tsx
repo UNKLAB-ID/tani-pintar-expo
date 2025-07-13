@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Svg, { SvgProps, Path } from 'react-native-svg';
 const StarIcons = (props: SvgProps) => (
-  <Svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <Svg fill="none" {...props}>
     <Path
       fill="#FCB72E"
       fillRule="evenodd"
