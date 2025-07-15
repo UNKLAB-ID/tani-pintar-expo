@@ -12,7 +12,7 @@ import StatusPublickProfileIcons from '@/assets/icons/sosial-media/status-public
 interface UserProfile {
   created_at: string;
   email: string;
-  full_name: string;
+  full_name?: string;
   id: number;
   id_card_validation_status: string;
   phone_number: string;
@@ -111,9 +111,11 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
           {query ? (
             <View className="ml-3">
               <Text className="text-[16px] font-semibold text-text-primary">
-                {item.user.profile.full_name.length > 170
-                  ? `${item.user.profile.full_name.slice(0, 170)}...`
-                  : item.user.profile.full_name}
+                {item.user.profile && item.user.profile.full_name
+                  ? item.user.profile.full_name.length > 170
+                    ? `${item.user.profile.full_name.slice(0, 170)}...`
+                    : item.user.profile.full_name
+                  : ''}
               </Text>
               <View className="flex-row items-center">
                 <Text className="text-[14px] text-text-secondary">
@@ -130,9 +132,11 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
           ) : (
             <View className="ml-3 flex-row items-center">
               <Text className="text-[16px] font-semibold text-text-primary">
-                {item.user.profile.full_name.length > 170
-                  ? `${item.user.profile.full_name.slice(0, 170)}...`
-                  : item.user.profile.full_name}
+                {item.user.profile && item.user.profile.full_name
+                  ? item.user.profile.full_name.length > 170
+                    ? `${item.user.profile.full_name.slice(0, 170)}...`
+                    : item.user.profile.full_name
+                  : ''}
               </Text>
               <PointIcons
                 width={6}
