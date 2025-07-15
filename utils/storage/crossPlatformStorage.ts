@@ -41,16 +41,18 @@ class CrossPlatformStorage {
 
   async setItem(key: string, value: string): Promise<void> {
     try {
+      // Accept any value and always stringify
+      const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
       if (this.isWeb) {
         // Web: Use localStorage
         if (this.isLocalStorageAvailable()) {
-          localStorage.setItem(key, value);
+          localStorage.setItem(key, stringValue);
         } else {
           console.warn('localStorage is not available, unable to store item');
         }
       } else {
         // Mobile: Use SecureStore
-        await SecureStore.setItemAsync(key, value);
+        await SecureStore.setItemAsync(key, stringValue);
       }
     } catch (error) {
       console.error(`Error setting item ${key}:`, error);
