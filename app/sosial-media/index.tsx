@@ -61,7 +61,11 @@ const SosialMediaIndex = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, paddingTop: insets.top }}>
-      <StatusBar barStyle="dark-content" translucent={false} />
+      <StatusBar
+        backgroundColor="#FFFFFF" // background putih
+        barStyle="dark-content" // ikon hitam
+        translucent={false}
+      />
 
       {/* HEADER: Absolute dan tetap di atas */}
       <View

@@ -31,16 +31,18 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
       statusBarTranslucent={true}
       onRequestClose={() => setModalVisible(false)}
     >
-      <TouchableOpacity
+      <View
         style={{
           flex: 1,
-          backgroundColor: 'rgba(0,0,0,0.5)',
           justifyContent: 'flex-end',
+          backgroundColor: 'rgba(0,0,0,0.5)',
         }}
-        activeOpacity={1}
-        onPressOut={() => setModalVisible(false)}
-      ></TouchableOpacity>
-      <View style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+      >
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          activeOpacity={1}
+          onPressOut={() => setModalVisible(false)}
+        />
         <View
           className="px-4"
           style={{

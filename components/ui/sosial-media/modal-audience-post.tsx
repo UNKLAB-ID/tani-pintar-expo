@@ -53,7 +53,7 @@ const ModalAudiencePost: React.FC<ModalAudiencePostProps> = ({
         }}
         activeOpacity={1}
         onPressOut={() => setModalAudience(false)}
-      ></TouchableOpacity>
+      />
 
       <View style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
         <View

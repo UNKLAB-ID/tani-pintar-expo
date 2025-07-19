@@ -42,7 +42,8 @@ class CrossPlatformStorage {
   async setItem(key: string, value: string): Promise<void> {
     try {
       // Accept any value and always stringify
-      const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
+      const stringValue =
+        typeof value === 'string' ? value : JSON.stringify(value);
       if (this.isWeb) {
         // Web: Use localStorage
         if (this.isLocalStorageAvailable()) {
