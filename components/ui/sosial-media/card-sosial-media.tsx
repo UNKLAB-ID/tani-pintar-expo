@@ -42,7 +42,6 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
     updated[indexToHide].hidenPost = hiden;
     setData(updated);
   };
-
   return (
     <View style={{ flex: 1 }}>
       {data.map((item, index) => (

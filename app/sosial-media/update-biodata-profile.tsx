@@ -52,7 +52,10 @@ const UpdateBiodataProfile = () => {
         paddingBottom: insets.bottom,
       }}
     >
-      <StatusBar barStyle="dark-content" />
+      <StatusBar
+        backgroundColor="#FFFFFF" // background putih
+        barStyle="dark-content"   // ikon hitam
+      />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

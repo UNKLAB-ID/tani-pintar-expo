@@ -38,7 +38,7 @@ const BlockScriner: React.FC<BlockScrinerProps> = ({
         }}
         activeOpacity={1}
         onPressOut={() => setModalBlock(false)}
-      ></TouchableOpacity>
+      />
       <View style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
         <View
           className="py-5 px-4"

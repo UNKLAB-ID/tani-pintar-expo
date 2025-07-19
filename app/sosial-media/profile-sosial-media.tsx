@@ -27,6 +27,14 @@ import ModalUserMenuProfile from '@/components/ui/sosial-media/profile/modal-men
 import BlockScriner from '@/components/ui/sosial-media/modal-block';
 import ModalShare from '@/components/ui/sosial-media/modal-share';
 import ModalDeletePost from '@/components/ui/sosial-media/profile/modal-delete-post-profile';
+import ModalAboutProfileUser from '@/components/ui/sosial-media/profile/modal-about-profile-user';
+import ModalReportProfile from '@/components/ui/sosial-media/profile/modal-report-profile';
+import ModalReportPost from '@/components/ui/sosial-media/profile/modal-report-post';
+import ModalReportProfileUser from '@/components/ui/sosial-media/profile/modal-report-profile-user';
+import ModalReportType from '@/components/ui/sosial-media/report/modal-report-type';
+import ModalReportConten from '@/components/ui/sosial-media/report/modal-report-conten';
+import ModalReportVerify from '@/components/ui/sosial-media/report/modal-report-verify';
+import ModalReportSuccess from '@/components/ui/sosial-media/report/modal-report-success';
 
 const ProfileSosialMedia = () => {
   const [dataPosts, setDataPosts] = useState<any[]>([]);
@@ -34,13 +42,20 @@ const ProfileSosialMedia = () => {
   const [modalUserMenu, setModalUserMenu] = useState<boolean>(false);
   const [modalBlock, setModalBlock] = useState<boolean>(false);
   const [modalReport, setModalReport] = useState<boolean>(false);
-  const [modalMenuEdit, setModalMenuEdit] = useState<boolean>(false);
   const [modalShare, setModalShare] = useState<boolean>(false);
   const [modalCopyLink, setModalCopyLink] = useState<boolean>(false);
-  const [modalAboutThisProfile, setModalAboutThisProfile] =
-    useState<boolean>(false);
-  const { profileImage, modalDeletePost, setModalDeletePost } =
-    useMediaSosial();
+  const [modalAboutThisProfile, setModalAboutThisProfile] = useState<boolean>(false);
+  const [modalReportPost, setModalReportPost] = useState<boolean>(false)
+  const [modalReportProfile, setModalReportProfie] = useState<boolean>(false)
+  const [modalreportType, setModalReportType] = useState<boolean>(false)
+  const [modalReportConten, setModalReportConten] = useState<boolean>(false)
+  const [modalReportVerify, setModalReportVerify] = useState<boolean>(false)
+  const [modalReportSuccess, setModalReportSuccess] = useState<boolean>(false)
+  const [textModalReportType, setTextModalReportType] = useState<string>("")
+  const [textModalContenHeader, setModalContenHeader] = useState<string>("")
+  const [dataModalReportConten, setDataModalReportConten] = useState<any[]>([])
+
+  const { profileImage, modalDeletePost, setModalDeletePost } = useMediaSosial();
   const { query, id } = useLocalSearchParams();
   const insets = useSafeAreaInsets();
 
@@ -103,7 +118,10 @@ const ProfileSosialMedia = () => {
         paddingBottom: insets.bottom,
       }}
     >
-      <StatusBar barStyle="dark-content" translucent={false} />
+      <StatusBar
+        backgroundColor="#FFFFFF" // background putih
+        barStyle="dark-content"   // ikon hitam
+        translucent={false} />
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Bagian header */}
@@ -148,12 +166,12 @@ const ProfileSosialMedia = () => {
               source={
                 profileImage
                   ? {
-                      uri: profileImage.uri,
-                    }
+                    uri: profileImage.uri,
+                  }
                   : dataProfile?.profile_picture_url
                     ? {
-                        uri: dataProfile.profile_picture_url,
-                      }
+                      uri: dataProfile.profile_picture_url,
+                    }
                     : require('../../assets/images/profile-default.png')
               }
               style={{
@@ -272,7 +290,7 @@ const ProfileSosialMedia = () => {
               About
             </Text>
             {query === 'profile' && (
-              <TouchableOpacity className="flex-row items-center justify-center">
+              <TouchableOpacity className="flex-row items-center justify-center" onPress={() => router.push("/sosial-media/edit-about")}>
                 <EditBgImagesSosialMediaIcons
                   width={16}
                   height={16}
@@ -318,7 +336,7 @@ const ProfileSosialMedia = () => {
                 newList[index] = updated[0];
                 setDataPosts(newList);
               }}
-              typeQuery={String(query)}
+              typeQuery={query === "profile" ? "profile" : "user"}
             />
           ))}
         </View>
@@ -350,12 +368,95 @@ const ProfileSosialMedia = () => {
         <ModalDeletePost
           // modalDeletePost={modalDeletePost}
           setModalDeletePost={setModalDeletePost}
-          // id={id}
-          // index={index}
-          // data={data}
-          // setData={setData}
+        // id={id}
+        // index={index}
+        // data={data}
+        // setData={setData}
         />
       )}
+
+      {modalAboutThisProfile && (
+        <ModalAboutProfileUser
+          modalAboutProfile={modalAboutThisProfile}
+          setModalAboutProfile={setModalAboutThisProfile}
+        />
+      )}
+
+      {modalReport && (
+        <ModalReportProfile
+          modalReport={modalReport}
+          setModalReport={setModalReport}
+          setModalReportPost={setModalReportPost}
+          setModalReportProfile={setModalReportProfie}
+        />
+      )}
+
+      {modalReportPost && (
+        <ModalReportPost
+          data={postsList.results}
+          modalReportPost={modalReportPost}
+          setModalReportPost={setModalReportPost}
+          setModalReport={setModalReport}
+        />
+      )}
+
+      {
+        modalReportProfile && (
+          <ModalReportProfileUser
+            modalProfileUser={modalReportProfile}
+            setModalProfileUser={setModalReportProfie}
+            setTextModalReportType={setTextModalReportType}
+            setModalReportType={setModalReportType}
+            setModalReport={setModalReport}
+          />
+        )
+      }
+
+      {
+        modalreportType && (
+          <ModalReportType
+            setModalReportProfie={setModalReportProfie}
+            modalReportType={modalreportType}
+            textModalReportType={textModalReportType}
+            setModalReportType={setModalReportType}
+            setModalReportConten={setModalReportConten}
+            setDataModalReportConten={setDataModalReportConten}
+            setModalContenHeader={setModalContenHeader}
+          />
+        )
+      }
+
+      {
+        modalReportConten && (
+          <ModalReportConten
+            data={dataModalReportConten}
+            textHeader={textModalContenHeader}
+            modalReportConten={modalReportConten}
+            setModalReportConten={setModalReportConten}
+            setModalReportType={setModalReportType}
+            setModalReportVerify={setModalReportVerify}
+          />
+        )
+      }
+
+      {
+        modalReportVerify && (
+          <ModalReportVerify
+            modalReportVerify={modalReportVerify}
+            setModalReportSuccess={setModalReportSuccess}
+            setModalReportVerify={setModalReportVerify}
+          />
+        )
+      }
+
+      {
+        modalReportSuccess && (
+          <ModalReportSuccess
+            modalReportSuccess={modalReportSuccess}
+            setModalReportSuccess={setModalReportSuccess}
+          />
+        )
+      }
     </SafeAreaView>
   );
 };

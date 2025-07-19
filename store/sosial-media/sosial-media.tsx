@@ -13,6 +13,7 @@ export const useMediaSosial = create<MediaSosialStore>(set => ({
   profileImage: null,
   rotation: 0,
   setProfileImage: url => set({ profileImage: url }),
+
   modalDeletePost: false,
   setModalDeletePost: visible => set({ modalDeletePost: visible }),
 }));
