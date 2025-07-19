@@ -54,7 +54,7 @@ const UpdateBiodataProfile = () => {
     >
       <StatusBar
         backgroundColor="#FFFFFF" // background putih
-        barStyle="dark-content"   // ikon hitam
+        barStyle="dark-content" // ikon hitam
       />
       <KeyboardAvoidingView
         style={{ flex: 1 }}

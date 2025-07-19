@@ -1,5 +1,5 @@
-import * as React from "react"
-import Svg, { SvgProps, Path } from "react-native-svg"
+import * as React from 'react';
+import Svg, { SvgProps, Path } from 'react-native-svg';
 const DateIcons = (props: SvgProps) => (
   <Svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
     <Path
@@ -7,5 +7,5 @@ const DateIcons = (props: SvgProps) => (
       d="M15.833 1.667H15V.833a.833.833 0 1 0-1.667 0v.834H6.667V.833A.833.833 0 1 0 5 .833v.834h-.833A4.171 4.171 0 0 0 0 5.833v10A4.171 4.171 0 0 0 4.167 20h11.666A4.171 4.171 0 0 0 20 15.833v-10a4.171 4.171 0 0 0-4.167-4.166ZM4.167 3.333h11.666c1.379 0 2.5 1.122 2.5 2.5v.834H1.667v-.834c0-1.378 1.121-2.5 2.5-2.5Zm11.666 15H4.167a2.503 2.503 0 0 1-2.5-2.5v-7.5h16.666v7.5c0 1.379-1.121 2.5-2.5 2.5Zm0-6.666c0 .46-.372.833-.833.833H5a.833.833 0 1 1 0-1.667h10c.46 0 .833.374.833.834ZM10 15c0 .46-.373.833-.833.833H5a.833.833 0 1 1 0-1.666h4.167c.46 0 .833.373.833.833Z"
     />
   </Svg>
-)
-export default DateIcons
+);
+export default DateIcons;

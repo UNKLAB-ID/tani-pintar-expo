@@ -63,7 +63,7 @@ const SosialMediaIndex = () => {
     <SafeAreaView style={{ flex: 1, paddingTop: insets.top }}>
       <StatusBar
         backgroundColor="#FFFFFF" // background putih
-        barStyle="dark-content"   // ikon hitam
+        barStyle="dark-content" // ikon hitam
         translucent={false}
       />
 
@@ -91,8 +91,8 @@ const SosialMediaIndex = () => {
                 source={
                   profile?.profile_picture_url
                     ? {
-                      uri: profile.profile_picture_url,
-                    }
+                        uri: profile.profile_picture_url,
+                      }
                     : require('../../assets/images/profile-default.png')
                 }
                 className="w-[40px] h-[40px] rounded-full"

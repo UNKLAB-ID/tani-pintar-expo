@@ -149,27 +149,25 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
             </View>
           )}
         </View>
-        {
-          query ? (
-            <TouchableOpacity
-              onPress={() => {
-                setModalPostMenu(true);
-              }}
-            >
-              <PoinVertialIcons width={26} height={26} />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              onPress={() => {
-                setId(item.slug);
-                setIndex(index);
-                setModalVisible(true);
-              }}
-            >
-              <PointThreeHorizontal width={24} height={24} />
-            </TouchableOpacity>
-          )
-        }
+        {query ? (
+          <TouchableOpacity
+            onPress={() => {
+              setModalPostMenu(true);
+            }}
+          >
+            <PoinVertialIcons width={26} height={26} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              setId(item.slug);
+              setIndex(index);
+              setModalVisible(true);
+            }}
+          >
+            <PointThreeHorizontal width={24} height={24} />
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Caption */}

@@ -27,7 +27,13 @@ const ModalShare: React.FC<ModalSHareProfileProps> = ({
         setModalShare(false);
       }}
     >
-      <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'flex-end',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+        }}
+      >
         <TouchableOpacity
           style={{ flex: 1 }}
           activeOpacity={1}

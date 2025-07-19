@@ -2,7 +2,13 @@ import BackIcons from '@/assets/icons/global/back-icons';
 import DropdownList from '@/components/ui/component-globals/input-dropdown-global';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { SafeAreaView, View, Text, TouchableOpacity, StatusBar } from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  TouchableOpacity,
+  StatusBar,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const countries = [
@@ -24,10 +30,10 @@ export default function LocationCountryScreen() {
         paddingBottom: insets.bottom,
       }}
     >
-  <StatusBar
-                backgroundColor="#FFFFFF" // background putih
-                barStyle="dark-content"   // ikon hitam
-            />
+      <StatusBar
+        backgroundColor="#FFFFFF" // background putih
+        barStyle="dark-content" // ikon hitam
+      />
       <View className="px-4">
         <View className="flex-row items-center" style={{ marginBottom: 20 }}>
           <TouchableOpacity className="mr-3" onPress={() => router.back()}>

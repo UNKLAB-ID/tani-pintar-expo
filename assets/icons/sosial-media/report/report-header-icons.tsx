@@ -1,11 +1,11 @@
-import * as React from "react"
+import * as React from 'react';
 import Svg, {
   SvgProps,
   Path,
   Defs,
   LinearGradient,
   Stop,
-} from "react-native-svg"
+} from 'react-native-svg';
 const ReportIconsHeader = (props: SvgProps) => (
   <Svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
     <Path
@@ -26,5 +26,5 @@ const ReportIconsHeader = (props: SvgProps) => (
       </LinearGradient>
     </Defs>
   </Svg>
-)
-export default ReportIconsHeader
+);
+export default ReportIconsHeader;

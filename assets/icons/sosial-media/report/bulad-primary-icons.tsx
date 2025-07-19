@@ -1,5 +1,5 @@
-import * as React from "react"
-import Svg, { SvgProps, Circle } from "react-native-svg"
+import * as React from 'react';
+import Svg, { SvgProps, Circle } from 'react-native-svg';
 const BulatReportPrimaryIcons = (props: SvgProps) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
@@ -10,5 +10,5 @@ const BulatReportPrimaryIcons = (props: SvgProps) => (
   >
     <Circle cx={12} cy={12} r={12} fill="#169953" />
   </Svg>
-)
-export default BulatReportPrimaryIcons
+);
+export default BulatReportPrimaryIcons;
