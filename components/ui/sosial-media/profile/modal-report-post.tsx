@@ -90,7 +90,7 @@ const ModalReportPost: React.FC<ModalReportPostProps> = ({ modalReportPost, setM
                     <View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
                         <Text className="font-semibold" style={{ fontSize: 16 }}>Select the post you want to report</Text>
                         <Text style={{ color: "#6F6F6F" }}>
-                            If there's something you need to look at that isn't on the list, please open the content and report it directly.
+                            {`If there's something you need to look at that isn't on the list, please open the content and report it directly.`}
                         </Text>
                         <ScrollView className="mt-3" contentContainerStyle={{ paddingBottom: 150 }}>
                             {
