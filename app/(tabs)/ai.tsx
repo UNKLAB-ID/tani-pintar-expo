@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-} from 'react-native';
+import { View, Text, TextInput, Image, ScrollView, ActivityIndicator, Animated, Pressable } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 const AiScreen = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [textInput, setTextInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fadeAnim] = useState(new Animated.Value(0));
   const router = useRouter();
 
   const pickImage = async () => {
@@ -27,6 +21,11 @@ const AiScreen = () => {
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
     }
   };
 
@@ -46,34 +45,10 @@ const AiScreen = () => {
 
   useEffect(() => {
     pickImage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <ScrollView className="flex-1 bg-gradient-to-b from-green-100 to-green-50 p-4">
-      {/* Header */}
-      <View className="flex-row items-center justify-between p-4 bg-white rounded-3xl shadow-lg mb-6 border-b-2 border-green-200">
-        <View className="flex-row items-center">
-          <Image
-            source={{ uri: 'https://randomuser.me/api/portraits/men/3.jpg' }}
-            className="w-14 h-14 rounded-full border-2 border-green-400"
-          />
-          <View className="ml-4">
-            <Text className="text-green-600 text-base font-medium">Welcome Back,</Text>
-            <Text className="text-xl font-bold text-green-900">Mambaus Baus</Text>
-          </View>
-        </View>
-        <View className="flex-row space-x-3">
-          <TouchableOpacity className="bg-green-500 p-3 rounded-full shadow">
-            <Ionicons name="notifications-outline" size={24} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity className="bg-green-500 p-3 rounded-full shadow">
-            <Ionicons name="chatbubble-outline" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* AI Post Card */}
       <View className="bg-white rounded-3xl p-6 shadow-lg border border-green-100">
         <Text className="text-2xl font-bold text-green-800 mb-4 text-center">
           Scan Penyakit Tanaman
@@ -82,23 +57,32 @@ const AiScreen = () => {
           Upload atau foto tanamanmu, lalu masukkan catatan/gejala jika ada. Tekan submit untuk melihat hasil analisa AI.
         </Text>
 
+        <View className="bg-green-50 border border-green-200 rounded-xl p-3 mb-5">
+          <Text className="text-green-700 font-semibold mb-1">Tips Foto:</Text>
+          <Text className="text-green-700 text-xs">• Pastikan daun/tanaman terlihat jelas</Text>
+          <Text className="text-green-700 text-xs">• Ambil gambar di tempat terang</Text>
+          <Text className="text-green-700 text-xs">• Hindari blur/goyang</Text>
+        </View>
+
         {/* Upload Button */}
-        <TouchableOpacity
-          className="flex-row items-center justify-center bg-blue-600 px-5 py-3 rounded-xl mb-5 shadow-md"
+        <Pressable
           onPress={pickImage}
+          className="flex-row items-center justify-center bg-emerald-500 active:bg-emerald-700 rounded-2xl mb-5 shadow-md py-4 px-6"
         >
-          <Ionicons name="cloud-upload-outline" size={24} color="white" />
-          <Text className="text-white text-lg font-semibold ml-2">
+          <Ionicons name="cloud-upload-outline" size={26} color="#fff" />
+          <Text className="text-white font-bold text-lg ml-2">
             {selectedImage ? 'Ganti Foto' : 'Upload / Foto Tanaman'}
           </Text>
-        </TouchableOpacity>
+        </Pressable>
 
         {/* Image Preview */}
         {selectedImage && (
-          <Image
-            source={{ uri: selectedImage }}
-            className="w-full h-56 rounded-2xl mb-5 border-2 border-green-200"
-          />
+          <Animated.View style={{ opacity: fadeAnim }}>
+            <Image
+              source={{ uri: selectedImage }}
+              className="w-full h-56 rounded-2xl mb-5 border-2 border-green-200"
+            />
+          </Animated.View>
         )}
 
         {/* Text Input */}
@@ -111,15 +95,18 @@ const AiScreen = () => {
         />
 
         {/* Submit Button */}
-        <TouchableOpacity
-          className={`mt-6 bg-green-600 py-4 rounded-xl shadow-lg ${!selectedImage ? 'opacity-50' : ''}`}
+        <Pressable
           onPress={handleSubmit}
           disabled={!selectedImage || isSubmitting}
+          className={`mt-6 rounded-2xl flex-row items-center justify-center py-4 px-6 shadow-md ${
+            !selectedImage ? 'bg-blue-300' : 'bg-blue-500 active:bg-blue-700'
+          }`}
         >
-          <Text className="text-white text-lg font-bold text-center">
+          {isSubmitting && <ActivityIndicator color="#fff" className="mr-2" />}
+          <Text className="text-white font-bold text-lg">
             {isSubmitting ? 'Memproses...' : 'Submit & Lihat Hasil'}
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </ScrollView>
   );
