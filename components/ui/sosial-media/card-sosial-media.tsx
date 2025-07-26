@@ -30,21 +30,27 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalBlock, setModalBlock] = useState<boolean>(false);
   const [modalComment, setModalComment] = useState<boolean>(false);
-  const [modalMenuPostProfile, setModalMenuPostProfile] = useState<boolean>(false);
-  const [modalReportMenuSosialMedia, setModalReportMenuSosialMedia] = useState<boolean>(false)
+  const [modalMenuPostProfile, setModalMenuPostProfile] =
+    useState<boolean>(false);
+  const [modalReportMenuSosialMedia, setModalReportMenuSosialMedia] =
+    useState<boolean>(false);
   const [modalShare, setModalShare] = useState<boolean>(false);
-  const [modalReportVerify, setModalReportVerify] = useState<boolean>(false)
-  const [modalReportContenTypeSosialMedia, setModalReportContenTypeSosialMedia] = useState<boolean>(false)
-  const [modalReportAgreeList, setModalReportAgreeList] = useState<boolean>(false)
-  const [modalReportdetail, setModalReportDetail] = useState<boolean>(false)
-  const [modalReportSuccess, setModalReportSuccess] = useState<boolean>(false)
-  const [dataReportTypeContent, setDataReportTypeContent] = useState<any>()
-  const [dataAgreeList, setDataAgreeList] = useState<any>()
+  const [modalReportVerify, setModalReportVerify] = useState<boolean>(false);
+  const [
+    modalReportContenTypeSosialMedia,
+    setModalReportContenTypeSosialMedia,
+  ] = useState<boolean>(false);
+  const [modalReportAgreeList, setModalReportAgreeList] =
+    useState<boolean>(false);
+  const [modalReportdetail, setModalReportDetail] = useState<boolean>(false);
+  const [modalReportSuccess, setModalReportSuccess] = useState<boolean>(false);
+  const [dataReportTypeContent, setDataReportTypeContent] = useState<any>();
+  const [dataAgreeList, setDataAgreeList] = useState<any>();
   const [id, setId] = useState<string>('');
   const [slugComent, setSlugComment] = useState<string>('');
-  const [reportDetailType, setReportDetailType] = useState<string>("")
-  const [reportDetailBacktype, setReportDetailBackType] = useState<string>("")
-  const [reportDetailTypeContent, setReportDetailTypeContent] = useState<any>()
+  const [reportDetailType, setReportDetailType] = useState<string>('');
+  const [reportDetailBacktype, setReportDetailBackType] = useState<string>('');
+  const [reportDetailTypeContent, setReportDetailTypeContent] = useState<any>();
   const [index, setIndex] = useState<number>(0);
   const [activeIndexes, setActiveIndexes] = useState<number[]>([]);
   const { setModalDeletePost } = useMediaSosial();
@@ -60,18 +66,16 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
   };
 
   const setModalBack = (value: boolean) => {
-    if (reportDetailBacktype === "Header List") {
-      setReportDetailType("")
-      setModalReportDetail(false)
-      setModalReportContenTypeSosialMedia(value)
+    if (reportDetailBacktype === 'Header List') {
+      setReportDetailType('');
+      setModalReportDetail(false);
+      setModalReportContenTypeSosialMedia(value);
     } else {
-      setReportDetailType("")
-      setModalReportDetail(false)
-      setModalReportAgreeList(value)
+      setReportDetailType('');
+      setModalReportDetail(false);
+      setModalReportAgreeList(value);
     }
-  }
-
-  console.log("Cobak Tes ======>", reportDetailTypeContent)
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -146,81 +150,75 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
         <ModalShare modalShare={modalShare} setModalShare={setModalShare} />
       )}
 
-      {
-        modalReportMenuSosialMedia && (
-          <ModalReportMenuSosialMedia
-            modalReportMenuSosialMedia={modalReportMenuSosialMedia}
-            setDataReportTypeContent={setDataReportTypeContent}
-            setModalReportMenuSosialMedia={setModalReportMenuSosialMedia}
-            setIndexMenuReportSosialMedia={setModalReportVerify}
-            setModalReportTypeContentSosialMedia={setModalReportContenTypeSosialMedia}
-          />
-        )
-      }
+      {modalReportMenuSosialMedia && (
+        <ModalReportMenuSosialMedia
+          modalReportMenuSosialMedia={modalReportMenuSosialMedia}
+          setDataReportTypeContent={setDataReportTypeContent}
+          setModalReportMenuSosialMedia={setModalReportMenuSosialMedia}
+          setIndexMenuReportSosialMedia={setModalReportVerify}
+          setModalReportTypeContentSosialMedia={
+            setModalReportContenTypeSosialMedia
+          }
+        />
+      )}
 
-      {
-        modalReportVerify && (
-          <ModalReportVerify
-            modalReportVerify={modalReportVerify}
-            setModalReportVerify={setModalReportVerify}
-            setModalReportSuccess={setModalReportSuccess}
-          />
-        )
-      }
+      {modalReportVerify && (
+        <ModalReportVerify
+          modalReportVerify={modalReportVerify}
+          setModalReportVerify={setModalReportVerify}
+          setModalReportSuccess={setModalReportSuccess}
+        />
+      )}
 
-      {
-        modalReportContenTypeSosialMedia && (
-          <ModalRepiortTypeContentSosialMedia
-            setReportDetailTypeContent={setReportDetailTypeContent}
-            modalReportTypeContentSosialMedia={modalReportContenTypeSosialMedia}
-            dataReportTypeContentSosialMedia={dataReportTypeContent}
-            setModalReportTypeContentSosialMedia={setModalReportContenTypeSosialMedia}
-            setDataAgreeList={setDataAgreeList}
-            setModalReportMenuSosialMedia={setModalReportMenuSosialMedia}
-            setModalReportAgreeList={setModalReportAgreeList}
-            setModalReportDetail={setModalReportDetail}
-            serReportDetailBackType={setReportDetailBackType}
-          />
-        )
-      }
-
-      {
-        modalReportAgreeList && (
-          <ModalAgreeReportSosialMedia
-            modalAgreeReportSosialMedia={modalReportAgreeList}
-            setModalAgreeReportSosialMedia={setModalReportAgreeList}
-            dataAgreeList={dataAgreeList}
-            setModalReportTypeContentSosialMedia={setModalReportContenTypeSosialMedia}
-            setModalReportDetail={setModalReportDetail}
-            setReportDetailType={setReportDetailType}
-            serReportDetailBackType={setReportDetailBackType}
+      {modalReportContenTypeSosialMedia && (
+        <ModalRepiortTypeContentSosialMedia
           setReportDetailTypeContent={setReportDetailTypeContent}
-          />
-        )
-      }
+          modalReportTypeContentSosialMedia={modalReportContenTypeSosialMedia}
+          dataReportTypeContentSosialMedia={dataReportTypeContent}
+          setModalReportTypeContentSosialMedia={
+            setModalReportContenTypeSosialMedia
+          }
+          setDataAgreeList={setDataAgreeList}
+          setModalReportMenuSosialMedia={setModalReportMenuSosialMedia}
+          setModalReportAgreeList={setModalReportAgreeList}
+          setModalReportDetail={setModalReportDetail}
+          serReportDetailBackType={setReportDetailBackType}
+        />
+      )}
 
-      {
-        modalReportdetail && (
-          <ModalReportDetail
-            modalReportDetail={modalReportdetail}
-            setModalReportVerify={setModalReportVerify}
-            setModalReportDetail={setModalReportDetail}
-            setModalBack={setModalBack}
-            setReportDetailType={setReportDetailType}
-            reportDetailType={reportDetailType}
-            reportDetailTypeContent={reportDetailTypeContent}
-          />
-        )
-      }
+      {modalReportAgreeList && (
+        <ModalAgreeReportSosialMedia
+          modalAgreeReportSosialMedia={modalReportAgreeList}
+          setModalAgreeReportSosialMedia={setModalReportAgreeList}
+          dataAgreeList={dataAgreeList}
+          setModalReportTypeContentSosialMedia={
+            setModalReportContenTypeSosialMedia
+          }
+          setModalReportDetail={setModalReportDetail}
+          setReportDetailType={setReportDetailType}
+          serReportDetailBackType={setReportDetailBackType}
+          setReportDetailTypeContent={setReportDetailTypeContent}
+        />
+      )}
 
-      {
-        modalReportSuccess && (
-          <ModalReportSuccess
-            modalReportSuccess={modalReportSuccess}
-            setModalReportSuccess={setModalReportSuccess}
-          />
-        )
-      }
+      {modalReportdetail && (
+        <ModalReportDetail
+          modalReportDetail={modalReportdetail}
+          setModalReportVerify={setModalReportVerify}
+          setModalReportDetail={setModalReportDetail}
+          setModalBack={setModalBack}
+          setReportDetailType={setReportDetailType}
+          reportDetailType={reportDetailType}
+          reportDetailTypeContent={reportDetailTypeContent}
+        />
+      )}
+
+      {modalReportSuccess && (
+        <ModalReportSuccess
+          modalReportSuccess={modalReportSuccess}
+          setModalReportSuccess={setModalReportSuccess}
+        />
+      )}
     </View>
   );
 };
