@@ -15,7 +15,7 @@ interface ModalSettingSrinerProps {
   setModalVisible: (visible: boolean) => void;
   setModalBlock: (visible: boolean) => void;
   setModalHidenPost: (visible: boolean) => void;
-  setModalReportMenuSosialMedia: (visible: boolean) => void
+  setModalReportMenuSosialMedia: (visible: boolean) => void;
 }
 
 const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
@@ -117,8 +117,8 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
           <CustomButtonSosialMedia
             title="Report"
             onPress={() => {
-              setModalVisible(false)
-              setModalReportMenuSosialMedia(true)
+              setModalVisible(false);
+              setModalReportMenuSosialMedia(true);
             }}
             borderColor="#AAA"
             textColor="#FF0808"

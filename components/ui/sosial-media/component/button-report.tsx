@@ -7,7 +7,7 @@ interface ButtonReportProps {
   title: string;
   disable?: boolean;
   fontWeight?: TextStyle['fontWeight'];
-  color?: string
+  color?: string;
 }
 
 const ButtonReport: React.FC<ButtonReportProps> = ({
@@ -15,7 +15,7 @@ const ButtonReport: React.FC<ButtonReportProps> = ({
   title,
   disable = false,
   fontWeight = '400',
-  color
+  color,
 }) => {
   return (
     <TouchableOpacity
