@@ -8,7 +8,7 @@ import CustomButton from '../../component-globals/button-primary';
 interface ModalReportVerifyeProps {
   modalReportVerify: boolean;
   setModalReportVerify: (value: boolean) => void;
-  setModalReportSuccess: (value: boolean) => void;
+  setModalReportSuccess?: (value: boolean) => void;
 }
 
 const ModalReportVerify: React.FC<ModalReportVerifyeProps> = ({
@@ -73,11 +73,11 @@ const ModalReportVerify: React.FC<ModalReportVerifyeProps> = ({
             }}
           >
             <CustomButton
-              title="Submit"
+              title="Done"
               className="py-[10px]"
               onPress={() => {
                 setModalReportVerify(false);
-                setModalReportSuccess(true);
+                setModalReportSuccess?.(true);
               }}
             />
           </View>
