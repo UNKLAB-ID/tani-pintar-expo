@@ -49,208 +49,115 @@ const ModalReportMenuSosialMedia: React.FC<ModalReportMenuSosialMediaProps> = ({
     ]
 
     const dataTypeReportConten = (id: number) => {
-        var valueListReportTypeConten: any
-
-        console.log(id)
+        let valueListReportTypeConten: any;
+    
         switch (id) {
             case 2:
                 valueListReportTypeConten = {
                     id: 2,
                     textHeader: "What makes this bullying or unwanted contact?",
                     data: [
-                        {
-                            id: 1,
-                            text: "Distribution of nude images without permission"
-                        },
-                        {
-                            id: 2,
-                            text: "Bullying and unpleasant treatment"
-                        },
-                        {
-                            id: 3,
-                            text: "Spam"
-                        }
-                    ]
-                }
-
-                setDataReportTypeContent(valueListReportTypeConten)
-                setModalReportTypeContentSosialMedia(true)
+                        { id: 1, text: "Distribution of nude images without permission" },
+                        { id: 2, text: "Bullying and unpleasant treatment" },
+                        { id: 3, text: "Spam" },
+                    ],
+                };
                 break;
+    
             case 3:
                 valueListReportTypeConten = {
                     id: 3,
                     textHeader: "What kind of self-harm?",
                     data: [
-                        {
-                            id: 1,
-                            text: "Suicidal and self-injurious behavior"
-                        },
-                        {
-                            id: 2,
-                            text: "Eating disorder syndrome"
-                        },
-                    ]
-                }
-
-                setDataReportTypeContent(valueListReportTypeConten)
-                setModalReportTypeContentSosialMedia(true)
+                        { id: 1, text: "Suicidal and self-injurious behavior" },
+                        { id: 2, text: "Eating disorder syndrome" },
+                    ],
+                };
                 break;
+    
             case 4:
                 valueListReportTypeConten = {
                     id: 4,
                     textHeader: "Reason for reporting: Violence, hatred or exploitation?",
                     data: [
-                        {
-                            id: 1,
-                            text: "Serious threat to safety."
-                        },
-                        {
-                            id: 2,
-                            text: "Indications of terrorism or organized crime."
-                        },
-                        {
-                            id: 3,
-                            text: "There are indications of exploitation."
-                        },
-                        {
-                            id: 4,
-                            text: "Speech or symbols containing hate"
-                        },
-                        {
-                            id: 5,
-                            text: "Provocation of violence"
-                        },
-                        {
-                            id: 6,
-                            text: "Content displayed contains scenes of violence, death, or significant physical injury"
-                        },
-                        {
-                            id: 7,
-                            text: "Animal violence"
-                        },
-                    ]
-                }
-
-                setDataReportTypeContent(valueListReportTypeConten)
-                setModalReportTypeContentSosialMedia(true)
+                        { id: 1, text: "Serious threat to safety." },
+                        { id: 2, text: "Indications of terrorism or organized crime." },
+                        { id: 3, text: "There are indications of exploitation." },
+                        { id: 4, text: "Speech or symbols containing hate" },
+                        { id: 5, text: "Provocation of violence" },
+                        { id: 6, text: "Content displayed contains scenes of violence, death, or significant physical injury" },
+                        { id: 7, text: "Animal violence" },
+                    ],
+                };
                 break;
-            case 4:
-                valueListReportTypeConten = {
-                    id: 4,
-                    textHeader: "What products or services are offered?",
-                    data: [
-                        {
-                            id: 1,
-                            text: "Drugs"
-                        },
-                        {
-                            id: 2,
-                            text: "Weapons"
-                        },
-                        {
-                            id: 3,
-                            text: "Animals"
-                        }
-                    ]
-                }
-
-                setDataReportTypeContent(valueListReportTypeConten)
-                setModalReportTypeContentSosialMedia(true)
-                break;
+    
             case 5:
                 valueListReportTypeConten = {
                     id: 5,
-                    textHeader: "Why is this considered nudity or sexual activity?",
+                    textHeader: "What products or services are offered?",
                     data: [
-                        {
-                            id: 1,
-                            text: "Threatening or distributing nude photos"
-                        },
-                        {
-                            id: 2,
-                            text: "Indication of prostitution"
-                        },
-                        {
-                            id: 3,
-                            text: "Indications of sexual exploitation"
-                        },
-                        {
-                            id: 4,
-                            text: "Adult content"
-                        }
-                    ]
-                }
-
-                setDataReportTypeContent(valueListReportTypeConten)
-                setModalReportTypeContentSosialMedia(true)
+                        { id: 1, text: "Drugs" },
+                        { id: 2, text: "Weapons" },
+                        { id: 3, text: "Animals" },
+                    ],
+                };
                 break;
+    
             case 6:
                 valueListReportTypeConten = {
                     id: 6,
-                    textHeader: "Does this content involve children under 18?",
+                    textHeader: "Why is this considered nudity or sexual activity?",
                     data: [
-                        {
-                            id: 1,
-                            text: "Yes"
-                        },
-                        {
-                            id: 2,
-                            text: "No"
-                        }
-                    ]
-                }
-
-                setDataReportTypeContent(valueListReportTypeConten)
-                setModalReportTypeContentSosialMedia(true)
+                        { id: 1, text: "Threatening or distributing nude photos" },
+                        { id: 2, text: "Indication of prostitution" },
+                        { id: 3, text: "Indications of sexual exploitation" },
+                        { id: 4, text: "Adult content" },
+                    ],
+                };
                 break;
+    
             case 7:
                 valueListReportTypeConten = {
                     id: 7,
-                    textHeader: "What is the most appropriate description of the problem?",
+                    textHeader: "Does this content involve children under 18?",
                     data: [
-                        {
-                            id: 1,
-                            text: "Fraudulent actions"
-                        },
-                        {
-                            id: 2,
-                            text: "Spam"
-                        }
-                    ]
-                }
-
-                setDataReportTypeContent(valueListReportTypeConten)
-                setModalReportTypeContentSosialMedia(true)
+                        { id: 1, text: "Yes" },
+                        { id: 2, text: "No" },
+                    ],
+                };
                 break;
+    
             case 8:
                 valueListReportTypeConten = {
                     id: 8,
+                    textHeader: "What is the most appropriate description of the problem?",
+                    data: [
+                        { id: 1, text: "Fraudulent actions" },
+                        { id: 2, text: "Spam" },
+                    ],
+                };
+                break;
+    
+            case 9:
+                valueListReportTypeConten = {
+                    id: 9,
                     textHeader: "What kind of false information?",
                     data: [
-                        {
-                            id: 1,
-                            text: "Mental Health"
-                        },
-                        {
-                            id: 2,
-                            text: "Public policy"
-                        },
-                        {
-                            id: 3,
-                            text: "Social problems"
-                        },
-                        {
-                            id: 4,
-                            text: "Digital modification"
-                        }
-                    ]
-                }
-
-                setDataReportTypeContent(valueListReportTypeConten)
-                setModalReportTypeContentSosialMedia(true)
+                        { id: 1, text: "Mental Health" },
+                        { id: 2, text: "Public policy" },
+                        { id: 3, text: "Social problems" },
+                        { id: 4, text: "Digital modification" },
+                    ],
+                };
                 break;
+    
+            default:
+                return;
         }
-    }
+    
+        setDataReportTypeContent(valueListReportTypeConten);
+        setModalReportTypeContentSosialMedia(true);
+    };    
 
     return (
         <Modal

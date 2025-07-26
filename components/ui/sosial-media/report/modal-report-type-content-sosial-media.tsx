@@ -17,71 +17,52 @@ interface ModalRepiortTypeContentSosialMediaProps {
 
 const ModalRepiortTypeContentSosialMedia: React.FC<ModalRepiortTypeContentSosialMediaProps> = ({ modalReportTypeContentSosialMedia, dataReportTypeContentSosialMedia, setModalReportTypeContentSosialMedia, setModalReportMenuSosialMedia, setDataAgreeList, setModalReportAgreeList, setModalReportDetail, setReportDetailTypeContent , serReportDetailBackType}) => {
     const toggleContenTypeReport = (id: number) => {
-        var dataAgreeList: any
+        let dataAgreeList: any;
+    
         switch (id) {
-            case 1:
+            case 2:
                 dataAgreeList = {
-                    id: 1,
+                    id: 2,
                     textHeader: "How old are you under 18?",
                     data: [
-                        {
-                            id: 1,
-                            text: "Yes"
-                        },
-                        {
-                            id: 2,
-                            text: "No"
-                        }
+                        { id: 1, text: "Yes" },
+                        { id: 2, text: "No" }
                     ]
-                }
-                setModalReportTypeContentSosialMedia(false)
-                setDataAgreeList(dataAgreeList)
-                setModalReportAgreeList(true)
-                break
+                };
+                setModalReportTypeContentSosialMedia(false);
+                setDataAgreeList(dataAgreeList);
+                setModalReportAgreeList(true);
+                break;
             case 4:
                 dataAgreeList = {
                     id: 4,
                     textHeader: "What kind of drugs?",
                     data: [
-                        {
-                            id: 1,
-                            text: "Highly addictive substances such as cocaine, heroin, and fentanyl."
-                        },
-                        {
-                            id: 2,
-                            text: "Prescription drugs"
-                        },
-                        {
-                            id: 3,
-                            text: "Other drugs"
-                        }
+                        { id: 1, text: "Highly addictive substances such as cocaine, heroin, and fentanyl." },
+                        { id: 2, text: "Prescription drugs" },
+                        { id: 3, text: "Other drugs" }
                     ]
-                }
-                setModalReportTypeContentSosialMedia(false)
-                setDataAgreeList(dataAgreeList)
-                setModalReportAgreeList(true)
-                break
+                };
+                setModalReportTypeContentSosialMedia(false);
+                setDataAgreeList(dataAgreeList);
+                setModalReportAgreeList(true);
+                break;
             case 5:
                 dataAgreeList = {
                     id: 5,
                     textHeader: "How old are you under 18?",
                     data: [
-                        {
-                            id: 1,
-                            text: "Yes"
-                        },
-                        {
-                            id: 2,
-                            text: "No"
-                        }
+                        { id: 1, text: "Yes" },
+                        { id: 2, text: "No" }
                     ]
-                }
-                setModalReportTypeContentSosialMedia(false)
-                setDataAgreeList(dataAgreeList)
-                setModalReportAgreeList(true)
-                break
+                };
+                setModalReportTypeContentSosialMedia(false);
+                setDataAgreeList(dataAgreeList);
+                setModalReportAgreeList(true);
+                break;
         }
-    }
+    };
+    
 
     return (
         <Modal
@@ -145,10 +126,10 @@ const ModalRepiortTypeContentSosialMedia: React.FC<ModalRepiortTypeContentSosial
                                         style={{ paddingVertical: 10 }}
                                         onPress={() => {
                                             switch (dataReportTypeContentSosialMedia.id) {
-                                                case 1:
-                                                    toggleContenTypeReport(1)
-                                                    break
                                                 case 2:
+                                                    toggleContenTypeReport(2)
+                                                    break
+                                                case 3:
                                                     setReportDetailTypeContent({
                                                         textHeader: "Suicide, self injury or eating disorders",
                                                         textContent: item.text
@@ -157,9 +138,9 @@ const ModalRepiortTypeContentSosialMedia: React.FC<ModalRepiortTypeContentSosial
                                                     setModalReportTypeContentSosialMedia(false)
                                                     setModalReportDetail(true)
                                                     break
-                                                case 3:
-                                                    break
                                                 case 4:
+                                                    break
+                                                case 9:
                                                     toggleContenTypeReport(4)
                                                     break
                                                 case 5:
