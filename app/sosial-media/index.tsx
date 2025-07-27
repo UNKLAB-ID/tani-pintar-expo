@@ -141,6 +141,7 @@ const SosialMediaIndex = () => {
       {/* FLATLIST */}
       <FlatList
         data={dataPosts}
+        // style={{marginTop:10}}
         keyExtractor={(item, index) => `${item.id}-${index}`}
         renderItem={({ item, index }) => (
           <CardSosialMedia

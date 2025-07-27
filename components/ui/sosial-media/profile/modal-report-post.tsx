@@ -76,7 +76,6 @@ const ModalReportPost: React.FC<ModalReportPostProps> = ({
             borderTopRightRadius: 20,
             paddingVertical: 20,
             height: 740, // Adjust height based on typeQuery
-            marginBottom: insets.bottom,
           }}
         >
           {/* Garis horizontal */}

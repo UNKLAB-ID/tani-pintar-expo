@@ -78,7 +78,7 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1}}>
       {data.map((item, index) => (
         <View
           key={`${item.id}-${index}`}
