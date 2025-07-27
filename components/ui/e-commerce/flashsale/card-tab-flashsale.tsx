@@ -43,11 +43,11 @@ const FlashSaleTabCard: React.FC<FlashSaleTabCardProps> = ({
       style={{ height: 128, padding: 0 }}
     >
       {/* Gambar Produk */}
-      <View className="w-[100px] h-full relative" style={{ marginRight: 16 }}>
+      <View className="w-[100px] h-full relative" style={{ marginRight: 40 }}>
         <Image
           source={image}
           resizeMode="cover"
-          style={{ width: 128, height: '100%' }}
+          style={{ width: 128, height: 128 }}
           className="rounded-md"
         />
         {discount && (
@@ -66,9 +66,9 @@ const FlashSaleTabCard: React.FC<FlashSaleTabCardProps> = ({
       </View>
 
       {/* Info Produk */}
-      <View className="flex-1 justify-between py-2">
+      <View className="flex-1 justify-between py-2 ">
         <Text className="text-[18px] font-semibold text-black mb-5">
-          {name.length > 17 ? name.slice(0, 17) + '...' : name}
+          {name.length > 14 ? name.slice(0, 14) + '...' : name}
         </Text>
 
         {discount ? (

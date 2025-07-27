@@ -73,10 +73,12 @@ export default function Layout() {
           },
           tabBarShowLabel: true,
           tabBarLabel: ({ focused, color }) => {
+            // Hide label only for AI tab
+            if (route.name === 'ai') return null;
+
             let label = '';
             if (route.name === 'sosmed') label = 'Home';
             else if (route.name === 'ecommerce') label = 'E-Commerce';
-            else if (route.name === 'ai') label = 'AI';
             else if (route.name === 'export') label = 'Agent';
             else if (route.name === 'profile') label = 'Profile';
 

@@ -30,7 +30,6 @@ const LoginScreen = () => {
   const mutation = useMutation({
     mutationFn: async (data: { phone_number: string }) => {
       //  API call for login
-
       return api.post('/accounts/login/', { phone_number: data.phone_number });
     },
 

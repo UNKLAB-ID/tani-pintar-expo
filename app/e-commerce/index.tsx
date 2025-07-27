@@ -242,7 +242,7 @@ const EcommerceIndex = () => {
         backgroundColor="#ffffff"
         translucent={false}
       />
-      <SafeAreaView edges={['top', 'right', 'left']} className="flex-1 w-full ">
+      <SafeAreaView edges={['right', 'left']} className="flex-1 w-full ">
         <View className="px-5 py-3 pb-4 bg-white">
           <View className="flex-row items-center justify-between">
             <View className="w-[276px] relative">

@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Image, ScrollView, ActivityIndicator, Animated, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+  Animated,
+  Pressable,
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -54,13 +63,18 @@ const AiScreen = () => {
           Scan Penyakit Tanaman
         </Text>
         <Text className="text-gray-500 text-center mb-6">
-          Upload atau foto tanamanmu, lalu masukkan catatan/gejala jika ada. Tekan submit untuk melihat hasil analisa AI.
+          Upload atau foto tanamanmu, lalu masukkan catatan/gejala jika ada.
+          Tekan submit untuk melihat hasil analisa AI.
         </Text>
 
         <View className="bg-green-50 border border-green-200 rounded-xl p-3 mb-5">
           <Text className="text-green-700 font-semibold mb-1">Tips Foto:</Text>
-          <Text className="text-green-700 text-xs">• Pastikan daun/tanaman terlihat jelas</Text>
-          <Text className="text-green-700 text-xs">• Ambil gambar di tempat terang</Text>
+          <Text className="text-green-700 text-xs">
+            • Pastikan daun/tanaman terlihat jelas
+          </Text>
+          <Text className="text-green-700 text-xs">
+            • Ambil gambar di tempat terang
+          </Text>
           <Text className="text-green-700 text-xs">• Hindari blur/goyang</Text>
         </View>
 
