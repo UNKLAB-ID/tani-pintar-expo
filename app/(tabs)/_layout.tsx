@@ -79,6 +79,7 @@ export default function Layout() {
             let label = '';
             if (route.name === 'sosmed') label = 'Home';
             else if (route.name === 'ecommerce') label = 'E-Commerce';
+            else if (route.name === 'ai') label = '';
             else if (route.name === 'export') label = 'Agent';
             else if (route.name === 'profile') label = 'Profile';
 

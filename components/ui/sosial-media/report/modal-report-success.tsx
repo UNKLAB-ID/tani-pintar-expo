@@ -111,7 +111,7 @@ const ModalReportSuccess: React.FC<ModalReportSuccessProps> = ({
             }}
           >
             <CustomButton
-              title="Submit"
+              title="Done"
               className="py-[10px]"
               onPress={() => {
                 setModalReportSuccess(false);

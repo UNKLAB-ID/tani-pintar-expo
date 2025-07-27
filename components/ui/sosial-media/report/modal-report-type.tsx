@@ -194,7 +194,7 @@ const ModalReportType: React.FC<ModalReportTypeProps> = ({
             <View
               className="flex-row items-center justify-center"
               style={{ width: 25 }}
-            ></View>
+            />
           </View>
           <View>
             {data.map((item, index) => {
