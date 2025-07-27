@@ -167,7 +167,7 @@ const CartScreen = () => {
           {/* Gambar Produk */}
           <Image
             source={item.image}
-            className="w-[133px] h-[129px] rounded-xl"
+            className="w-[100px] h-[94px] rounded-xl"
             resizeMode="contain"
           />
 
@@ -202,7 +202,7 @@ const CartScreen = () => {
             {/* Harga */}
             <View
               className="flex-row items-center justify-between"
-              style={{ marginTop: 15 }}
+              style={{ marginTop: 4 }}
             >
               <Text className="text-[12px] font-bold text-black mr-2">
                 {formatPrice(getDiscountedPrice(item.price, item.discount))}

@@ -1,5 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Animated, StatusBar, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Animated,
+  StatusBar,
+  Alert,
+} from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useIsFocused } from '@react-navigation/native';
 import IconsAiSuccess from '@/assets/icons/sosial-media/icons-ai-success';
@@ -17,7 +24,7 @@ const CameraScreen = () => {
   const [isScanned, setIsScanned] = useState(false);
   const scanAnim = useRef(new Animated.Value(0)).current;
   const animationRef = useRef<Animated.CompositeAnimation | null>(null);
-  const { setResulData } = useAiStore()
+  const { setResulData } = useAiStore();
 
   const startScanAnimation = () => {
     scanAnim.setValue(0); // reset nilai
@@ -45,7 +52,6 @@ const CameraScreen = () => {
     startScanAnimation();
   }, []);
 
-
   // ✅ Mutation untuk upload FormData
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {
@@ -53,8 +59,8 @@ const CameraScreen = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     },
-    onSuccess: (res) => {
-      setResulData(res.data)
+    onSuccess: res => {
+      setResulData(res.data);
       if (res.success) {
         router.push('/AI/result-ai');
       } else {
@@ -62,7 +68,10 @@ const CameraScreen = () => {
       }
     },
     onError: (error: any) => {
-      Alert.alert('Error', error.message || 'Terjadi kesalahan saat mengirim data.');
+      Alert.alert(
+        'Error',
+        error.message || 'Terjadi kesalahan saat mengirim data.'
+      );
     },
   });
 
@@ -70,14 +79,19 @@ const CameraScreen = () => {
   const handleScan = async () => {
     if (cameraRef.current) {
       try {
-        const photo = await cameraRef.current.takePictureAsync({ quality: 0.7 });
+        const photo = await cameraRef.current.takePictureAsync({
+          quality: 0.7,
+        });
         setPhotoUri(photo);
         setIsScanned(true);
       } catch (error) {
         Alert.alert('Gagal Scan', 'Terjadi kesalahan saat mengambil gambar');
       }
     } else {
-      Alert.alert('Kamera Tidak Terdeteksi', 'Silakan pastikan kamera sudah aktif');
+      Alert.alert(
+        'Kamera Tidak Terdeteksi',
+        'Silakan pastikan kamera sudah aktif'
+      );
     }
   };
 
@@ -98,8 +112,11 @@ const CameraScreen = () => {
 
       mutation.mutate(formData);
     } catch (error: any) {
-      console.log("error 3", error)
-      Alert.alert('Gagal', error.message || 'Terjadi kesalahan saat memproses foto.');
+      console.log('error 3', error);
+      Alert.alert(
+        'Gagal',
+        error.message || 'Terjadi kesalahan saat memproses foto.'
+      );
     }
   };
 
@@ -111,7 +128,11 @@ const CameraScreen = () => {
   }, [permission]);
 
   if (!permission) {
-    return <View><Text>Memeriksa izin kamera...</Text></View>;
+    return (
+      <View>
+        <Text>Memeriksa izin kamera...</Text>
+      </View>
+    );
   }
 
   if (!permission.granted) {
@@ -137,11 +158,8 @@ const CameraScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, }}>
-        <StatusBar
-              barStyle="dark-content" 
-              backgroundColor="#fff" 
-            />
+    <View style={{ flex: 1 }}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       {isFocused && (
         <CameraView
           ref={cameraRef}
@@ -162,12 +180,62 @@ const CameraScreen = () => {
             }}
           >
             {/* Corner-only border */}
-            <View style={{ position: 'absolute', width: '100%', height: '100%' }}>
+            <View
+              style={{ position: 'absolute', width: '100%', height: '100%' }}
+            >
               {/* 4 sudut */}
-              <View style={{ position: 'absolute', top: 0, left: 0, borderLeftWidth: 4, borderTopWidth: 4, borderColor: 'white', width: 30, height: 30, borderTopLeftRadius: 10 }} />
-              <View style={{ position: 'absolute', top: 0, right: 0, borderRightWidth: 4, borderTopWidth: 4, borderColor: 'white', width: 30, height: 30, borderTopRightRadius: 10 }} />
-              <View style={{ position: 'absolute', bottom: 0, left: 0, borderLeftWidth: 4, borderBottomWidth: 4, borderColor: 'white', width: 30, height: 30, borderBottomLeftRadius: 10 }} />
-              <View style={{ position: 'absolute', bottom: 0, right: 0, borderRightWidth: 4, borderBottomWidth: 4, borderColor: 'white', width: 30, height: 30, borderBottomRightRadius: 10 }} />
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  borderLeftWidth: 4,
+                  borderTopWidth: 4,
+                  borderColor: 'white',
+                  width: 30,
+                  height: 30,
+                  borderTopLeftRadius: 10,
+                }}
+              />
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  borderRightWidth: 4,
+                  borderTopWidth: 4,
+                  borderColor: 'white',
+                  width: 30,
+                  height: 30,
+                  borderTopRightRadius: 10,
+                }}
+              />
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  borderLeftWidth: 4,
+                  borderBottomWidth: 4,
+                  borderColor: 'white',
+                  width: 30,
+                  height: 30,
+                  borderBottomLeftRadius: 10,
+                }}
+              />
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 0,
+                  borderRightWidth: 4,
+                  borderBottomWidth: 4,
+                  borderColor: 'white',
+                  width: 30,
+                  height: 30,
+                  borderBottomRightRadius: 10,
+                }}
+              />
             </View>
 
             {/* Garis scan biru transparan bergerak */}
@@ -196,7 +264,14 @@ const CameraScreen = () => {
 
           {/* Tombol */}
           {!isScanned ? (
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 20, marginBottom: 40 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                margin: 20,
+                marginBottom: 40,
+              }}
+            >
               <TouchableOpacity
                 style={{
                   flex: 1,
@@ -206,7 +281,9 @@ const CameraScreen = () => {
                 }}
                 onPress={handleScan}
               >
-                <Text style={{ textAlign: 'center', color: 'white' }}>Start Scan</Text>
+                <Text style={{ textAlign: 'center', color: 'white' }}>
+                  Start Scan
+                </Text>
               </TouchableOpacity>
             </View>
           ) : (
@@ -232,10 +309,23 @@ const CameraScreen = () => {
                 }}
               >
                 <IconsAiSuccess width={55.95} height={55.91} />
-                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#169953', marginBottom: 10 }}>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                    color: '#169953',
+                    marginBottom: 10,
+                  }}
+                >
                   Scan Successful!
                 </Text>
-                <Text style={{ textAlign: 'center', color: '#333', marginBottom: 20 }}>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color: '#333',
+                    marginBottom: 20,
+                  }}
+                >
                   {`Come on, check your scan results now! Not satisfied with the results? Don't worry, you can just rescan!`}
                 </Text>
                 <View style={{ flexDirection: 'row', gap: 10 }}>
@@ -251,7 +341,9 @@ const CameraScreen = () => {
                     }}
                     onPress={resetScan}
                   >
-                    <Text style={{ textAlign: 'center', color: '#169953' }}>Scan Ulang</Text>
+                    <Text style={{ textAlign: 'center', color: '#169953' }}>
+                      Scan Ulang
+                    </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={{
@@ -263,7 +355,9 @@ const CameraScreen = () => {
                     }}
                     onPress={handlerSuccess}
                   >
-                    <Text style={{ textAlign: 'center', color: 'white' }}>Lihat Hasil</Text>
+                    <Text style={{ textAlign: 'center', color: 'white' }}>
+                      Lihat Hasil
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>

@@ -1,7 +1,3 @@
-import CartIcons from '@/assets/icons/e-commerce/cart-icons';
-import BackIcons from '@/assets/icons/global/back-icons';
-import RecomendationCard from '@/components/ui/e-commerce/card-recomendation';
-import { router } from 'expo-router';
 import {
   Text,
   View,
@@ -10,8 +6,14 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import CartIcons from '@/assets/icons/e-commerce/cart-icons';
+import BackIcons from '@/assets/icons/global/back-icons';
+import RecomendationCard from '@/components/ui/e-commerce/card-recomendation';
+import StarIcons from '@/assets/icons/e-commerce/stars-icons';
+import LocationRedIcon from '@/assets/icons/e-commerce/locations-red-icons';
+import TrashIcon from '@/assets/icons/e-commerce/trash-icons';
 const datadummy = [
   {
     id: '1',
@@ -80,50 +82,75 @@ const WishlistScreen = () => {
             datadummy.map(item => (
               <View
                 key={item.id}
-                className="flex-row bg-white  mb-1  py-3 px-3"
+                className="relative flex-row bg-white mb-1 p-3"
               >
                 {/* Image */}
                 <Image
                   source={item.image}
-                  className="w-[80px] h-[80px] rounded-md"
+                  className="w-[114px] h-[114px] rounded-md"
                   resizeMode="contain"
                 />
 
                 {/* Info */}
                 <View className="flex-1 ml-3 justify-between">
-                  <Text className="text-xs text-green-600 font-semibold">
+                  {/* Category */}
+                  <Text className="text-[16px] text-[#169953] font-semibold">
                     {item.category}
                   </Text>
+
+                  {/* Title */}
                   <Text
-                    className="text-[13px] font-bold text-black"
+                    className="text-[12px] font-semibold text-black"
                     numberOfLines={2}
                   >
                     {item.title}
                   </Text>
-                  <Text className="text-[11px] text-gray-500">
-                    📍 {item.location}
-                  </Text>
-                  <Text className="text-[11px] text-yellow-600 mt-1">
-                    ⭐ {item.rating} • Sold {item.sold}
-                  </Text>
+
+                  {/* Location */}
                   <View className="flex-row items-center mt-1">
-                    <Text className="text-[14px] font-semibold text-black mr-2">
-                      {item.price}
+                    <LocationRedIcon width={16} height={16} />
+                    <Text className="text-[12px] text-gray-500 ml-1">
+                      {item.location}
                     </Text>
-                    <Text className="text-[12px] line-through text-[#bcbcbc]">
-                      {item.originalPrice}
+                  </View>
+
+                  {/* Rating */}
+                  <View className="flex-row items-center mt-1">
+                    <StarIcons width={16} height={16} />
+                    <Text className="text-[12px] text-[#7D7D7D] ml-1">
+                      {item.rating} • Sold {item.sold}
                     </Text>
-                    <View className="ml-2 bg-red-500 px-2 rounded">
+                  </View>
+
+                  {/* Price, Discount & Cart */}
+                  <View className="flex-row items-center mt-2">
+                    {/* Harga */}
+                    <View className="flex-col mr-2">
+                      <Text className="text-[16px] font-semibold text-black">
+                        {item.price}
+                      </Text>
+                      <Text className="text-[14px] mt-1 line-through text-[#bcbcbc]">
+                        {item.originalPrice}
+                      </Text>
+                    </View>
+
+                    {/* Diskon */}
+                    <View className="bg-[#FF0808] px-2 p-1 rounded-2xl justify-center">
                       <Text className="text-[10px] text-white font-bold">
                         {item.discount}
                       </Text>
                     </View>
+
+                    {/* CartIcon mentok kanan bawah sejajar diskon */}
+                    <TouchableOpacity className="ml-auto rounded-full p-3 bg-primary">
+                      <CartIcons width={18} height={18} color="#fff" />
+                    </TouchableOpacity>
                   </View>
                 </View>
 
-                {/* Cart Icon */}
-                <TouchableOpacity className="justify-center items-center ml-2">
-                  <CartIcons width={28} height={28} color="#0AAD55" />
+                {/* TrashIcon mentok kanan atas sejajar category */}
+                <TouchableOpacity className="absolute right-3 top-3">
+                  <TrashIcon width={24} height={24} />
                 </TouchableOpacity>
               </View>
             ))

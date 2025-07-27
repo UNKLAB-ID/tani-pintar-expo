@@ -1,4 +1,4 @@
-import ScanScreen from "../AI";
+import ScanScreen from '../AI';
 
 const AiScreen = () => {
   return <ScanScreen />;

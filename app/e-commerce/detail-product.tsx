@@ -29,7 +29,6 @@ import ProductDescription from '@/components/ui/e-commerce/detail/product-descri
 import StoreInfo from '@/components/ui/e-commerce/detail/store-info';
 import OtherProductCard from '@/components/ui/e-commerce/detail/card-other-product';
 
-const { width } = Dimensions.get('window');
 const products = [
   {
     id: 1,
@@ -194,6 +193,9 @@ const ProductDetailScreen = () => {
     router.push('/(tabs)/ecommerce');
   };
 
+  const handleCheckout = () => {
+    router.push('/e-commerce/checkout');
+  };
   return (
     <>
       <StatusBar
@@ -311,7 +313,10 @@ const ProductDetailScreen = () => {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity className="flex-1 bg-[#169953] w-[148px] h-[40px] mr-2 ml-3 rounded-2xl flex-row justify-center items-center py-2">
+            <TouchableOpacity
+              onPress={handleCheckout}
+              className="flex-1 bg-[#169953] w-[148px] h-[40px] mr-2 ml-3 rounded-2xl flex-row justify-center items-center py-2"
+            >
               <Text className="text-white font-semibold text-[14px]">
                 Checkout
               </Text>

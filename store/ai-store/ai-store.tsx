@@ -5,7 +5,7 @@ interface AIStore {
   setResulData: (value: any) => void;
 }
 
-export const useAiStore = create<AIStore>((set) => ({
+export const useAiStore = create<AIStore>(set => ({
   resuldata: null,
-  setResulData: (value) => set({ resuldata: value }),
+  setResulData: value => set({ resuldata: value }),
 }));
