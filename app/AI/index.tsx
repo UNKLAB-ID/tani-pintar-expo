@@ -1,11 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Animated, Easing, Alert } from 'react-native';
-import { Camera, CameraView, useCameraPermissions } from 'expo-camera';
-import { useIsFocused, useRoute } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, Animated, StatusBar, Alert } from 'react-native';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { useIsFocused } from '@react-navigation/native';
 import IconsAiSuccess from '@/assets/icons/sosial-media/icons-ai-success';
 import { useMutation } from '@tanstack/react-query';
 import api from '@/utils/api/api';
 import { router } from 'expo-router';
+import { useAiStore } from '@/store/ai-store/ai-store';
 
 const CameraScreen = () => {
   const cameraRef = useRef<CameraView | null>(null);
@@ -16,6 +17,7 @@ const CameraScreen = () => {
   const [isScanned, setIsScanned] = useState(false);
   const scanAnim = useRef(new Animated.Value(0)).current;
   const animationRef = useRef<Animated.CompositeAnimation | null>(null);
+  const { setResulData } = useAiStore()
 
   const startScanAnimation = () => {
     scanAnim.setValue(0); // reset nilai
@@ -52,17 +54,14 @@ const CameraScreen = () => {
       });
     },
     onSuccess: (res) => {
-      console.log('Respon backend:', res.data);
-      console.log(res)
+      setResulData(res.data)
       if (res.success) {
         router.push('/AI/result-ai');
       } else {
-        console.log("error 1", res.error)
         Alert.alert('Gagal', res.data.error || 'Gagal menganalisis gambar.');
       }
     },
     onError: (error: any) => {
-      console.log("error 2", error)
       Alert.alert('Error', error.message || 'Terjadi kesalahan saat mengirim data.');
     },
   });
@@ -139,6 +138,10 @@ const CameraScreen = () => {
 
   return (
     <View style={{ flex: 1, }}>
+        <StatusBar
+              barStyle="dark-content" 
+              backgroundColor="#fff" 
+            />
       {isFocused && (
         <CameraView
           ref={cameraRef}
