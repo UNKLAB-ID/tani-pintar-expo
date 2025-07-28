@@ -330,19 +330,21 @@ const CheckoutScreen = () => {
           )}
 
           {/* Total & Pay Button */}
-          <View className="bg-white px-4 pb-5 pt-2 rounded-t-xl flex-row justify-between items-center">
-            <View>
-              <Text className="text-[14px] text-[#9E9E9E]">Total Bill</Text>
-              <Text className="text-[14px] text-[#00A86B] font-semibold">
-                Rp290.000
-              </Text>
+          {summary && summary.grandTotal > 0 && (
+            <View className="bg-white px-4 pb-5 pt-2 rounded-t-xl flex-row justify-between items-center">
+              <View>
+                <Text className="text-[14px] text-[#9E9E9E]">Total Bill</Text>
+                <Text className="text-[14px] text-[#00A86B] font-semibold">
+                  Rp{summary.grandTotal.toLocaleString()}
+                </Text>
+              </View>
+              <TouchableOpacity className="bg-[#00A86B] px-6 py-2 rounded-xl">
+                <Text className="text-white font-semibold text-[14px]">
+                  Pay Now
+                </Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity className="bg-[#00A86B] px-6 py-2 rounded-xl">
-              <Text className="text-white font-semibold text-[14px]">
-                Pay Now
-              </Text>
-            </TouchableOpacity>
-          </View>
+          )}
         </ScrollView>
       </SafeAreaView>
     </>

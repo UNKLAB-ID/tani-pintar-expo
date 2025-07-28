@@ -25,7 +25,7 @@ const ModalCheckout: React.FC<ModalCheckoutProps> = ({
 
   return (
     <View
-      className="rounded-3xl  px-4 pb-[20px]  bg-white"
+      className="rounded-3xl  px-4 pb-[20px] bg-white"
       style={{
         width,
         paddingTop: 14,
