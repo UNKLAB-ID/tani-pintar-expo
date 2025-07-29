@@ -4,8 +4,7 @@ import { Colors } from './constants/Colors';
 module.exports = {
   // NOTE: Update this to include the paths to all of your component files.
   content: ['./app/**/*.{js,jsx,ts,tsx}'],
-  presets: [require('nativewind/preset')],
-  theme: {
+  presets: [require('nativewind/preset')],  theme: {
     extend: {
       colors: {
         primary: Colors.color.primary,
@@ -17,6 +16,9 @@ module.exports = {
         warning: Colors.color.warning,
         'text-primary': Colors.text.primary,
         'text-secondary': Colors.text.secondary,
+      },
+      maxWidth: {
+        'mobile': '414px',
       },
     },
   },
