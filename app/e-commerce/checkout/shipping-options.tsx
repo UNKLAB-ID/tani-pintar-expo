@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import ShippingIcon from '@/assets/icons/e-commerce/ship-icon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BackIcons from '@/assets/icons/global/back-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { useEcommerceStore } from '@/store/e-commerce/ecommerce';
 
 type ShippingOption = {
   id: number;
@@ -21,7 +22,7 @@ type ShippingOption = {
   isVoucherApplied: boolean;
 };
 
-const shippingOptions: ShippingOption[] = [
+const defaultOptions: ShippingOption[] = [
   {
     id: 1,
     label: 'Express',
@@ -32,10 +33,9 @@ const shippingOptions: ShippingOption[] = [
   {
     id: 2,
     label: 'Standard',
-    cost: 0,
-    discountCost: 30000,
+    cost: 30000,
     eta: 'Estimated arrival of goods March 18',
-    isVoucherApplied: true,
+    isVoucherApplied: false,
   },
   {
     id: 3,
@@ -48,12 +48,46 @@ const shippingOptions: ShippingOption[] = [
 
 const ShippingOptionsScreen = () => {
   const router = useRouter();
-  const [selectedId, setSelectedId] = useState<number | null>(1); // default terpilih Express
+  const { shippingVoucher, setSelectedShipping, selectedShipping } =
+    useEcommerceStore();
+
+  const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([]);
+  const [selectedId, setSelectedId] = useState<number | null>(
+    selectedShipping?.id ?? 1
+  );
+
+  useEffect(() => {
+    // Terapkan voucher jika ada
+    const updatedOptions = defaultOptions.map(option => {
+      if (shippingVoucher && option.id === selectedId) {
+        return {
+          ...option,
+          discountCost: option.cost,
+          cost: Math.max(option.cost - shippingVoucher.value, 0),
+          isVoucherApplied: true,
+        };
+      } else {
+        return {
+          ...option,
+          isVoucherApplied: false,
+        };
+      }
+    });
+
+    setShippingOptions(updatedOptions);
+  }, [shippingVoucher, selectedId]);
 
   const handleSelect = (option: ShippingOption) => {
+    const updated = { ...option };
+
+    if (shippingVoucher) {
+      updated.discountCost = option.cost;
+      updated.cost = Math.max(option.cost - shippingVoucher.value, 0);
+      updated.isVoucherApplied = true;
+    }
+
     setSelectedId(option.id);
-    // Simpan ke global state jika perlu
-    console.log('[SELECTED SHIPPING]', option);
+    setSelectedShipping(updated);
   };
 
   return (
@@ -67,6 +101,7 @@ const ShippingOptionsScreen = () => {
         className="flex-1 pt-3 bg-primary"
         edges={['top', 'left', 'right']}
       >
+        {/* Header */}
         <View className="flex-row items-center space-x-2 px-5 py-2">
           <TouchableOpacity className="p-1 mr-2" onPress={() => router.back()}>
             <BackIcons width={20} height={20} color="#FFF" />
@@ -82,6 +117,7 @@ const ShippingOptionsScreen = () => {
             <ShippingIcon width={24} height={24} color="#fff" />
           </View>
 
+          {/* List Shipping Options */}
           <View className="bg-white rounded-xl px-3 py-4">
             <FlatList
               data={shippingOptions}
@@ -119,14 +155,18 @@ const ShippingOptionsScreen = () => {
                           {item.label}
                         </Text>
 
-                        <Text className="text-[14px] mx-2 text-[#1F1F1F]">
-                          (Rp{item.cost.toLocaleString()})
-                        </Text>
-
-                        {(item.discountCost || item.isVoucherApplied) && (
-                          <Text className="text-[12px] text-[#9E9E9E] line-through">
-                            Rp
-                            {(item.discountCost ?? item.cost).toLocaleString()}
+                        {item.isVoucherApplied ? (
+                          <>
+                            <Text className="text-[12px] text-[#9E9E9E] line-through">
+                              Rp{item.discountCost?.toLocaleString()}
+                            </Text>
+                            <Text className="text-[14px] text-[#00A86B] ml-2 font-semibold">
+                              Rp{item.cost.toLocaleString()}
+                            </Text>
+                          </>
+                        ) : (
+                          <Text className="text-[14px] text-[#1F1F1F]">
+                            Rp{item.cost.toLocaleString()}
                           </Text>
                         )}
                       </View>
@@ -142,7 +182,10 @@ const ShippingOptionsScreen = () => {
           </View>
 
           <View className="mt-6">
-            <TouchableOpacity className="bg-primary rounded-xl py-3 items-center border">
+            <TouchableOpacity
+              onPress={() => router.back()}
+              className="bg-primary rounded-xl py-3 items-center border"
+            >
               <Text className="text-white text-[14px] font-medium">Save</Text>
             </TouchableOpacity>
           </View>

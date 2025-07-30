@@ -52,11 +52,13 @@ const products = [
 interface RecomendationCardProps {
   products?: typeof products;
   title?: string;
+  className?: string;
 }
 
 const RecomendationCard: React.FC<RecomendationCardProps> = ({
   products: propProducts = products,
   title = 'Recommended Product',
+  className = '',
 }) => {
   const handleLoadMore = () => {
     router.push('/e-commerce');

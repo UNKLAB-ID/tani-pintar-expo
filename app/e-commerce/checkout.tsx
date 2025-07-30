@@ -157,13 +157,41 @@ const CheckoutScreen = () => {
   const [note, setNote] = useState<string>('');
   const { selectedPayment } = useEcommerceStore();
 
+  const { shippingVoucher, discountVoucher, selectedShipping } =
+    useEcommerceStore();
+
   useEffect(() => {
     setSelectedAddress(addresses[0]);
     setSelectedProduct(products[0]);
     setShippingOption(shippingOptions[0]);
     setVoucher(vouchers[0]);
-    setSummary(paymentSummary);
-  }, []);
+
+    // Hitung total awal + diskon dari voucher
+    let shippingFee = shippingOptions[0].cost;
+    let itemsTotal = products[0].price;
+    let platformFee = 1000;
+
+    if (shippingVoucher) {
+      shippingFee = Math.max(shippingFee - shippingVoucher.value, 0);
+    }
+
+    let discountAmount = 0;
+    if (discountVoucher) {
+      discountAmount = discountVoucher.value; // Atur sesuai logika voucher diskon kamu
+    }
+
+    const grandTotal = Math.max(
+      itemsTotal + shippingFee + platformFee - discountAmount,
+      0
+    );
+
+    setSummary({
+      itemsTotal,
+      shippingFee,
+      platformFee,
+      grandTotal,
+    });
+  }, [shippingVoucher, discountVoucher]);
 
   return (
     <>
@@ -245,16 +273,9 @@ const CheckoutScreen = () => {
             </View>
           )}
 
-          {shippingOption && (
-            <ShippingOptionCard
-              label={shippingOption.label}
-              cost={shippingOption.cost}
-              eta={shippingOption.eta}
-              onPress={() =>
-                router.push('/e-commerce/checkout/shipping-options')
-              }
-            />
-          )}
+          <ShippingOptionCard
+            onPress={() => router.push('/e-commerce/checkout/shipping-options')}
+          />
 
           {/* Note */}
           <View className="bg-white px-4 py-3 rounded-md mx-3">
@@ -262,7 +283,7 @@ const CheckoutScreen = () => {
           </View>
 
           {/* Voucher Tani */}
-          {voucher && <VoucherCard voucher={voucher} />}
+          {voucher && <VoucherCard />}
 
           {/* Payment Method */}
           {selectedPayment && (
@@ -314,12 +335,27 @@ const CheckoutScreen = () => {
                   Rp{summary.itemsTotal.toLocaleString()}
                 </Text>
               </View>
-              <View className="flex-row justify-between mb-1">
+              <View className="flex-row justify-between mb-1 items-center">
                 <Text className="text-[14px] text-[#9E9E9E]">Shipping fee</Text>
-                <Text className="text-[14px] text-[#1F1F1F]">
-                  Rp{summary.shippingFee.toLocaleString()}
-                </Text>
+                <View className="flex-row items-center space-x-1">
+                  {shippingVoucher &&
+                  selectedShipping?.discountCost !== undefined ? (
+                    <>
+                      <Text className="text-[14px] text-[#9E9E9E] mr-2 line-through">
+                        Rp{selectedShipping.discountCost.toLocaleString()}
+                      </Text>
+                      <Text className="text-[14px] text-[#00A86B] font-semibold">
+                        Rp{selectedShipping.cost.toLocaleString()}
+                      </Text>
+                    </>
+                  ) : (
+                    <Text className="text-[14px] text-[#1F1F1F] font-semibold">
+                      Rp{summary.shippingFee.toLocaleString()}
+                    </Text>
+                  )}
+                </View>
               </View>
+
               <View className="flex-row justify-between">
                 <Text className="text-[14px] text-[#9E9E9E]">Platform fee</Text>
                 <Text className="text-[14px] text-[#1F1F1F]">
@@ -338,7 +374,10 @@ const CheckoutScreen = () => {
                   Rp{summary.grandTotal.toLocaleString()}
                 </Text>
               </View>
-              <TouchableOpacity className="bg-[#00A86B] px-6 py-2 rounded-xl">
+              <TouchableOpacity
+                className="bg-[#00A86B] px-6 py-2 rounded-xl"
+                onPress={() => router.push('/e-commerce/checkout/success')}
+              >
                 <Text className="text-white font-semibold text-[14px]">
                   Pay Now
                 </Text>

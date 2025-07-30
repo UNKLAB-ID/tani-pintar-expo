@@ -60,7 +60,6 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({ value, onChange }) => {
               flex: 1,
               paddingHorizontal: 12,
               paddingVertical: 8,
-
               fontSize: 13,
               borderRadius: 8,
             },
@@ -124,7 +123,6 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({ value, onChange }) => {
                   padding: 12,
                   fontSize: 13,
                   color: '#1F1F1F',
-
                   textAlignVertical: 'top',
                 }}
               />
