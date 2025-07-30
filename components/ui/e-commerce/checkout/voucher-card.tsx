@@ -3,9 +3,9 @@ import { View, Text, TouchableOpacity } from 'react-native';
 
 import ChevronRight from '@/assets/icons/e-commerce/chevronright-icons';
 import VoucherPrimaryIcon from '@/assets/icons/e-commerce/voucher-primery-icon';
-import CheckPrimaryIcon from './check-voucher-primary-icon';
-import ModalVoucher from './modal-voucher';
+import ModalVoucher from '@/components/ui/e-commerce/checkout/modal-voucher';
 import { useEcommerceStore } from '@/store/e-commerce/ecommerce';
+import CheckPrimaryIcon from '@/assets/icons/e-commerce/check-voucher-primary-icon';
 
 interface VoucherItem {
   id: string;
