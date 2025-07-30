@@ -1,21 +1,24 @@
 import ProtectIcon from '@/assets/icons/e-commerce/protect-icon';
 import ShippingIcon from '@/assets/icons/e-commerce/ship-icon';
+import { useEcommerceStore } from '@/store/e-commerce/ecommerce';
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
 type Props = {
-  label: string;
-  cost: number;
-  eta: string;
   onPress: () => void;
 };
 
-const ShippingOptionCard: React.FC<Props> = ({
-  label,
-  cost,
-  eta,
-  onPress,
-}: Props) => {
+const ShippingOptionCard: React.FC<Props> = ({ onPress }) => {
+  const selectedShipping = useEcommerceStore(state => state.selectedShipping);
+
+  // Default tampilkan Standard jika belum dipilih
+  const displayShipping = selectedShipping ?? {
+    label: 'Standard',
+    cost: 20000,
+    eta: 'Estimated arrival of goods March 18',
+    discountCost: undefined,
+  };
+
   return (
     <View className="bg-white px-4 py-3 rounded-md mx-3">
       {/* Header */}
@@ -24,32 +27,47 @@ const ShippingOptionCard: React.FC<Props> = ({
           Select Shipping
         </Text>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onPress}>
           <Text className="text-[12px] text-[#00A86B] font-medium">
             See All Options
           </Text>
         </TouchableOpacity>
       </View>
 
-      {/* Touchable Option */}
+      {/* Touchable Shipping Summary */}
       <TouchableOpacity
         onPress={onPress}
         activeOpacity={0.8}
-        className="border border-[#C8C8C8] rounded-xl px-4 py-3"
+        className="rounded-xl px-4 py-3"
+        style={{ borderWidth: 1, borderColor: '#C8C8C8' }}
       >
         <View className="flex-row space-x-3 items-start border-b border-[#E5E5E5] pb-3">
           <ShippingIcon width={24} height={24} />
           <View className="flex-1">
-            <View className="flex-row items-center space-x-2">
-              <Text className="text-[14px] text-[#1F1F1F] font-medium">
-                {label}
+            <View className="flex-row items-center space-x-2 flex-wrap">
+              <Text className="text-[14px] text-[#1F1F1F] font-medium mx-2">
+                {displayShipping.label}
               </Text>
-              <Text className="text-[14px] text-[#1F1F1F]">
-                Rp{cost.toLocaleString()}
-              </Text>
+
+              {displayShipping.discountCost &&
+              displayShipping.discountCost > displayShipping.cost ? (
+                <>
+                  <Text className="text-[12px] text-[#9E9E9E] mr-2 line-through">
+                    Rp{displayShipping.discountCost.toLocaleString()}
+                  </Text>
+                  <Text className="text-[14px] text-[#00A86B] font-semibold">
+                    Rp{displayShipping.cost.toLocaleString()}
+                  </Text>
+                </>
+              ) : (
+                <Text className="text-[14px] text-[#1F1F1F]">
+                  Rp{displayShipping.cost.toLocaleString()}
+                </Text>
+              )}
             </View>
+
             <Text className="text-[12px] text-[#9E9E9E] mt-1">
-              Estimasi: {eta}
+              Estimasi: {displayShipping.eta}
             </Text>
           </View>
         </View>
