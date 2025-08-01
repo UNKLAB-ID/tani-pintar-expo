@@ -160,7 +160,7 @@ const ShippingOptionsScreen = () => {
                             <Text className="text-[12px] text-[#9E9E9E] line-through">
                               Rp{item.discountCost?.toLocaleString()}
                             </Text>
-                            <Text className="text-[14px] text-[#00A86B] ml-2 font-semibold">
+                            <Text className="text-[14px] text-[#00A86B] font-semibold">
                               Rp{item.cost.toLocaleString()}
                             </Text>
                           </>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -25,12 +25,37 @@ import ChangeUserIcon from '@/assets/icons/e-commerce/change-user-icon';
 import TermInfoIcon from '@/assets/icons/e-commerce/term-info-icon';
 import PrivacyPolicyIcon from '@/assets/icons/profile/privacy-policy-icon';
 import AboutUsIcon from '@/assets/icons/profile/about-icon';
+import SettingProfileIcon from '@/assets/icons/profile/setting-profile-icon';
 import { router } from 'expo-router';
 
 const handleVendor = () => {
   router.push('/vendor/dashboard');
 };
+
+type User = {
+  name: string;
+  email: string;
+  avatar: string;
+};
 const ProfileScreen = () => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    // Simulasi fetch API
+    const loadUserData = async () => {
+      const dummyUser: User = {
+        name: 'Mambaus Baus',
+        email: 'baus@gmail.com',
+        avatar: 'https://i.pravatar.cc/100',
+      };
+
+      setTimeout(() => {
+        setUser(dummyUser);
+      }, 500);
+    };
+    loadUserData();
+  }, []);
+  if (!user) return null;
   return (
     <>
       <StatusBar
@@ -38,24 +63,27 @@ const ProfileScreen = () => {
         backgroundColor="#5AD598"
         translucent={false}
       />
-      <SafeAreaView className=" bg-[#5AD598]" edges={['top']}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <SafeAreaView className=" bg-[#5AD598] flex-1" edges={['top']}>
           {/* Header */}
-          <View className="bg-[#5AD598]  pb-6 px-5 pt-6 mt-5">
+          <View className="bg-[#5AD598] pb-6 px-5 ">
             <View className="flex-row items-center">
               <Image
-                source={{ uri: 'https://i.pravatar.cc/100' }}
+                source={{ uri: user.avatar }}
                 className="w-16 h-16 rounded-full mr-4"
               />
               <View>
                 <Text className="text-white text-lg font-bold">
-                  Mambaus Baus
+                  {user.name}
                 </Text>
-                <Text className="text-white text-sm">baus@gmail.com</Text>
+                <Text className="text-white text-sm">{user.email}</Text>
               </View>
-              <View className="ml-auto">
-                <Ionicons name="settings-sharp" size={24} color="white" />
-              </View>
+              <TouchableOpacity
+                className="ml-auto"
+                onPress={() => router.push('/profile/edit-profile')}
+              >
+                <SettingProfileIcon width={24} height={24} />
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -227,8 +255,8 @@ const ProfileScreen = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
-      </SafeAreaView>
+        </SafeAreaView>
+      </ScrollView>
     </>
   );
 };

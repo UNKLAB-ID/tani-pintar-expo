@@ -13,9 +13,9 @@ import LocationIcons from '@/assets/icons/e-commerce/locations-icons';
 import ChevronRight from '@/assets/icons/e-commerce/chevronright-icons';
 import { router } from 'expo-router';
 import VoucherCard from '@/components/ui/e-commerce/checkout/voucher-card';
-import NoteInputModal from '@/components/ui/e-commerce/checkout/modal-notes';
 import ShippingOptionCard from '@/components/ui/e-commerce/checkout/card-shipping-options';
 import { useEcommerceStore } from '@/store/e-commerce/ecommerce';
+import NoteTriggerButton from '@/components/ui/e-commerce/checkout/note-trigger-button';
 
 type Address = {
   id: number;
@@ -279,7 +279,7 @@ const CheckoutScreen = () => {
 
           {/* Note */}
           <View className="bg-white px-4 py-3 rounded-md mx-3">
-            <NoteInputModal value={note} onChange={setNote} />
+            <NoteTriggerButton value={note} onChange={setNote} />
           </View>
 
           {/* Voucher Tani */}
