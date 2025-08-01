@@ -15,8 +15,6 @@ import { useMutation } from '@tanstack/react-query';
 import api from '@/utils/api/api';
 import { router } from 'expo-router';
 import { useAiStore } from '@/store/ai-store/ai-store';
-import * as ImageManipulator from 'expo-image-manipulator';
-import * as FileSystem from 'expo-file-system';
 
 const CameraScreen = () => {
   const cameraRef = useRef<CameraView | null>(null);
@@ -77,8 +75,11 @@ const CameraScreen = () => {
       console.log(error)
       Alert.alert(
         'Error',
+        'Error',
         error.message || 'Terjadi kesalahan saat mengirim data.'
       );
+    },
+  });
     },
   });
 
@@ -103,6 +104,11 @@ const CameraScreen = () => {
   };
 
   // ✅ Kirim ke API
+  const handlerSuccess = async () => {
+    if (!photoUri?.uri) {
+      Alert.alert('Gagal', 'Tidak ada foto untuk dianalisis.');
+      return;
+    }
   const handlerSuccess = async () => {
     if (!photoUri?.uri) {
       Alert.alert('Gagal', 'Tidak ada foto untuk dianalisis.');
