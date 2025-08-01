@@ -6,6 +6,7 @@ import {
   Animated,
   StatusBar,
   Alert,
+  Image
 } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useIsFocused } from '@react-navigation/native';
@@ -55,90 +56,31 @@ const CameraScreen = () => {
   }, []);
 
   // ✅ Mutation untuk upload FormData
-  // const mutation = useMutation({
-  //   mutationFn: async (formData: FormData) => {
-  //     return api.post('/thinkflow/plant-disease/analyzer/', formData, {
-  //       headers: { 'Content-Type': 'multipart/form-data' },
-  //     });
-  //   },
-  //   onSuccess: res => {
-  //     setResulData(res.data);
-  //     if (res.success) {
-  //       router.push('/AI/result-ai');
-  //     } else {
-  //       Alert.alert('Gagal', res.data.error || 'Gagal menganalisis gambar.');
-  //     }
-  //   },
-  //   onError: (error: any) => {
-  //     Alert.alert(
-  //       'Error',
-  //       error.message || 'Terjadi kesalahan saat mengirim data.'
-  //     );
-  //   },
-  // });
-
-  const handlerSuccess = async () => {
-    if (!photoUri?.uri) {
-      Alert.alert('Gagal', 'Tidak ada foto untuk dianalisis.');
-      return;
-    }
-
-    try {
-      const manipulated = await ImageManipulator.manipulateAsync(
-        photoUri.uri,
-        [],
-        { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
-      );
-
-      const fileInfo = await FileSystem.getInfoAsync(manipulated.uri);
-      console.log('[FILE]: FileInfo:', fileInfo);
-
-      if (!fileInfo.exists) {
-        Alert.alert('Error', 'File hasil manipulasi tidak ditemukan.');
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append('image', {
-        uri: manipulated.uri,
-        name: 'photo.jpg',
-        type: 'image/jpeg',
-      } as any);
-
-      console.log('[FOTO]: Foto yang dikirim:', {
-        uri: manipulated.uri,
-        name: 'photo.jpg',
-        type: 'image/jpeg',
+  const mutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      return api.post('/thinkflow/plant-disease/analyzer/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-
-      const response = await fetch(
-        'https://dev.api.taniverse.id/thinkflow/plant-disease/analyzer/', // GANTI INI
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-          },
-          body: formData,
-        }
-      );
-
-      const data = await response.json();
-      console.log('✅ Response:', data);
-
-      if (data?.uuid) {
-        setResulData(data);
+    },
+    onSuccess: res => {
+      console.log("Respon Muttation ==============> ", res)
+      setResulData(res.data);
+      if (res.success) {
         router.push('/AI/result-ai');
       } else {
-        Alert.alert('Gagal', data?.error || 'Gagal menganalisis gambar.');
+        const errorMessage = res?.message || 'Gagal menganalisis gambar.';
+        console.log('❌ Error dari server:', errorMessage);
+        Alert.alert('Gagal', errorMessage);
       }
-    } catch (error: any) {
-      console.error('❌ Gagal kirim:', error);
+    },
+    onError: (error: any) => {
+      console.log(error)
       Alert.alert(
-        'Gagal',
+        'Error',
         error.message || 'Terjadi kesalahan saat mengirim data.'
       );
-    }
-  };
+    },
+  });
 
   // ✅ Ambil foto
   const handleScan = async () => {
@@ -161,49 +103,49 @@ const CameraScreen = () => {
   };
 
   // ✅ Kirim ke API
-  // const handlerSuccess = async () => {
-  //   if (!photoUri?.uri) {
-  //     Alert.alert('Gagal', 'Tidak ada foto untuk dianalisis.');
-  //     return;
-  //   }
+  const handlerSuccess = async () => {
+    if (!photoUri?.uri) {
+      Alert.alert('Gagal', 'Tidak ada foto untuk dianalisis.');
+      return;
+    }
 
-  //   try {
+    try {
 
-  //      const manipulated = await ImageManipulator.manipulateAsync(
-  //        photoUri.uri,
-  //        [], // atau tambahkan resize: [{ resize: { width: 800 } }]
-  //        { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
-  //      );
+      const manipulated = await ImageManipulator.manipulateAsync(
+        photoUri.uri,
+        [], // atau tambahkan resize: [{ resize: { width: 800 } }]
+        { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+      );
 
-  //      // ✅ Cek file hasil manipulasi
-  //      const fileInfo = await FileSystem.getInfoAsync(manipulated.uri);
-  //      console.log('🔍 FileInfo:', fileInfo);
+      // ✅ Cek file hasil manipulasi
+      const fileInfo = await FileSystem.getInfoAsync(manipulated.uri);
+      console.log('🔍 FileInfo:', fileInfo);
 
-  //     const mimeType = photoUri.uri.endsWith('.png')
-  //       ? 'image/png'
-  //       : 'image/jpeg';
-  //     const formData = new FormData();
-  //     formData.append('image', {
-  //       uri: manipulated.uri,
-  //       name: 'photo.jpg',
-  //       type: 'image/jpeg',
-  //     } as any);
+      const mimeType = photoUri.uri.endsWith('.png')
+        ? 'image/png'
+        : 'image/jpeg';
+      const formData = new FormData();
+      formData.append('image', {
+        uri: manipulated.uri,
+        name: 'photo.jpg',
+        type: 'image/jpeg',
+      } as any);
 
-  //     console.log('Foto yang dikirim:', {
-  //       uri: manipulated.uri,
-  //       name: 'photo.jpg',
-  //       type: mimeType,
-  //     });
+      console.log('Foto yang dikirim:', {
+        uri: manipulated.uri,
+        name: 'photo.jpg',
+        type: mimeType,
+      });
 
-  //     mutation.mutate(formData);
-  //   } catch (error: any) {
-  //     console.log('error 3', error);
-  //     Alert.alert(
-  //       'Gagal',
-  //       error.message || 'Terjadi kesalahan saat memproses foto.'
-  //     );
-  //   }
-  // };
+      mutation.mutate(formData);
+    } catch (error: any) {
+      console.log('error 3', error);
+      Alert.alert(
+        'Gagal',
+        error.message || 'Terjadi kesalahan saat memproses foto.'
+      );
+    }
+  };
 
   // ✅ Izin Kamera
   useEffect(() => {
@@ -393,6 +335,18 @@ const CameraScreen = () => {
                   width: '80%',
                 }}
               >
+                {photoUri?.uri && (
+                  <Image
+                    source={{ uri: photoUri.uri }}
+                    style={{
+                      width: 200,
+                      height: 200,
+                      borderRadius: 10,
+                      marginBottom: 10,
+                      resizeMode: 'cover',
+                    }}
+                  />
+                )}
                 <IconsAiSuccess width={55.95} height={55.91} />
                 <Text
                   style={{

@@ -138,15 +138,15 @@ const CartScreen = () => {
     };
 
     return (
+
       <View className="bg-white px-3 ">
         {/* Toko */}
         <View className="flex-row items-center mb-2 mt-2">
           <TouchableOpacity onPress={() => toggleSelect(item.id)}>
             <View
               style={{ width: 24, height: 24 }}
-              className={` rounded border-2 mr-2 ${
-                isSelected ? 'bg-primary border-primary' : 'border-gray-400'
-              } items-center justify-center`}
+              className={` rounded border-2 mr-2 ${isSelected ? 'bg-primary border-primary' : 'border-gray-400'
+                } items-center justify-center`}
             >
               {isSelected && (
                 <Text className="text-white text-xs font-bold">✓</Text>
@@ -175,7 +175,7 @@ const CartScreen = () => {
           <View className="ml-3 flex-1 justify-between mt-3">
             <View className="flex-row justify-between items-start">
               <Text
-                className="text-[16px] font-semibold flex-1"
+                className="text-[12px] font-semibold flex-1"
                 numberOfLines={1}
               >
                 {item.name}
@@ -195,7 +195,7 @@ const CartScreen = () => {
                 </TouchableOpacity>
               </View>
             </View>
-            <Text className="text-[14px] text-[#bcbcbc] mt-1">
+            <Text className="text-[12px] text-[#bcbcbc] mt-1">
               {item.variants?.[0]?.size || 'No size available'}
             </Text>
 
@@ -204,7 +204,7 @@ const CartScreen = () => {
               className="flex-row items-center justify-between"
               style={{ marginTop: 4 }}
             >
-              <Text className="text-[14px] font-bold text-black mr-2">
+              <Text className="text-[12px] font-bold text-black mr-2">
                 {formatPrice(getDiscountedPrice(item.price, item.discount))}
               </Text>
               <View className="flex-row items-center ">
@@ -223,7 +223,7 @@ const CartScreen = () => {
                 </TouchableOpacity>
               </View>
             </View>
-            <Text className="text-[14px] line-through text-[#bcbcbc] ">
+            <Text className="text-[12px] line-through text-[#bcbcbc] ">
               {item.price}
             </Text>
           </View>
@@ -305,39 +305,35 @@ const CartScreen = () => {
             </View>
           </View>
         ) : (
-          <View className="flex-1">
-            <FlatList
-              data={cartData}
-              keyExtractor={item => item.id}
-              renderItem={renderItem}
-              contentContainerStyle={{ paddingTop: 10 }}
-              ListHeaderComponent={
-                selectedItems.length > 0 ? (
-                  <View
-                    className="flex-row items-center justify-between bg-[#fff] px-4 border-b border-[#E0E0E0]"
-                    style={{ height: 40 }}
-                  >
-                    <Text className="text-[12px] text-[#7d7d7d] font-medium">
-                      {selectedItems.length} selected product
-                      {selectedItems.length > 1 ? 's' : ''}
+          <FlatList
+            data={cartData}
+            keyExtractor={item => item.id}
+            renderItem={renderItem}
+            contentContainerStyle={{ paddingVertical: 16 }}
+            ListHeaderComponent={
+              selectedItems.length > 0 ? (
+                <View
+                  className="flex-row items-center justify-between bg-[#fff] px-4 border-b border-[#E0E0E0]"
+                  style={{ height: 40 }}
+                >
+                  <Text className="text-[12px] text-[#7d7d7d] font-medium">
+                    {selectedItems.length} selected product
+                    {selectedItems.length > 1 ? 's' : ''}
+                  </Text>
+                  <TouchableOpacity onPress={() => setDeleteModalVisible(true)}>
+                    <Text className="text-sm text-[#0AAD55] font-semibold">
+                      Wipe
                     </Text>
-                    <TouchableOpacity
-                      onPress={() => setDeleteModalVisible(true)}
-                    >
-                      <Text className="text-sm text-[#0AAD55] font-semibold">
-                        Wipe
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                ) : null
-              }
-              ListFooterComponent={
-                <View className="mt-4">
-                  <RecomendationCard />
+                  </TouchableOpacity>
                 </View>
-              }
-            />
-          </View>
+              ) : null
+            }
+            ListFooterComponent={
+              <View className="mt-4">
+                <RecomendationCard />
+              </View>
+            }
+          />
         )}
 
         {/* Checkout Button */}

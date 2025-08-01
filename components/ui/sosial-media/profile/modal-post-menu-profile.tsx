@@ -16,6 +16,7 @@ interface ModalPostMenuProfileProps {
   setModalShare: (value: boolean) => void;
   setModalDeletePost: (value: boolean) => void;
   typeQuery?: string;
+  idSlug?: string
 }
 
 const ModalPostMenuProfile: React.FC<ModalPostMenuProfileProps> = ({
@@ -24,8 +25,9 @@ const ModalPostMenuProfile: React.FC<ModalPostMenuProfileProps> = ({
   setModalShare,
   setModalDeletePost,
   typeQuery,
+  idSlug,
 }) => {
-  console.log(typeQuery);
+  console.log(idSlug);
 
   return (
     <Modal
@@ -105,7 +107,7 @@ const ModalPostMenuProfile: React.FC<ModalPostMenuProfileProps> = ({
                 onPress={() => {
                   setModalPostMenu(false);
                   router.push(
-                    '/sosial-media/create-post-media?typePost=update'
+                    `/sosial-media/create-post-media?typePost=update&idPost=${idSlug}`
                   );
                 }}
                 className="flex-row items-center mb-4 border-b pb-4"

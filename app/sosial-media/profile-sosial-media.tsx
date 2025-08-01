@@ -55,27 +55,12 @@ const ProfileSosialMedia = () => {
   const [textModalReportType, setTextModalReportType] = useState<string>('');
   const [textModalContenHeader, setModalContenHeader] = useState<string>('');
   const [dataModalReportConten, setDataModalReportConten] = useState<any[]>([]);
+  const [idUser, setIduser] = useState<string>("")
 
   const { profileImage, modalDeletePost, setModalDeletePost } =
     useMediaSosial();
   const { query, id } = useLocalSearchParams();
   const insets = useSafeAreaInsets();
-
-  const fetchPostsList = async () => {
-    const response = await api.get('/social-media/posts/');
-    return response.data;
-  };
-
-  const {
-    data: postsList,
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ['postsList'],
-    queryFn: fetchPostsList,
-    refetchOnWindowFocus: false,
-  });
 
   const fetchProfileById = async () => {
     const response = await api.get(`/accounts/profile/${id}/`);
@@ -101,15 +86,42 @@ const ProfileSosialMedia = () => {
 
   useEffect(() => {
     if (query === 'profile' && !id) {
+      console.log(profile?.user.id)
+      setIduser(String(profile?.user.id))
       setDataProfile(profile);
     } else if (query === 'user' && id) {
+      console.log(profileById?.id)
+      setIduser(String(profileById?.user.id))
       setDataProfile(profileById);
     }
   }, [profile, profileById]);
 
+  const fetchPostsList = async () => {
+    const response = await api.get(`/social-media/posts/?user_id=${idUser}`);
+    return response.data;
+  };
+
+  const {
+    data: postsList,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ['postsList', idUser],
+    queryFn: fetchPostsList,
+    refetchOnWindowFocus: false,
+    enabled: !!idUser,
+  });
+
   useEffect(() => {
     setDataPosts(postsList?.results || []);
   }, [postsList]);
+
+  useEffect(() => {
+    if (idUser) {
+      refetch();
+    }
+  }, [idUser]);
 
   return (
     <SafeAreaView
@@ -169,12 +181,12 @@ const ProfileSosialMedia = () => {
               source={
                 profileImage
                   ? {
-                      uri: profileImage.uri,
-                    }
+                    uri: profileImage.uri,
+                  }
                   : dataProfile?.profile_picture_url
                     ? {
-                        uri: dataProfile.profile_picture_url,
-                      }
+                      uri: dataProfile.profile_picture_url,
+                    }
                     : require('../../assets/images/profile-default.png')
               }
               style={{
@@ -374,10 +386,10 @@ const ProfileSosialMedia = () => {
         <ModalDeletePost
           // modalDeletePost={modalDeletePost}
           setModalDeletePost={setModalDeletePost}
-          // id={id}
-          // index={index}
-          // data={data}
-          // setData={setData}
+        // id={id}
+        // index={index}
+        // data={data}
+        // setData={setData}
         />
       )}
 

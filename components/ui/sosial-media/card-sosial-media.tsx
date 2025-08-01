@@ -143,6 +143,7 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
           setModalShare={() => setModalShare(true)}
           setModalDeletePost={setModalDeletePost}
           typeQuery={typeQuery}
+          idSlug={id}
         />
       )}
 

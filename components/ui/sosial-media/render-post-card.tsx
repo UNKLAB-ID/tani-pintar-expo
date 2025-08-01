@@ -8,6 +8,7 @@ import ShareIcons from '@/assets/icons/sosial-media/share-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import PoinVertialIcons from '@/assets/icons/sosial-media/poin-vertical-icons';
 import StatusPublickProfileIcons from '@/assets/icons/sosial-media/status-publick-profile-icons';
+import { formatAngkaRingkas } from '@/utils/services/sosial-media/format-angka-ringkas';
 
 interface UserProfile {
   created_at: string;
@@ -152,6 +153,7 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
         {query ? (
           <TouchableOpacity
             onPress={() => {
+              setId(item.slug);
               setModalPostMenu(true);
             }}
           >
@@ -232,9 +234,7 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
             <LoveIcons width={18} height={18} color={'#434343'} />
           </TouchableOpacity>
           <Text className="text-[14px] text-[#434343] ml-2">
-            {item.likes_count === 0
-              ? `${item.likes_count}`
-              : `${item.likes_count}K`}
+            {formatAngkaRingkas(item.likes_count)}
           </Text>
         </View>
         <TouchableOpacity
@@ -247,9 +247,7 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
         >
           <KomentarIcons width={18} height={18} color={'#434343'} />
           <Text className="text-[14px] text-[#434343] ml-2">
-            {item.comments_count === 0
-              ? `${item.comments_count}`
-              : `${item.comments_count}K`}
+            {formatAngkaRingkas(item.comments_count)}
           </Text>
         </TouchableOpacity>
         <View
@@ -260,9 +258,7 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
             <ShareIcons width={18} height={18} color={'#434343'} />
           </TouchableOpacity>
           <Text className="text-[14px] text-[#434343] ml-2">
-            {item.shared_count === 0
-              ? `${item.shared_count}`
-              : `${item.shared_count}K`}
+            0
           </Text>
         </View>
       </View>
