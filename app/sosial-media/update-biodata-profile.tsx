@@ -16,9 +16,10 @@ import {
   ScrollView,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useUserLocation } from '@/store/location/location';
 
 const UpdateBiodataProfile = () => {
-  const [selectedCountry, setSelectedCountry] = useState<string>('');
+  const { selectedCity, selectedCountry } = useUserLocation();
   const [modalCancel, setModalCancel] = useState<boolean>(false);
   const insets = useSafeAreaInsets();
   const {
@@ -217,7 +218,7 @@ const UpdateBiodataProfile = () => {
                   color: selectedCountry ? '#000' : '#AAA',
                 }}
               >
-                {selectedCountry || 'Ex : Indonesia'}
+                {selectedCountry?.name || 'Ex : Indonesia'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -234,9 +235,7 @@ const UpdateBiodataProfile = () => {
             City*
           </Text>
           <TouchableOpacity
-            onPress={() =>
-              router.push('/sosial-media/address/location-country')
-            }
+            onPress={() => router.push('/sosial-media/address/location-city')}
             style={{
               borderWidth: 1,
               borderRadius: 12,
@@ -246,9 +245,12 @@ const UpdateBiodataProfile = () => {
             }}
           >
             <Text
-              style={{ fontSize: 16, color: selectedCountry ? '#000' : '#AAA' }}
+              style={{
+                fontSize: 16,
+                color: selectedCity ? '#000' : '#AAA',
+              }}
             >
-              {selectedCountry || 'Fill in your city'}
+              {selectedCity?.name || 'Fill in your city'}
             </Text>
           </TouchableOpacity>
 
