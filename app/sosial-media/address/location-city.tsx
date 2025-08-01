@@ -9,10 +9,12 @@ import {
   StatusBar,
   ActivityIndicator,
   FlatList,
+  TextInput,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import api from '@/utils/api/api';
 import { useUserLocation } from '@/store/location/location';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 type City = {
   id: number;
@@ -26,63 +28,65 @@ type CityResponse = {
   results: City[];
 };
 
+const fetchCities = async ({
+  pageParam = '/location/cities/',
+  queryKey,
+}: any) => {
+  const [, searchQuery] = queryKey;
+  const url = pageParam.includes('?')
+    ? `${pageParam}&search=${encodeURIComponent(searchQuery)}`
+    : `${pageParam}?search=${encodeURIComponent(searchQuery)}`;
+
+  const res = await api.get(url);
+  return res.data;
+};
+
 export default function LocationCityScreen() {
   const insets = useSafeAreaInsets();
   const { selectedCity, setSelectedCity } = useUserLocation();
-  const [cityList, setCityList] = useState<City[]>([]);
-  const [nextUrl, setNextUrl] = useState<string | null>('/location/cities/');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [displayedCities, setDisplayedCities] = useState<City[]>([]);
 
-  const fetchCities = async (url: string) => {
-    try {
-      setLoading(true);
-      const response = await api.get(url);
-      const data: CityResponse = response.data;
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ['cities', searchQuery],
+    queryFn: fetchCities,
+    initialPageParam: '/location/cities/',
+    getNextPageParam: lastPage => {
+      if (!lastPage?.next) return undefined;
+      return lastPage.next.replace(/^https?:\/\/[^/]+/, '');
+    },
+    refetchOnWindowFocus: false,
+  });
 
-      let combinedCities = [...cityList, ...data.results];
+  useEffect(() => {
+    if (data) {
+      const flatData = data.pages.flatMap(page => page.results);
 
-      if (selectedCity) {
-        const exists = combinedCities.find(c => c.id === selectedCity.id);
+      let result = [...flatData];
+      // Jangan tambahkan selectedCity jika sedang mencari (ada input pencarian)
+      if (!searchQuery && selectedCity) {
+        const exists = result.find(c => c.id === selectedCity.id);
         if (!exists) {
-          combinedCities = [selectedCity, ...combinedCities];
+          result = [selectedCity, ...result];
         } else {
-          combinedCities = [
+          result = [
             selectedCity,
-            ...combinedCities.filter(c => c.id !== selectedCity.id),
+            ...result.filter(c => c.id !== selectedCity.id),
           ];
         }
       }
 
-      setCityList(combinedCities);
-      setNextUrl(data.next); // TIDAK PERLU replace di sini
-      setError(false);
-    } catch (err) {
-      console.log('Fetch error:', err);
-      setError(true);
-    } finally {
-      setLoading(false);
+      setDisplayedCities(result);
     }
-  };
-
-  useEffect(() => {
-    if (nextUrl && cityList.length === 0) {
-      const cleanUrl = nextUrl.startsWith('http')
-        ? nextUrl.replace(/^https?:\/\/[^/]+/, '')
-        : nextUrl;
-      fetchCities(cleanUrl);
-    }
-  }, []);
-
-  const loadMore = () => {
-    if (!nextUrl || loading) return;
-
-    const cleanUrl = nextUrl.startsWith('http')
-      ? nextUrl.replace(/^https?:\/\/[^/]+/, '')
-      : nextUrl;
-
-    fetchCities(cleanUrl);
-  };
+  }, [data, selectedCity]);
 
   const handleSelect = (item: City) => {
     setSelectedCity({
@@ -104,7 +108,7 @@ export default function LocationCityScreen() {
       <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
       <View className="px-4">
         {/* Header */}
-        <View className="flex-row items-center mb-5">
+        <View className="flex-row items-center mb-4">
           <TouchableOpacity className="mr-3" onPress={() => router.back()}>
             <BackIcons size={20} />
           </TouchableOpacity>
@@ -113,17 +117,43 @@ export default function LocationCityScreen() {
           </Text>
         </View>
 
-        {/* List Cities */}
-        {error ? (
+        {/* Search Input */}
+        <TextInput
+          placeholder="Search city..."
+          value={searchQuery}
+          onChangeText={text => {
+            setSearchQuery(text);
+          }}
+          onSubmitEditing={() => {
+            setDisplayedCities([]); // reset local state
+            refetch(); // refetch based on query
+          }}
+          style={{
+            padding: 12,
+            borderWidth: 1,
+            borderColor: '#ddd',
+            borderRadius: 8,
+            marginBottom: 12,
+          }}
+        />
+
+        {/* City List */}
+        {isError ? (
           <Text style={{ color: 'red' }}>Error loading cities</Text>
+        ) : isLoading ? (
+          <ActivityIndicator size="large" color="#999" />
         ) : (
           <FlatList
-            data={cityList}
+            data={displayedCities}
             keyExtractor={item => item.id.toString()}
-            onEndReached={loadMore}
+            onEndReached={() => {
+              if (hasNextPage && !isFetchingNextPage) {
+                fetchNextPage();
+              }
+            }}
             onEndReachedThreshold={0.5}
             ListFooterComponent={
-              loading ? (
+              isFetchingNextPage ? (
                 <ActivityIndicator size="small" color="#999" className="my-2" />
               ) : null
             }
