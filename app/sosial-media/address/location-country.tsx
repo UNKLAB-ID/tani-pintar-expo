@@ -7,57 +7,72 @@ import {
   Text,
   TouchableOpacity,
   StatusBar,
-  FlatList,
   ActivityIndicator,
+  FlatList,
+  TextInput,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useQuery } from '@tanstack/react-query';
 import api from '@/utils/api/api';
 import { useUserLocation } from '@/store/location/location';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
-type Country = {
+type City = {
   id: number;
   name: string;
-  createdAt: string;
 };
 
-type CountryResponse = {
-  results: Country[];
+type CityResponse = {
+  count: number;
   next: string | null;
   previous: string | null;
+  results: City[];
 };
 
-const fetchCountries = async (url?: string) => {
-  const endpoint = url || '/location/countries/';
-  const response = await api.get(endpoint);
-  return response.data;
+const fetchCities = async ({
+  pageParam = '/location/cities/',
+  queryKey,
+}: any) => {
+  const [, searchQuery] = queryKey;
+  const url = pageParam.includes('?')
+    ? `${pageParam}&search=${encodeURIComponent(searchQuery)}`
+    : `${pageParam}?search=${encodeURIComponent(searchQuery)}`;
+
+  const res = await api.get(url);
+  return res.data;
 };
 
-export default function LocationCountryScreen() {
+export default function LocationCityScreen() {
   const insets = useSafeAreaInsets();
   const { selectedCountry, setSelectedCountry } = useUserLocation();
-
-  const [countryList, setCountryList] = useState<Country[]>([]);
-  const [nextUrl, setNextUrl] = useState<string | null>(null);
-  const [prevUrl, setPrevUrl] = useState<string | null>(null);
-  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [displayedCities, setDisplayedCities] = useState<City[]>([]);
 
   const {
-    data: countriesData,
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     isLoading,
-    error,
+    isError,
     refetch,
-  } = useQuery<CountryResponse>({
-    queryKey: ['countries'],
-    queryFn: () => fetchCountries(),
+  } = useInfiniteQuery({
+    queryKey: ['countries', searchQuery],
+    queryFn: fetchCities,
+    initialPageParam: '/location/countries/',
+    getNextPageParam: lastPage => {
+      if (!lastPage?.next) return undefined;
+      return lastPage.next.replace(/^https?:\/\/[^/]+/, '');
+    },
     refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
-    if (countriesData?.results) {
-      let result = countriesData.results;
+    if (data) {
+      const flatData = data.pages.flatMap(page => page.results);
 
-      if (selectedCountry) {
+      let result = [...flatData];
+      // Jangan tambahkan selectedCity jika sedang mencari (ada input pencarian)
+      if (!searchQuery && selectedCountry) {
         const exists = result.find(c => c.id === selectedCountry.id);
         if (!exists) {
           result = [selectedCountry, ...result];
@@ -69,48 +84,17 @@ export default function LocationCountryScreen() {
         }
       }
 
-      setCountryList(result);
-      setNextUrl(countriesData.next);
-      setPrevUrl(countriesData.previous);
+      setDisplayedCities(result);
     }
-  }, [countriesData, selectedCountry]);
+  }, [data, selectedCountry]);
 
-  const loadMoreCountries = async () => {
-    if (!nextUrl || isFetchingMore) return;
-    setIsFetchingMore(true);
-    try {
-      const data: CountryResponse = await fetchCountries(nextUrl);
-      setNextUrl(data.next);
-      setPrevUrl(data.previous);
-
-      const newResults = data.results.filter(
-        c => !countryList.find(existing => existing.id === c.id)
-      );
-
-      setCountryList(prev => [...prev, ...newResults]);
-    } catch (e) {
-      console.error('Failed to load more countries:', e);
-    } finally {
-      setIsFetchingMore(false);
-    }
-  };
-
-  const handleSelect = (item: Country) => {
+  const handleSelect = (item: City) => {
     setSelectedCountry({
       ...item,
       createdAt: new Date().toISOString(),
     });
     router.back();
   };
-
-  const renderItem = ({ item }: { item: Country }) => (
-    <TouchableOpacity
-      className="py-4 border-b border-gray-200"
-      onPress={() => handleSelect(item)}
-    >
-      <Text className="text-base text-black">{item.name}</Text>
-    </TouchableOpacity>
-  );
 
   return (
     <SafeAreaView
@@ -124,32 +108,63 @@ export default function LocationCountryScreen() {
       <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
       <View className="px-4">
         {/* Header */}
-        <View className="flex-row items-center mb-5">
+        <View className="flex-row items-center mb-4">
           <TouchableOpacity className="mr-3" onPress={() => router.back()}>
             <BackIcons size={20} />
           </TouchableOpacity>
           <Text style={{ fontSize: 20, fontWeight: '600', color: '#1F1F1F' }}>
-            Select Country
+            Location
           </Text>
         </View>
 
-        {/* Error / Loading */}
-        {isLoading ? (
+        {/* Search Input */}
+        <TextInput
+          placeholder="Search city..."
+          value={searchQuery}
+          onChangeText={text => {
+            setSearchQuery(text);
+          }}
+          onSubmitEditing={() => {
+            setDisplayedCities([]); // reset local state
+            refetch(); // refetch based on query
+          }}
+          style={{
+            padding: 12,
+            borderWidth: 1,
+            borderColor: '#ddd',
+            borderRadius: 8,
+            marginBottom: 12,
+          }}
+        />
+
+        {/* City List */}
+        {isError ? (
+          <Text style={{ color: 'red' }}>Error loading cities</Text>
+        ) : isLoading ? (
           <ActivityIndicator size="large" color="#999" />
-        ) : error ? (
-          <Text style={{ color: 'red' }}>Error loading countries</Text>
         ) : (
           <FlatList
-            data={countryList}
+            data={displayedCities}
             keyExtractor={item => item.id.toString()}
-            renderItem={renderItem}
-            onEndReached={loadMoreCountries}
+            onEndReached={() => {
+              if (hasNextPage && !isFetchingNextPage) {
+                fetchNextPage();
+              }
+            }}
             onEndReachedThreshold={0.5}
             ListFooterComponent={
-              isFetchingMore ? (
-                <ActivityIndicator size="small" color="#666" />
+              isFetchingNextPage ? (
+                <ActivityIndicator size="small" color="#999" className="my-2" />
               ) : null
             }
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                className="py-3 border-b border-gray-200"
+                onPress={() => handleSelect(item)}
+              >
+                <Text className="text-base text-gray-800">{item.name}</Text>
+              </TouchableOpacity>
+            )}
           />
         )}
       </View>
