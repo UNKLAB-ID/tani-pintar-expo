@@ -1,7 +1,9 @@
 import BackIcons from '@/assets/icons/global/back-icons';
 import BottomTextInputModal from '@/components/ui/component-globals/modal-input';
+import ModalGender from '@/components/ui/profile/modal-gender';
+import ModalLogout from '@/components/ui/profile/modal-logout';
 import { Entypo } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,10 +20,16 @@ const EditProfileScreen = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [showNameModal, setShowNameModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showGenderModal, setShowGenderModal] = useState(false);
+  const [editedGender, setEditedGender] = useState('');
   const [editedName, setEditedName] = useState('');
+  const { newEmail, newPhone } = useLocalSearchParams();
 
   const maskPhone = (phone: string) => {
-    return phone.replace(/(\+62)\s\d{3}-\d{4}/, '$1 ****-****');
+    if (!phone) return '';
+    const cleaned = phone.replace(/\s|-/g, '');
+    return cleaned.replace(/(\+62)(\d{3})(\d{4})/, '$1 $2-****');
   };
 
   const maskEmail = (email: string) => {
@@ -34,11 +42,10 @@ const EditProfileScreen = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        // Simulasi fetch (ganti dengan real API)
         const dummyData: User = {
           name: 'Mambaus Baus',
-          email: 'baus@gmail.com',
-          phone: '+62 812-3456-7890',
+          email: newEmail ? String(newEmail) : 'baus@gmail.com',
+          phone: newPhone ? String(newPhone) : '+62 812-3456-7890',
           avatar: 'https://i.pravatar.cc/100',
           gender: 'Male',
           birthDate: 'Not yet determined',
@@ -47,6 +54,7 @@ const EditProfileScreen = () => {
         setTimeout(() => {
           setUser(dummyData);
           setEditedName(dummyData.name);
+          setEditedGender(dummyData.gender);
           setLoading(false);
         }, 800);
       } catch (err) {
@@ -56,14 +64,14 @@ const EditProfileScreen = () => {
     };
 
     fetchUser();
-  }, []);
+  }, [newEmail, newPhone]); // <-- tambahkan di sini
 
-  // //   if (loading || !user) {
-  // //     return (
-  // //       <View className="flex-1 justify-center items-center">
-  // //         <ActivityIndicator size="large" color="#5AD598" />
-  // //       </View>
-  // //     );
+  //   if (loading || !user) {
+  //     return (
+  //       <View className="flex-1 justify-center items-center">
+  //         <ActivityIndicator size="large" color="#5AD598" />
+  //       </View>
+  //     );
   // }
 
   const handleNameSave = (newName: string) => {
@@ -72,10 +80,19 @@ const EditProfileScreen = () => {
       setUser({ ...user, name: newName });
     }
   };
+  const handleGenderSave = (newGender: string) => {
+    setEditedGender(newGender);
+    if (user) {
+      setUser({ ...user, gender: newGender });
+    }
+  };
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1">
-      <View className="bg-[#f8f8f8]">
+    <SafeAreaView
+      edges={['top', 'left', 'right']}
+      className="flex-1 bg-[#f8f8f8]"
+    >
+      <View>
         <View className="flex-row bg-white items-center p-4">
           <TouchableOpacity onPress={() => router.back()}>
             <BackIcons width={24} height={24} fill="#000" />
@@ -136,6 +153,7 @@ const EditProfileScreen = () => {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => router.push('/profile/change-phone')}
               style={{ borderBottomWidth: 1, borderColor: '#F4F4F4' }}
               className=" p-3 mt-2"
             >
@@ -149,6 +167,7 @@ const EditProfileScreen = () => {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => setShowGenderModal(true)}
               style={{ borderBottomWidth: 1, borderColor: '#F4F4F4' }}
               className=" p-3 mt-2"
             >
@@ -177,8 +196,8 @@ const EditProfileScreen = () => {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ borderBottomWidth: 1, borderColor: '#F4F4F4' }}
-              className=" p-3 mt-2"
+              onPress={() => router.push('/profile/sosmed-account')}
+              className=" px-3 pt-3 mt-2"
             >
               <View className="flex-row items-center">
                 <Text className="text-[#6F6F6F] text-[14px]">
@@ -190,6 +209,36 @@ const EditProfileScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
+        <View className="mt-2 px-4 pb-4 bg-white">
+          <TouchableOpacity
+            style={{ borderBottomWidth: 1, borderColor: '#F4F4F4' }}
+            className=" p-3 mt-2"
+          >
+            <View className="flex-row items-center">
+              <Text className="text-[#6F6F6F] text-[14px]">Security</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => router.push('/profile/signin-device')}
+            className=" p-3 mt-1"
+          >
+            <View className="flex-row items-center">
+              <Text className="text-[#6F6F6F] text-[14px]">
+                Manage Sign-in Devices
+              </Text>
+              <View className="flex-1" />
+              <Entypo name="chevron-right" size={20} color="#6F6F6F" />
+            </View>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          onPress={() => setShowLogoutModal(true)}
+          className="p-3 mt-5 justify-center"
+        >
+          <Text className="text-center text-primary font-semibold">
+            Log Out
+          </Text>
+        </TouchableOpacity>
       </View>
       <BottomTextInputModal
         visible={showNameModal}
@@ -200,6 +249,19 @@ const EditProfileScreen = () => {
         onClose={() => setShowNameModal(false)}
         confirmLabel="Save"
         defaultOpenText="Enter full name"
+      />
+      <ModalGender
+        visible={showGenderModal}
+        onChange={handleGenderSave}
+        onClose={() => setShowGenderModal(false)}
+      />
+      <ModalLogout
+        visible={showLogoutModal}
+        onCancel={() => setShowLogoutModal(false)}
+        onConfirm={() => {
+          setShowLogoutModal(false);
+          // Lakukan logout logic di sini
+        }}
       />
     </SafeAreaView>
   );

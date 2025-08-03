@@ -3,15 +3,15 @@ import { View, Text, TouchableOpacity, BackHandler } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import BackIcons from '@/assets/icons/global/back-icons';
-import ChangeEmailForm from '@/components/ui/profile/change-email-form';
-import VerifyCodeEmail from './verify-code-email';
+import ChangePhoneForm from '@/components/ui/profile/change-phone-form';
+import VerifyCodePhone from './verify-code-phone';
 
-const ChangeEmail = () => {
+const ChangePhone = () => {
   const [showVerify, setShowVerify] = useState(false);
-  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
 
-  const handleSubmit = (submittedEmail: string) => {
-    setEmail(submittedEmail);
+  const handleSubmit = (submittedPhone: string) => {
+    setPhone(submittedPhone);
     setShowVerify(true);
   };
 
@@ -37,7 +37,6 @@ const ChangeEmail = () => {
 
   return (
     <SafeAreaView edges={['top']} className="flex-1 bg-white">
-      {/* Header - tetap Change Email */}
       <View
         className="flex-row items-center px-5 pt-4 pb-3"
         style={{ borderBottomWidth: 1, borderColor: '#F4F4F4' }}
@@ -45,17 +44,19 @@ const ChangeEmail = () => {
         <TouchableOpacity onPress={handleBack}>
           <BackIcons width={24} height={24} />
         </TouchableOpacity>
-        <Text className="text-[16px] font-semibold ml-3">Change Email</Text>
+        <Text className="text-[16px] font-semibold ml-3">
+          Change Phone Number
+        </Text>
       </View>
 
       {/* Body: Tampilkan form berdasarkan state */}
       {showVerify ? (
-        <VerifyCodeEmail email={email} />
+        <VerifyCodePhone phone={phone} />
       ) : (
-        <ChangeEmailForm onSubmit={handleSubmit} />
+        <ChangePhoneForm onSubmit={handleSubmit} />
       )}
     </SafeAreaView>
   );
 };
 
-export default ChangeEmail;
+export default ChangePhone;
