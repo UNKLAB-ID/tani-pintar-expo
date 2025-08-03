@@ -66,7 +66,7 @@ const ProfileScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <SafeAreaView className=" bg-[#5AD598] flex-1" edges={['top']}>
           {/* Header */}
-          <View className="bg-[#5AD598] pb-6 px-5 ">
+          <View className="bg-[#5AD598] pb-6 px-5 mt-8">
             <View className="flex-row items-center">
               <Image
                 source={{ uri: user.avatar }}
@@ -91,13 +91,13 @@ const ProfileScreen = () => {
             className="px-5 py-4  bg-white "
             style={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
           >
-            <Text className="text-[14px] font-semibold mb-5 text-[#6F6F6F]">
+            <Text className="text-[14px] font-semibold mb-5 text-[#525252]">
               Transactions
             </Text>
             <View className="flex-row justify-between px-10">
               <TouchableOpacity className="items-center  min-h-[64px]">
                 <WalletIcon width={24} height={24} />
-                <Text className="text-[14px] font-medium mt-2 text-center">
+                <Text className="text-[14px] font-medium mt-2 text-center text-[#525252]">
                   Pay
                 </Text>
               </TouchableOpacity>
@@ -110,13 +110,13 @@ const ProfileScreen = () => {
               <TouchableOpacity className="items-center  min-h-[64px]">
                 <ExpressDeliveryIcon width={32} height={32} />
 
-                <Text className="text-[14px] font-medium text-center">
+                <Text className="text-[14px] font-medium text-center text-[#525252]">
                   Sent
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity className="items-center  min-h-[64px]">
                 <RateIcons width={24} height={24} />
-                <Text className="text-[14px] font-medium mt-2 text-center">
+                <Text className="text-[14px] font-medium mt-2 text-center text-[#525252]">
                   Rate
                 </Text>
               </TouchableOpacity>
@@ -166,7 +166,12 @@ const ProfileScreen = () => {
                 </View>
                 <Entypo name="chevron-right" size={20} color="#6F6F6F" />
               </TouchableOpacity>
-              <TouchableOpacity className="flex-row items-center justify-between py-3 border-b border-gray-200">
+              <TouchableOpacity
+                onPress={() => {
+                  router.push('/profile/language');
+                }}
+                className="flex-row items-center justify-between py-3 border-b border-gray-200"
+              >
                 <View className="flex-row items-center">
                   <WordIcon width={20} height={20} />
                   <Text className="ml-3 text-sm">Laguage</Text>
