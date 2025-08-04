@@ -218,6 +218,12 @@ const EcommerceIndex = () => {
     setActiveIndex(realIndex);
   };
 
+  const handleScrollToIndex = () => {
+    if (productData.length > 5) {
+      flatListRef.current?.scrollToIndex({ index: 5, animated: true });
+    }
+  };
+
   useEffect(() => {
     if (currentIndex === banners.length - 1) {
       setTimeout(() => {
@@ -242,7 +248,7 @@ const EcommerceIndex = () => {
         backgroundColor="#ffffff"
         translucent={false}
       />
-      <SafeAreaView edges={['right', 'left']} className="flex-1 w-full ">
+      <SafeAreaView edges={['right', 'left']} className="flex-1">
         <View className="px-5 py-3 pb-4 bg-white">
           <View className="flex-row items-center justify-between">
             <View className="w-[276px] relative">
@@ -441,6 +447,7 @@ const EcommerceIndex = () => {
                 keyExtractor={item => item.id.toString()}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
+                onContentSizeChange={handleScrollToIndex}
                 renderItem={({ item }) => (
                   <View className="mr-2 pb-3">
                     <FlashSaleCard
