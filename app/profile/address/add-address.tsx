@@ -57,7 +57,7 @@ const AddAddress = () => {
         {/* Name */}
         <View>
           <Text className="text-sm font-medium mb-1">
-            Recipient's Name <Text className="text-red-500">*</Text>
+            Recipient&apos;s Name <Text className="text-red-500">*</Text>
           </Text>
           <TextInput
             placeholder="Input your recipient's name"
@@ -70,7 +70,8 @@ const AddAddress = () => {
         {/* Phone */}
         <View>
           <Text className="text-sm font-medium mb-1">
-            Recipient’s Phone Number <Text className="text-red-500">*</Text>
+            Recipient&apos;s Phone Number{' '}
+            <Text className="text-red-500">*</Text>
           </Text>
           <View className="flex-row items-center border border-gray-300 rounded-md px-3 py-2">
             <Text className="text-sm text-black mr-2">+62</Text>
