@@ -29,9 +29,9 @@ const devices = [
 
 const SignInDeviceScreen = () => {
   return (
-    <SafeAreaView edges={['top']} className="flex-1 ">
+    <SafeAreaView edges={['top']} className="flex-1">
       {/* Header */}
-      <View className="bg-white flex-row items-center px-4 py-3 border-b border-gray-200">
+      <View className="bg-white flex-row items-center px-4 py-4 border-b border-gray-200">
         <TouchableOpacity onPress={() => router.back()}>
           <BackIcons width={24} height={24} fill="#000" />
         </TouchableOpacity>
