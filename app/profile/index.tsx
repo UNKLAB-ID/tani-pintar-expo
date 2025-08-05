@@ -141,6 +141,7 @@ const ProfileScreen = () => {
                 <Text className="text-xs mt-1">TaniPinjam</Text>
               </TouchableOpacity>
               <TouchableOpacity
+                onPress={() => router.push('/profile/voucer/voucer')}
                 className="items-center"
                 style={{
                   borderLeftWidth: 1,
@@ -223,7 +224,10 @@ const ProfileScreen = () => {
               <Text className="text-[14px] font-semibold mb-3 text-[#6F6F6F]">
                 Appearance
               </Text>
-              <TouchableOpacity className="flex-row items-center justify-between py-3">
+              <TouchableOpacity
+                onPress={() => router.push('/profile/mode-view')}
+                className="flex-row items-center justify-between py-3"
+              >
                 <View className="flex-row items-center">
                   <Ionicons name="sunny-outline" size={20} color="#5A5A5A" />
                   <Text className="ml-3 text-sm">Mode View</Text>
