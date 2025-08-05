@@ -132,7 +132,7 @@ const NewsScreen = () => {
         ))}
         {filteredNews.length === 0 && (
           <Text className="text-center text-[#999] mt-10">
-            Tidak ditemukan berita dengan kata: "{searchQuery}"
+            Tidak ditemukan berita dengan kata: &quot;{searchQuery}&quot;
           </Text>
         )}
       </ScrollView>
