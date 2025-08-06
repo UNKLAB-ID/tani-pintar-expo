@@ -1,10 +1,9 @@
 import { View, Text } from 'react-native';
 
-const Vendor = () => {
+export default function Profile() {
   return (
     <View className="flex-1 items-center justify-center">
-      <Text className="text-2xl font-bold">Vendor</Text>
+      <Text className="text-lg font-bold">Profile Vendor</Text>
     </View>
   );
-};
-export default Vendor;
+}

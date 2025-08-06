@@ -218,6 +218,12 @@ const EcommerceIndex = () => {
     setActiveIndex(realIndex);
   };
 
+  const handleScrollToIndex = () => {
+    if (productData.length > 5) {
+      flatListRef.current?.scrollToIndex({ index: 5, animated: true });
+    }
+  };
+
   useEffect(() => {
     if (currentIndex === banners.length - 1) {
       setTimeout(() => {
@@ -242,7 +248,7 @@ const EcommerceIndex = () => {
         backgroundColor="#ffffff"
         translucent={false}
       />
-      <SafeAreaView edges={['right', 'left']} className="flex-1 w-full ">
+      <SafeAreaView edges={['right', 'left']} className="flex-1">
         <View className="px-5 py-3 pb-4 bg-white">
           <View className="flex-row items-center justify-between">
             <View className="w-[276px] relative">
@@ -325,74 +331,75 @@ const EcommerceIndex = () => {
               ))}
             </View>
           </View>
-
-          <View className="flex-row w-[355px] h-[83px] bg-[#F0F0F0] justify-center rounded-xl pt-3 pb-3 px-4 py-4 mx-5 mt-5 ">
-            <View className="w-1/3 items-start">
-              <View className="flex-row items-center mb-1 mt-1">
-                <View style={{ marginRight: 3 }}>
-                  <WalletIcons width={16} height={16} />
+          <View className="px-5 mt-5">
+            <View className="flex-row w-full bg-[#F0F0F0] justify-between rounded-xl py-4 px-4">
+              <View className="w-1/3 items-start">
+                <View className="flex-row items-center mb-1 mt-1">
+                  <View style={{ marginRight: 3 }}>
+                    <WalletIcons width={16} height={16} />
+                  </View>
+                  <Text className="text-[12px] font-medium text-black">
+                    TaniPay
+                  </Text>
                 </View>
-                <Text className="text-[12px] font-medium text-black">
-                  TaniPay
-                </Text>
-              </View>
-              <View className="space-y-1">
-                <Text className="text-[12px] font-bold text-black">
-                  Rp20.000
-                </Text>
-                <Text
-                  className="text-[10px] text-gray-500"
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                >
-                  Topup minimum...
-                </Text>
-              </View>
-            </View>
-
-            <View className="w-1/3">
-              <View className="flex-row items-center mb-1 mt-1">
-                <View style={{ marginRight: 3 }}>
-                  <Wallet2Icons width={16} height={16} />
+                <View className="space-y-1">
+                  <Text className="text-[12px] font-bold text-black">
+                    Rp20.000
+                  </Text>
+                  <Text
+                    className="text-[10px] text-gray-500"
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    Topup minimum...
+                  </Text>
                 </View>
-                <Text className="text-[12px] font-medium text-black">
-                  TaniPinjam
-                </Text>
               </View>
-              <View className="space-y-1">
-                <Text className="text-[12px] font-bold text-[#28a745]">
-                  ActivateNow
-                </Text>
-                <Text
-                  className="text-[10px] text-gray-500"
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                >
-                  Limit up to Rp20...
-                </Text>
-              </View>
-            </View>
 
-            <View className="w-1/3">
-              <View className="flex-row items-center mb-1 mt-1">
-                <View style={{ marginRight: 3 }}>
-                  <VoucherIcons width={16} height={16} />
+              <View className="w-1/3">
+                <View className="flex-row items-center mb-1 mt-1">
+                  <View style={{ marginRight: 3 }}>
+                    <Wallet2Icons width={16} height={16} />
+                  </View>
+                  <Text className="text-[12px] font-medium text-black">
+                    TaniPinjam
+                  </Text>
                 </View>
-                <Text className="text-[12px] font-medium text-black">
-                  Voucher
-                </Text>
+                <View className="space-y-1">
+                  <Text className="text-[12px] font-bold text-[#28a745]">
+                    ActivateNow
+                  </Text>
+                  <Text
+                    className="text-[10px] text-gray-500"
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    Limit up to Rp20...
+                  </Text>
+                </View>
               </View>
-              <View className="space-y-1">
-                <Text className="text-[12px] font-bold text-black">
-                  Voucher Discount
-                </Text>
-                <Text
-                  className="text-[10px] text-[#28a745]"
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                >
-                  Free Delivery Service
-                </Text>
+
+              <View className="w-1/3">
+                <View className="flex-row items-center mb-1 mt-1">
+                  <View style={{ marginRight: 3 }}>
+                    <VoucherIcons width={16} height={16} />
+                  </View>
+                  <Text className="text-[12px] font-medium text-black">
+                    Voucher
+                  </Text>
+                </View>
+                <View className="space-y-1">
+                  <Text className="text-[12px] font-bold text-black">
+                    Voucher Discount
+                  </Text>
+                  <Text
+                    className="text-[10px] text-[#28a745]"
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    Free Delivery Service
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -441,6 +448,7 @@ const EcommerceIndex = () => {
                 keyExtractor={item => item.id.toString()}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
+                onContentSizeChange={handleScrollToIndex}
                 renderItem={({ item }) => (
                   <View className="mr-2 pb-3">
                     <FlashSaleCard
