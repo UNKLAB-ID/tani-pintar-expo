@@ -109,11 +109,9 @@ const CameraScreen = () => {
         name: 'photo.jpg',
         type: 'image/jpeg',
       } as any);
-      console.log(`[🖼️ PREVIEW GAMBAR]: ${photoUri.uri}`);
 
       mutation.mutate(formData);
     } catch (error: any) {
-      console.log('error 3', error);
       Alert.alert(
         'Gagal',
         error.message || 'Terjadi kesalahan saat memproses foto.'

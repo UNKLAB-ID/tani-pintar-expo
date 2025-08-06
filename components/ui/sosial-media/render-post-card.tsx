@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Image, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import LoveIcons from '@/assets/icons/global/love-icons';
 import PointThreeHorizontal from '@/assets/icons/global/point-three-horizontal';
@@ -8,6 +8,11 @@ import ShareIcons from '@/assets/icons/sosial-media/share-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import PoinVertialIcons from '@/assets/icons/sosial-media/poin-vertical-icons';
 import StatusPublickProfileIcons from '@/assets/icons/sosial-media/status-publick-profile-icons';
+import { formatAngkaRingkas } from '@/utils/services/sosial-media/format-angka-ringkas';
+import { useMutation } from '@tanstack/react-query';
+import api from '@/utils/api/api';
+import LoveActiveIcons from '@/assets/icons/global/love-active-icons';
+import { useMediaSosial } from '@/store/sosial-media/sosial-media';
 
 interface UserProfile {
   created_at: string;
@@ -37,11 +42,12 @@ interface PostItem {
   created_at: string;
   images: ImageItem[];
   likes_count: number;
+  is_liked: boolean;
+  is_saved: boolean;
   shared_count: number;
   slug: string;
   updated_at: string;
   user: User;
-  views_count: number;
 }
 
 interface RenderPostCardProps {
@@ -58,6 +64,8 @@ interface RenderPostCardProps {
   setModalComment: (visible: boolean) => void;
   setModalShare: (visible: boolean) => void;
   setModalPostMenu: (visible: boolean) => void;
+  setStatusSavePost: (value: boolean) => void;
+  referest: () => void;
 }
 
 const RenderPostCard: React.FC<RenderPostCardProps> = ({
@@ -74,9 +82,12 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
   setModalComment,
   setModalShare,
   setModalPostMenu,
+  setStatusSavePost,
+  referest,
 }) => {
   const scrollRef = useRef(null);
   const { query } = useLocalSearchParams();
+  const { setIdSlugStore } = useMediaSosial();
 
   const handleScroll = (event: any) => {
     const slide = Math.round(
@@ -88,6 +99,27 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
       return updated;
     });
   };
+
+  const mutationLike = useMutation({
+    mutationFn: async (data: { idSlug: string; isLiked: boolean }) => {
+      if (data.isLiked) {
+        return api.delete(`/social-media/posts/${data.idSlug}/unlike/`);
+      } else {
+        return api.post(`/social-media/posts/${data.idSlug}/like/`);
+      }
+    },
+    onSuccess: (res, variables) => {
+      console.log('Success liking/unliking:', res);
+      referest();
+      // Contoh: Update UI atau tampilkan toast
+      // toast.show(variables.isLiked ? 'Liked!' : 'Unliked!');
+    },
+    onError: (error, variables) => {
+      console.error('Error liking/unliking:', error);
+      // Contoh: Tampilkan error toast atau alert
+      // toast.show('Gagal memproses like/unlike');
+    },
+  });
 
   return (
     <View>
@@ -152,7 +184,10 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
         {query ? (
           <TouchableOpacity
             onPress={() => {
+              setId(item.slug);
+              setIdSlugStore(item.slug);
               setModalPostMenu(true);
+              setStatusSavePost(item.is_saved);
             }}
           >
             <PoinVertialIcons width={26} height={26} />
@@ -161,8 +196,10 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
           <TouchableOpacity
             onPress={() => {
               setId(item.slug);
+              setIdSlugStore(item.slug);
               setIndex(index);
               setModalVisible(true);
+              setStatusSavePost(item.is_saved);
             }}
           >
             <PointThreeHorizontal width={24} height={24} />
@@ -171,9 +208,11 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
       </View>
 
       {/* Caption */}
-      <View className="mb-2">
-        <Text className="text-[#1F1F1F] text-[14px]">{item.content}</Text>
-      </View>
+      {item.content && (
+        <View className="mb-2">
+          <Text className="text-[#1F1F1F] text-[14px]">{item.content}</Text>
+        </View>
+      )}
 
       {/* Image Slider */}
       {item.images.length > 0 && (
@@ -228,13 +267,19 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
           className="flex-row items-center justify-between"
           style={{ width: 49 }}
         >
-          <TouchableOpacity>
-            <LoveIcons width={18} height={18} color={'#434343'} />
+          <TouchableOpacity
+            onPress={() =>
+              mutationLike.mutate({ idSlug: item.slug, isLiked: item.is_liked })
+            }
+          >
+            {item.is_liked ? (
+              <LoveActiveIcons width={18} height={18} />
+            ) : (
+              <LoveIcons width={18} height={18} color={'#434343'} />
+            )}
           </TouchableOpacity>
           <Text className="text-[14px] text-[#434343] ml-2">
-            {item.likes_count === 0
-              ? `${item.likes_count}`
-              : `${item.likes_count}K`}
+            {formatAngkaRingkas(item.likes_count)}
           </Text>
         </View>
         <TouchableOpacity
@@ -247,9 +292,7 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
         >
           <KomentarIcons width={18} height={18} color={'#434343'} />
           <Text className="text-[14px] text-[#434343] ml-2">
-            {item.comments_count === 0
-              ? `${item.comments_count}`
-              : `${item.comments_count}K`}
+            {formatAngkaRingkas(item.comments_count)}
           </Text>
         </TouchableOpacity>
         <View
@@ -259,11 +302,7 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
           <TouchableOpacity onPress={() => setModalShare(true)}>
             <ShareIcons width={18} height={18} color={'#434343'} />
           </TouchableOpacity>
-          <Text className="text-[14px] text-[#434343] ml-2">
-            {item.shared_count === 0
-              ? `${item.shared_count}`
-              : `${item.shared_count}K`}
-          </Text>
+          <Text className="text-[14px] text-[#434343] ml-2">0</Text>
         </View>
       </View>
     </View>

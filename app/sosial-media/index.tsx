@@ -22,6 +22,7 @@ import {
 const SosialMediaIndex = () => {
   const [dataPosts, setDataPosts] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [search, setSearch] = useState<string>('');
   const insets = useSafeAreaInsets();
   const { data: profile, isLoading: loading, isError } = useProfile();
 
@@ -34,7 +35,7 @@ const SosialMediaIndex = () => {
   };
 
   const fetchPostsList = async () => {
-    const response = await api.get('/social-media/posts/');
+    const response = await api.get(`/social-media/posts/?search=${search}`);
     return response.data;
   };
 
@@ -44,7 +45,7 @@ const SosialMediaIndex = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['postsList'],
+    queryKey: ['postsList', search],
     queryFn: fetchPostsList,
     refetchOnWindowFocus: false,
   });
@@ -58,6 +59,8 @@ const SosialMediaIndex = () => {
     await refetch(); // 🚀 pakai react-query
     setRefreshing(false);
   };
+
+  console.log(search);
 
   return (
     <SafeAreaView style={{ flex: 1, paddingTop: insets.top }}>
@@ -128,9 +131,11 @@ const SosialMediaIndex = () => {
               coloricon="#000"
               placeholder="Find what you’re looking for..."
               className="px-[12px] h-[39px]"
+              onChangeText={setSearch}
             />
           </View>
           <TouchableOpacity
+            className="ml-2"
             onPress={() => router.push('/sosial-media/create-post-media')}
           >
             <ButtonPlusIcons />
@@ -141,7 +146,7 @@ const SosialMediaIndex = () => {
       {/* FLATLIST */}
       <FlatList
         data={dataPosts}
-        // style={{marginTop:10}}
+        style={{ marginTop: 10 }}
         keyExtractor={(item, index) => `${item.id}-${index}`}
         renderItem={({ item, index }) => (
           <CardSosialMedia
@@ -151,6 +156,7 @@ const SosialMediaIndex = () => {
               newList[index] = updated[0];
               setDataPosts(newList);
             }}
+            refresData={refetch}
           />
         )}
         // Beri padding atas sesuai tinggi header

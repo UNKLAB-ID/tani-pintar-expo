@@ -9,6 +9,8 @@ import ReportIcons from '@/assets/icons/sosial-media/report-icons';
 import BlockIcons from '@/assets/icons/sosial-media/block-icons';
 import CopyLinkIcons from '@/assets/icons/sosial-media/copy-link-icons';
 import NotInterestedIcons from '@/assets/icons/sosial-media/not-interested';
+import { useMutation } from '@tanstack/react-query';
+import api from '@/utils/api/api';
 
 interface ModalSettingSrinerProps {
   modalVisible: boolean;
@@ -16,6 +18,9 @@ interface ModalSettingSrinerProps {
   setModalBlock: (visible: boolean) => void;
   setModalHidenPost: (visible: boolean) => void;
   setModalReportMenuSosialMedia: (visible: boolean) => void;
+  statusSavePost: boolean;
+  idSlug: string;
+  refrest: () => void;
 }
 
 const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
@@ -24,7 +29,37 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
   setModalBlock,
   setModalHidenPost,
   setModalReportMenuSosialMedia,
+  statusSavePost,
+  idSlug,
+  refrest,
 }) => {
+  const mutationSave = useMutation({
+    mutationFn: async () => {
+      try {
+        let res;
+        if (statusSavePost) {
+          res = await api.delete(`/social-media/posts/${idSlug}/unsave/`);
+        } else {
+          res = await api.post(`/social-media/posts/${idSlug}/save/`);
+        }
+
+        return res.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    onSuccess: res => {
+      console.log(res);
+      refrest();
+      setModalVisible(false);
+    },
+
+    onError: error => {
+      console.log(error);
+    },
+  });
+
   return (
     <Modal
       visible={modalVisible}
@@ -62,16 +97,16 @@ const ModalSettingSriner: React.FC<ModalSettingSrinerProps> = ({
 
           <View className="flex-row items-center justify-between mb-5">
             <CustomButtonSosialMedia
-              title={modalVisible ? 'Save' : 'Unsave'}
-              onPress={() => setModalVisible(false)}
+              title={statusSavePost ? 'Unsave' : 'Save'}
+              onPress={() => mutationSave.mutate()}
               borderColor="#AAA"
               textColor="#000"
               widht={173}
               icon={
-                modalVisible ? (
-                  <BoockmarkSave width={22} height={22} />
-                ) : (
+                statusSavePost ? (
                   <BoockmarkUnsave width={22} height={22} />
+                ) : (
+                  <BoockmarkSave width={22} height={22} />
                 )
               }
             />

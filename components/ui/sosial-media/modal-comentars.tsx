@@ -2,7 +2,7 @@ import LoveIcons from '@/assets/icons/global/love-icons';
 import GarisHorizotal from '@/assets/icons/sosial-media/garis-horizontal-icons';
 import IconsComentars from '@/assets/icons/sosial-media/iconst-button-comentars';
 import api from '@/utils/api/api';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -17,7 +17,8 @@ import {
   View,
   SafeAreaView,
 } from 'react-native';
-import moment from 'moment';
+import LoveActiveIcons from '@/assets/icons/global/love-active-icons';
+import { formatWaktuSingkat } from '@/utils/services/sosial-media/format-waktu';
 
 interface ModalComentarsProps {
   modalCommentVisible: boolean;
@@ -31,16 +32,37 @@ const ModalComentars: React.FC<ModalComentarsProps> = ({
   id,
 }) => {
   const [dataComentars, setDataComentars] = useState<any[]>([]);
-  const [commentInput, setCommentInput] = useState('');
+  const [dataComentarChildern, setDataComentarChildern] = useState<any[]>([]);
+  const [commentInput, setCommentInput] = useState<string>('');
+  const [idComentar, setIdComentar] = useState<string>('');
+  const [idComentarCildern, setIdComentarCildern] = useState<string>('');
 
   const feactDataComentarList = async () => {
     const response = await api.get(`/social-media/posts/${id}/comments`);
     return response.data;
   };
 
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['postComentarList'],
     queryFn: feactDataComentarList,
+    refetchOnWindowFocus: true,
+  });
+
+  const feactDataComentarCildernList = async () => {
+    const response = await api.get(
+      `https://dev.api.taniverse.id/social-media/posts/${id}/comments/${idComentar}/replies/`
+    );
+    return response.data;
+  };
+
+  const {
+    data: dataChildern,
+    refetch: refetchChildern,
+    isLoading: loadingChildern,
+  } = useQuery({
+    queryKey: ['postComentarChildernList', idComentar],
+    queryFn: feactDataComentarCildernList,
+    enabled: !!idComentar, // ✅ hanya fetch kalau idComentar ada
     refetchOnWindowFocus: true,
   });
 
@@ -48,23 +70,96 @@ const ModalComentars: React.FC<ModalComentarsProps> = ({
     setDataComentars(data?.results || []);
   }, [data]);
 
+  useEffect(() => {
+    setDataComentarChildern(dataChildern?.results || []);
+  }, [dataChildern]);
+
+  useEffect(() => {
+    if (idComentar) {
+      refetchChildern();
+    }
+  }, [idComentar]);
+
+  const mutation = useMutation({
+    mutationFn: async (newComment: { content: string; parent?: string }) => {
+      const response = await api.post(
+        `/social-media/posts/${id}/comments/`,
+        newComment
+      );
+      return response.data;
+    },
+
+    onSuccess: () => {
+      setCommentInput('');
+      setIdComentar('');
+      refetch();
+      refetchChildern();
+    },
+
+    onError: (error: any) => {
+      const errorMessage =
+        error?.response?.data?.message || 'Gagal mengirim komentar.';
+      alert(errorMessage);
+      console.error('Comment Error:', error);
+    },
+  });
+
+  // Fungsi untuk memanggil mutation
+  const createdComment = () => {
+    if (!commentInput.trim()) return;
+
+    const payload: { content: string; parent?: string } = {
+      content: commentInput,
+    };
+
+    if (idComentarCildern !== '') {
+      payload.parent = idComentarCildern;
+    }
+
+    mutation.mutate(payload);
+  };
+
+  const mutationLike = useMutation({
+    mutationFn: async ({
+      idLike,
+      statusLike,
+    }: {
+      idLike: string;
+      statusLike: boolean;
+    }) => {
+      let response;
+
+      if (statusLike) {
+        // Jika sudah like, maka hapus like
+        response = await api.delete(
+          `/social-media/posts/${id}/comments/${idLike}/unlike/`
+        );
+      } else {
+        // Jika belum like, maka kirim like
+        response = await api.post(
+          `/social-media/posts/${id}/comments/${idLike}/like/`
+        );
+      }
+
+      return response.data;
+    },
+
+    onSuccess: () => {
+      setCommentInput('');
+      refetch();
+      refetchChildern();
+    },
+
+    onError: (error: any) => {
+      const errorMessage =
+        error?.response?.data?.message || 'Gagal mengirim like comentar.';
+      alert(errorMessage);
+      console.error('Comment Error:', error);
+    },
+  });
+
   const emojis = ['😀', '😂', '😍', '😎', '😭', '👍', '🎉', '🔥', '❤️'];
 
-  const formatWaktuSingkat = (tanggal: string) => {
-    const now = moment();
-    const posted = moment(tanggal);
-    const diffInMinutes = now.diff(posted, 'minutes');
-    const diffInHours = now.diff(posted, 'hours');
-    const diffInDays = now.diff(posted, 'days');
-
-    if (diffInMinutes < 60) {
-      return `${diffInMinutes}m`; // menit
-    } else if (diffInHours < 24) {
-      return `${diffInHours}h`; // jam
-    } else {
-      return `${diffInDays}d`; // hari
-    }
-  };
   return (
     <Modal
       visible={modalCommentVisible}
@@ -116,45 +211,194 @@ const ModalComentars: React.FC<ModalComentarsProps> = ({
             >
               {dataComentars.length > 0 ? (
                 dataComentars.map((value: any, index: number) => (
-                  <View
-                    key={index}
-                    style={{ flexDirection: 'row', marginBottom: 16 }}
-                  >
-                    {/* Avatar dan isi komentar */}
-                    <Image
-                      source={require('../../../assets/images/Image-success-otp.png')}
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 20,
-                        marginRight: 10,
-                      }}
-                    />
-                    <View style={{ flex: 1 }}>
-                      <Text style={{ fontWeight: '600' }}>
-                        {value.user.profile?.full_name}
-                      </Text>
-                      <Text style={{ marginTop: 4 }}>{value.content}</Text>
-                      <View style={{ flexDirection: 'row', marginTop: 4 }}>
-                        <Text style={{ color: '#999' }}>
-                          {formatWaktuSingkat(value.created_at)}
+                  <View key={index}>
+                    <View style={{ flexDirection: 'row', marginBottom: 16 }}>
+                      {/* Avatar dan isi komentar */}
+                      <Image
+                        source={require('../../../assets/images/profile-default.png')}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 20,
+                          marginRight: 10,
+                        }}
+                      />
+                      <View style={{ flex: 1 }}>
+                        <Text style={{ fontWeight: '600' }}>
+                          {value.user.profile?.full_name}
                         </Text>
-                        <Text
-                          style={{
-                            marginLeft: 8,
-                            fontWeight: 'bold',
-                            color: '#169953',
-                          }}
-                        >
-                          Reply
-                        </Text>
+                        <Text style={{ marginTop: 4 }}>{value.content}</Text>
+                        <View style={{ flexDirection: 'row', marginTop: 4 }}>
+                          <Text style={{ color: '#999' }}>
+                            {formatWaktuSingkat(value.created_at)}
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setDataComentarChildern([]);
+                              setIdComentar(String(value.id));
+                              setIdComentarCildern(String(value.id));
+                            }}
+                          >
+                            <Text
+                              style={{
+                                marginLeft: 8,
+                                fontWeight: 'bold',
+                                color: '#169953',
+                              }}
+                            >
+                              Reply
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
                       </View>
+                      {/* Like icon */}
+                      <TouchableOpacity
+                        onPress={() => {
+                          console.log(value.has_replies);
+                          if (value.id) {
+                            mutationLike.mutate({
+                              idLike: String(value.id),
+                              statusLike: value.is_liked,
+                            });
+                          }
+                        }}
+                        style={{ alignItems: 'center', marginLeft: 8 }}
+                      >
+                        {value.is_liked ? (
+                          <LoveActiveIcons width={18} height={18} />
+                        ) : (
+                          <LoveIcons width={18} height={18} color={'#434343'} />
+                        )}
+                        <Text>{value.likes_count}</Text>
+                      </TouchableOpacity>
                     </View>
-                    {/* Like icon */}
-                    <View style={{ alignItems: 'center', marginLeft: 8 }}>
-                      <LoveIcons width={18} height={18} color={'#434343'} />
-                      <Text>100</Text>
-                    </View>
+                    {/* BALASAN */}
+                    {idComentar === String(value.id) && (
+                      <View
+                        style={{
+                          paddingLeft: 50,
+                          borderLeftWidth: 1,
+                          borderColor: '#ccc',
+                        }}
+                      >
+                        {loadingChildern ? (
+                          // Skeleton 1 item dulu, bisa dikembangkan pakai library shimmer
+                          <View
+                            style={[{ flexDirection: 'row', marginTop: 12 }]}
+                          >
+                            <View
+                              style={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: 16,
+                                backgroundColor: '#ddd',
+                                marginRight: 10,
+                              }}
+                            />
+                            <View style={{ flex: 1 }}>
+                              <View
+                                style={{
+                                  width: '40%',
+                                  height: 12,
+                                  backgroundColor: '#ddd',
+                                  marginBottom: 6,
+                                }}
+                              />
+                              <View
+                                style={{
+                                  width: '100%',
+                                  height: 12,
+                                  backgroundColor: '#ddd',
+                                  marginBottom: 4,
+                                }}
+                              />
+                              <View
+                                style={{
+                                  width: '60%',
+                                  height: 10,
+                                  backgroundColor: '#eee',
+                                }}
+                              />
+                            </View>
+                          </View>
+                        ) : (
+                          dataComentarChildern.map(
+                            (reply: any, idx: number) => (
+                              <View
+                                key={idx}
+                                style={{ flexDirection: 'row', marginTop: 12 }}
+                              >
+                                <Image
+                                  source={require('../../../assets/images/profile-default.png')}
+                                  style={{
+                                    width: 32,
+                                    height: 32,
+                                    borderRadius: 16,
+                                    marginRight: 10,
+                                  }}
+                                />
+                                <View style={{ flex: 1 }}>
+                                  <Text style={{ fontWeight: '600' }}>
+                                    {reply.user.profile?.full_name}
+                                  </Text>
+                                  <Text style={{ marginTop: 4 }}>
+                                    {reply.content}
+                                  </Text>
+                                  <View
+                                    style={{
+                                      flexDirection: 'row',
+                                      marginTop: 4,
+                                    }}
+                                  >
+                                    <Text style={{ color: '#999' }}>
+                                      {formatWaktuSingkat(reply.created_at)}
+                                    </Text>
+                                    <TouchableOpacity
+                                      onPress={() => {
+                                        setIdComentarCildern(String(reply.id));
+                                      }}
+                                    >
+                                      <Text
+                                        style={{
+                                          marginLeft: 8,
+                                          fontWeight: 'bold',
+                                          color: '#169953',
+                                        }}
+                                      >
+                                        Reply
+                                      </Text>
+                                    </TouchableOpacity>
+                                  </View>
+                                </View>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    mutationLike.mutate({
+                                      idLike: String(reply.id),
+                                      statusLike: reply.is_liked,
+                                    });
+                                  }}
+                                  style={{
+                                    alignItems: 'center',
+                                    marginLeft: 8,
+                                  }}
+                                >
+                                  {reply.is_liked ? (
+                                    <LoveActiveIcons width={18} height={18} />
+                                  ) : (
+                                    <LoveIcons
+                                      width={18}
+                                      height={18}
+                                      color={'#434343'}
+                                    />
+                                  )}
+                                  <Text>{reply.likes_count}</Text>
+                                </TouchableOpacity>
+                              </View>
+                            )
+                          )
+                        )}
+                      </View>
+                    )}
                   </View>
                 ))
               ) : (
@@ -209,7 +453,7 @@ const ModalComentars: React.FC<ModalComentarsProps> = ({
                   }}
                 />
                 <TouchableOpacity
-                  onPress={() => setCommentInput('')}
+                  onPress={createdComment}
                   className="rounded-full bg-primary items-center justify-center"
                   style={{ width: 36, height: 36 }}
                 >
