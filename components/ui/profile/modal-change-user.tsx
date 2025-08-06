@@ -28,16 +28,18 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
   const handleSubmit = () => {
     if (!selectedRole) return;
 
-    // Navigasi khusus saat memilih "Vendor"
-    if (selectedRole === 'Vendor') {
-      router.push('/vendor/dashboard');
+    // Navigasi berdasarkan peran
+    switch (selectedRole) {
+      case 'Vendor':
+        router.replace('/vendor/home'); // Ganti push jika ingin bisa kembali
+        break;
+
+      case 'Consumen':
+        router.replace('/(tabs)/sosmed');
+        break;
     }
 
-    // Bisa juga handle lainnya kalau mau
-    if (onSubmit) {
-      onSubmit(selectedRole);
-    }
-
+    if (onSubmit) onSubmit(selectedRole);
     onClose();
   };
 
@@ -50,8 +52,8 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
           backgroundColor: 'rgba(0,0,0,0.4)',
         }}
       >
-        {/* Press outside to close */}
         <Pressable className="flex-1" onPress={onClose} />
+
         <View
           style={{
             backgroundColor: 'white',
@@ -68,7 +70,7 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
             </TouchableOpacity>
           </View>
 
-          {/* Roles */}
+          {/* Role List */}
           <ScrollView showsVerticalScrollIndicator={false}>
             {USER_ROLES.map(role => {
               const isSelected = selectedRole === role;
@@ -90,12 +92,15 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
             })}
           </ScrollView>
 
-          {/* Button pinned at bottom inside modal */}
+          {/* Submit Button */}
           <TouchableOpacity
             disabled={!selectedRole}
             onPress={handleSubmit}
-            className={`mt-5 rounded-xl py-3 border 
-    ${selectedRole ? 'bg-primary border-primary' : 'bg-[#E9E9E9] border-[#E9E9E9]'}`}
+            className={`mt-5 rounded-xl py-3 border ${
+              selectedRole
+                ? 'bg-primary border-primary'
+                : 'bg-[#E9E9E9] border-[#E9E9E9]'
+            }`}
           >
             <Text
               className={`text-center text-base font-semibold ${
