@@ -34,6 +34,8 @@ const InputSearchPrimary: React.FC<InputSearchProps> = ({
     const handler = setTimeout(() => {
       if (inputValue.length >= 3 && onChangeText) {
         onChangeText(inputValue);
+      } else if (inputValue.trim().length === 0) {
+        onChangeText?.(''); // kalau kosong, kirim kosong juga
       }
     }, 300);
 
