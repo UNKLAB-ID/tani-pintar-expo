@@ -6,7 +6,6 @@ import {
   Animated,
   StatusBar,
   Alert,
-  Image
 } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useIsFocused } from '@react-navigation/native';
@@ -61,25 +60,18 @@ const CameraScreen = () => {
       });
     },
     onSuccess: res => {
-      console.log("Respon Muttation ==============> ", res)
       setResulData(res.data);
       if (res.success) {
         router.push('/AI/result-ai');
       } else {
-        const errorMessage = res?.message || 'Gagal menganalisis gambar.';
-        console.log('❌ Error dari server:', errorMessage);
-        Alert.alert('Gagal', errorMessage);
+        Alert.alert('Gagal', res.data.error || 'Gagal menganalisis gambar.');
       }
     },
     onError: (error: any) => {
-      console.log(error)
       Alert.alert(
-        'Error',
         'Error',
         error.message || 'Terjadi kesalahan saat mengirim data.'
       );
-    },
-  });
     },
   });
 
@@ -109,43 +101,17 @@ const CameraScreen = () => {
       Alert.alert('Gagal', 'Tidak ada foto untuk dianalisis.');
       return;
     }
-  const handlerSuccess = async () => {
-    if (!photoUri?.uri) {
-      Alert.alert('Gagal', 'Tidak ada foto untuk dianalisis.');
-      return;
-    }
 
     try {
-
-      const manipulated = await ImageManipulator.manipulateAsync(
-        photoUri.uri,
-        [], // atau tambahkan resize: [{ resize: { width: 800 } }]
-        { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
-      );
-
-      // ✅ Cek file hasil manipulasi
-      const fileInfo = await FileSystem.getInfoAsync(manipulated.uri);
-      console.log('🔍 FileInfo:', fileInfo);
-
-      const mimeType = photoUri.uri.endsWith('.png')
-        ? 'image/png'
-        : 'image/jpeg';
       const formData = new FormData();
       formData.append('image', {
-        uri: manipulated.uri,
+        uri: photoUri.uri,
         name: 'photo.jpg',
         type: 'image/jpeg',
       } as any);
 
-      console.log('Foto yang dikirim:', {
-        uri: manipulated.uri,
-        name: 'photo.jpg',
-        type: mimeType,
-      });
-
       mutation.mutate(formData);
     } catch (error: any) {
-      console.log('error 3', error);
       Alert.alert(
         'Gagal',
         error.message || 'Terjadi kesalahan saat memproses foto.'
@@ -341,18 +307,6 @@ const CameraScreen = () => {
                   width: '80%',
                 }}
               >
-                {photoUri?.uri && (
-                  <Image
-                    source={{ uri: photoUri.uri }}
-                    style={{
-                      width: 200,
-                      height: 200,
-                      borderRadius: 10,
-                      marginBottom: 10,
-                      resizeMode: 'cover',
-                    }}
-                  />
-                )}
                 <IconsAiSuccess width={55.95} height={55.91} />
                 <Text
                   style={{

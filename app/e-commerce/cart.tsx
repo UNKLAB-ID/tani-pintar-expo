@@ -138,15 +138,15 @@ const CartScreen = () => {
     };
 
     return (
-
       <View className="bg-white px-3 ">
         {/* Toko */}
         <View className="flex-row items-center mb-2 mt-2">
           <TouchableOpacity onPress={() => toggleSelect(item.id)}>
             <View
               style={{ width: 24, height: 24 }}
-              className={` rounded border-2 mr-2 ${isSelected ? 'bg-primary border-primary' : 'border-gray-400'
-                } items-center justify-center`}
+              className={` rounded border-2 mr-2 ${
+                isSelected ? 'bg-primary border-primary' : 'border-gray-400'
+              } items-center justify-center`}
             >
               {isSelected && (
                 <Text className="text-white text-xs font-bold">✓</Text>

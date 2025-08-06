@@ -55,7 +55,7 @@ const ProfileSosialMedia = () => {
   const [textModalReportType, setTextModalReportType] = useState<string>('');
   const [textModalContenHeader, setModalContenHeader] = useState<string>('');
   const [dataModalReportConten, setDataModalReportConten] = useState<any[]>([]);
-  const [idUser, setIduser] = useState<string>("")
+  const [idUser, setIduser] = useState<string>('');
 
   const { profileImage, modalDeletePost, setModalDeletePost } =
     useMediaSosial();
@@ -86,12 +86,12 @@ const ProfileSosialMedia = () => {
 
   useEffect(() => {
     if (query === 'profile' && !id) {
-      console.log(profile?.user.id)
-      setIduser(String(profile?.user.id))
+      console.log(profile?.user.id);
+      setIduser(String(profile?.user.id));
       setDataProfile(profile);
     } else if (query === 'user' && id) {
-      console.log(profileById?.id)
-      setIduser(String(profileById?.user.id))
+      console.log(profileById?.id);
+      setIduser(String(profileById?.user.id));
       setDataProfile(profileById);
     }
   }, [profile, profileById]);
@@ -181,12 +181,12 @@ const ProfileSosialMedia = () => {
               source={
                 profileImage
                   ? {
-                    uri: profileImage.uri,
-                  }
+                      uri: profileImage.uri,
+                    }
                   : dataProfile?.profile_picture_url
                     ? {
-                      uri: dataProfile.profile_picture_url,
-                    }
+                        uri: dataProfile.profile_picture_url,
+                      }
                     : require('../../assets/images/profile-default.png')
               }
               style={{
@@ -354,6 +354,7 @@ const ProfileSosialMedia = () => {
                 newList[index] = updated[0];
                 setDataPosts(newList);
               }}
+              refresData={refetch}
               typeQuery={query === 'profile' ? 'profile' : 'user'}
             />
           ))}
@@ -384,12 +385,8 @@ const ProfileSosialMedia = () => {
 
       {modalDeletePost && (
         <ModalDeletePost
-          // modalDeletePost={modalDeletePost}
+          refrest={refetch}
           setModalDeletePost={setModalDeletePost}
-        // id={id}
-        // index={index}
-        // data={data}
-        // setData={setData}
         />
       )}
 

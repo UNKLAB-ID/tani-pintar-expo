@@ -192,6 +192,20 @@ const api = {
       return handleError(err as AxiosError);
     }
   },
+
+  patch: async <T = any>(
+    url: string,
+    data: any = {},
+    config: any = {}
+  ): Promise<ApiResponse<T>> => {
+    try {
+      const res = await API.patch<T>(url, data, config);
+      return handleResponse<T>(res);
+    } catch (err) {
+      return handleError(err as AxiosError);
+    }
+  },
+
   delete: async <T = any>(url: string): Promise<ApiResponse<T>> => {
     try {
       const res = await API.delete<T>(url);

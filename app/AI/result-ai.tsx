@@ -18,7 +18,7 @@ const ResultScreen = () => {
   const insets = useSafeAreaInsets();
   const { resuldata } = useAiStore();
 
-  console.log(resuldata.disease_name)
+  console.log(resuldata.disease_name);
 
   return (
     <SafeAreaView
@@ -53,7 +53,9 @@ const ResultScreen = () => {
           <Text
             style={{ fontSize: 18, fontWeight: '600', textAlign: 'center' }}
           >
-            {resuldata.disease_name ? resuldata.disease_name : "Tidak Terdeteksi"}
+            {resuldata.disease_name
+              ? resuldata.disease_name
+              : 'Tidak Terdeteksi'}
           </Text>
         </View>
         <View style={{ width: 25 }} />

@@ -19,12 +19,14 @@ interface CardSosialMediaProps {
   data: any[];
   setData: (data: any[]) => void;
   typeQuery?: string;
+  refresData: () => void;
 }
 
 const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
   data,
   setData,
   typeQuery,
+  refresData,
 }) => {
   const [containerWidth, setContainerWidth] = useState<number>(0);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -44,6 +46,7 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
     useState<boolean>(false);
   const [modalReportdetail, setModalReportDetail] = useState<boolean>(false);
   const [modalReportSuccess, setModalReportSuccess] = useState<boolean>(false);
+  const [statusSavePost, setStatusSavePost] = useState<boolean>(false);
   const [dataReportTypeContent, setDataReportTypeContent] = useState<any>();
   const [dataAgreeList, setDataAgreeList] = useState<any>();
   const [id, setId] = useState<string>('');
@@ -108,6 +111,8 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
               setModalComment={setModalComment}
               setModalShare={setModalShare}
               setModalPostMenu={setModalMenuPostProfile}
+              referest={refresData}
+              setStatusSavePost={setStatusSavePost}
             />
           )}
         </View>
@@ -116,11 +121,14 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
       {/* Modal */}
       {modalVisible && (
         <ModalSettingSriner
+          idSlug={id}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
           setModalBlock={setModalBlock}
           setModalHidenPost={() => hidePost(index, id, true)}
           setModalReportMenuSosialMedia={setModalReportMenuSosialMedia}
+          statusSavePost={statusSavePost}
+          refrest={refresData}
         />
       )}
 
@@ -144,6 +152,8 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
           setModalDeletePost={setModalDeletePost}
           typeQuery={typeQuery}
           idSlug={id}
+          refrest={refresData}
+          statusSavePost={statusSavePost}
         />
       )}
 

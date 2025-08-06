@@ -1,14 +1,16 @@
 import DeleteIcons from '@/assets/icons/global/delete-icons';
 import ShareGlobalIcons from '@/assets/icons/global/share-global-icons';
 import BoockmarkSave from '@/assets/icons/sosial-media/boockmark-save-icons';
-import CopyIcons from '@/assets/icons/sosial-media/copy-icons';
+import BoockmarkUnsave from '@/assets/icons/sosial-media/boockmark-unsave-icons';
 import CopyLinkIcons from '@/assets/icons/sosial-media/copy-link-icons';
 import EditBgImagesSosialMediaIcons from '@/assets/icons/sosial-media/edit-bg-images-profile-sosial-media-icons';
 import GarisHorizotal from '@/assets/icons/sosial-media/garis-horizontal-icons';
 import ReportIcons from '@/assets/icons/sosial-media/report-icons';
+import api from '@/utils/api/api';
+import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React from 'react';
-import { Modal, Share, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, Text, TouchableOpacity, View } from 'react-native';
 
 interface ModalPostMenuProfileProps {
   modalPostMenu: boolean;
@@ -16,7 +18,9 @@ interface ModalPostMenuProfileProps {
   setModalShare: (value: boolean) => void;
   setModalDeletePost: (value: boolean) => void;
   typeQuery?: string;
-  idSlug?: string
+  idSlug?: string;
+  statusSavePost: boolean;
+  refrest: () => void;
 }
 
 const ModalPostMenuProfile: React.FC<ModalPostMenuProfileProps> = ({
@@ -26,9 +30,37 @@ const ModalPostMenuProfile: React.FC<ModalPostMenuProfileProps> = ({
   setModalDeletePost,
   typeQuery,
   idSlug,
+  statusSavePost,
+  refrest,
 }) => {
-  console.log(idSlug);
+  const mutationSave = useMutation({
+    mutationFn: async () => {
+      try {
+        let res;
+        if (statusSavePost) {
+          res = await api.delete(`/social-media/posts/${idSlug}/unsave/`);
+        } else {
+          res = await api.post(`/social-media/posts/${idSlug}/save/`);
+        }
 
+        return res.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    onSuccess: res => {
+      console.log(res);
+      refrest();
+      setModalPostMenu(false);
+    },
+
+    onError: error => {
+      console.log(error);
+    },
+  });
+
+  console.log(statusSavePost);
   return (
     <Modal
       animationType="slide"
@@ -88,18 +120,22 @@ const ModalPostMenuProfile: React.FC<ModalPostMenuProfileProps> = ({
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  setModalPostMenu(false);
+                  mutationSave.mutate();
                 }}
                 className="flex-row items-center mb-4 border-b pb-4"
                 style={{ borderBottomColor: '#E9E9E9', borderBottomWidth: 1 }}
               >
                 <View className="flex-row items-center justify-center mr-3">
-                  <BoockmarkSave width={22} height={22} color="#525252" />
+                  {statusSavePost ? (
+                    <BoockmarkUnsave width={22} height={22} />
+                  ) : (
+                    <BoockmarkSave width={22} height={22} />
+                  )}
                 </View>
                 <Text
                   style={{ fontWeight: 400, fontSize: 14, color: '#525252' }}
                 >
-                  Saved
+                  {statusSavePost ? 'Unsaved' : 'Saved'}
                 </Text>
               </TouchableOpacity>
 
@@ -172,7 +208,7 @@ const ModalPostMenuProfile: React.FC<ModalPostMenuProfileProps> = ({
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  setModalPostMenu(false);
+                  mutationSave.mutate();
                 }}
                 className="flex-row items-center justify-between mb-4 border-b pb-4"
                 style={{ borderBottomColor: '#E9E9E9', borderBottomWidth: 1 }}
@@ -180,17 +216,20 @@ const ModalPostMenuProfile: React.FC<ModalPostMenuProfileProps> = ({
                 <Text
                   style={{ fontWeight: 400, fontSize: 14, color: '#525252' }}
                 >
-                  Save post
+                  {statusSavePost ? 'Unsave post' : ' Save post'}
                 </Text>
                 <View className="flex-row items-center justify-center mr-3">
-                  <BoockmarkSave width={22} height={22} color="#525252" />
+                  {statusSavePost ? (
+                    <BoockmarkUnsave width={22} height={22} />
+                  ) : (
+                    <BoockmarkSave width={22} height={22} />
+                  )}
                 </View>
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={() => {
                   setModalPostMenu(false);
-                  // router.push('/sosial-media/create-post-media?typePost=update');
                 }}
                 className="flex-row items-center justify-between mb-4 border-b pb-4"
                 style={{ borderBottomColor: '#E9E9E9', borderBottomWidth: 1 }}

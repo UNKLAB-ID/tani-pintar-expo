@@ -1,5 +1,5 @@
 import SearchIconPrimary from '@/assets/icons/global/search-icons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TextInput, TextInputProps } from 'react-native';
 import { Colors } from '@/constants/Colors';
 
@@ -8,9 +8,6 @@ interface InputSearchProps
   colorPlaceholder?: string;
   className?: string;
   error?: boolean;
-  // onFocus?: () => void;
-  // onBlur?: () => void;
-  // onPress?: () => void;
   rounded?: number;
   borderColor?: string;
   coloricon?: string;
@@ -24,9 +21,6 @@ const InputSearchPrimary: React.FC<InputSearchProps> = ({
   placeholder = 'Search...',
   className = '',
   error = false,
-  //   onFocus,
-  //   onBlur,
-  //   onPress,
   colorPlaceholder = Colors.color.border,
   rounded = 12,
   borderColor = Colors.color.border,
@@ -34,6 +28,18 @@ const InputSearchPrimary: React.FC<InputSearchProps> = ({
   iconPosition = 'left',
   disable = true,
 }) => {
+  const [inputValue, setInputValue] = useState<string>(value ?? '');
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (inputValue.length >= 3 && onChangeText) {
+        onChangeText(inputValue);
+      }
+    }, 300);
+
+    return () => clearTimeout(handler); // cleanup debounce
+  }, [inputValue]);
+
   return (
     <View
       className={`flex-row items-center border ${className}`}
@@ -50,7 +56,7 @@ const InputSearchPrimary: React.FC<InputSearchProps> = ({
         placeholder={placeholder}
         placeholderTextColor={colorPlaceholder}
         value={value}
-        onChangeText={onChangeText}
+        onChangeText={setInputValue}
         editable={disable}
         textAlignVertical="center"
       />
