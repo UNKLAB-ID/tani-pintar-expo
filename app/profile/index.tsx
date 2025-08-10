@@ -103,21 +103,32 @@ const ProfileScreen = () => {
               Transactions
             </Text>
             <View className="flex-row justify-between px-10">
-              <TouchableOpacity className="items-center  min-h-[64px]">
+              <TouchableOpacity
+                onPress={() => router.push('/profile/order/order?tab=Pay')}
+                className="items-center  min-h-[64px]"
+              >
                 <WalletIcon width={24} height={24} />
                 <Text className="text-[14px] font-medium mt-2 text-center text-[#525252]">
                   Pay
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity className="items-center min-h-[64px]">
+              <TouchableOpacity
+                onPress={() =>
+                  router.push('/profile/order/order?tab=Processing')
+                }
+                className="items-center min-h-[64px]"
+              >
                 <DeliveryBoxIcon width={24} height={24} />
                 <Text className="text-[14px] font-medium mt-2 text-center text-[#525252]">
                   Process
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity className="items-center  min-h-[64px]">
-                <ExpressDeliveryIcon width={32} height={32} />
 
+              <TouchableOpacity
+                onPress={() => router.push('/profile/order/order?tab=Shipped')}
+                className="items-center  min-h-[64px]"
+              >
+                <ExpressDeliveryIcon width={32} height={32} />
                 <Text className="text-[14px] font-medium text-center text-[#525252]">
                   Sent
                 </Text>
@@ -154,7 +165,10 @@ const ProfileScreen = () => {
                 <Text className="text-xs font-semibold">Voucher</Text>
                 <Text className="text-xs mt-1">10+Voucher</Text>
               </TouchableOpacity>
-              <TouchableOpacity className="items-center">
+              <TouchableOpacity
+                onPress={() => router.push('/payment/payment')}
+                className="items-center"
+              >
                 <WalletBalanceIcon width={24} height={24} />
                 <Text className="text-xs text-[#3A9B7A] font-semibold mt-1">
                   Activate Now
@@ -294,7 +308,6 @@ const ProfileScreen = () => {
           <ChangeUserModal
             visible={isModalVisible}
             onClose={handleCloseModal}
-            onSubmit={handleRoleSubmit}
           />
         </SafeAreaView>
       </ScrollView>

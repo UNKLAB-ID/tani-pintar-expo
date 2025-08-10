@@ -10,36 +10,42 @@ import {
 import { X } from 'lucide-react-native';
 import { router } from 'expo-router';
 
+import { useAuthStore } from '@/store/auth/role';
+
 interface ChangeUserModalProps {
   visible: boolean;
   onClose: () => void;
-  onSubmit?: (role: string) => void;
 }
 
-const USER_ROLES = ['Distributor', 'Vendor', 'Consumen', 'Suplier', 'Agent'];
+const USER_ROLES = ['tani', 'vendor'];
 
 const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
   visible,
   onClose,
-  onSubmit,
 }) => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+
+  const setRole = useAuthStore(state => state.setRole);
 
   const handleSubmit = () => {
     if (!selectedRole) return;
 
-    // Navigasi berdasarkan peran
-    switch (selectedRole) {
-      case 'Vendor':
-        router.replace('/vendor/home'); // Ganti push jika ingin bisa kembali
-        break;
+    console.log('Simpan role:', selectedRole);
 
-      case 'Consumen':
-        router.replace('/(tabs)/sosmed');
+    setRole(selectedRole as 'tani' | 'vendor');
+
+    switch (selectedRole) {
+      case 'vendor':
+        router.replace('/(tabs)/ai');
+        break;
+      case 'tani':
+        router.replace('/splash');
+        break;
+      default:
+        router.replace('/');
         break;
     }
 
-    if (onSubmit) onSubmit(selectedRole);
     onClose();
   };
 
@@ -52,7 +58,7 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
           backgroundColor: 'rgba(0,0,0,0.4)',
         }}
       >
-        <Pressable className="flex-1" onPress={onClose} />
+        <Pressable style={{ flex: 1 }} onPress={onClose} />
 
         <View
           style={{
@@ -60,11 +66,19 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
             padding: 20,
+            maxHeight: '50%',
           }}
         >
           {/* Header */}
-          <View className="flex-row justify-between items-center mb-5">
-            <Text className="text-lg font-semibold">Change User</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 20,
+            }}
+          >
+            <Text style={{ fontSize: 18, fontWeight: '600' }}>Try As Role</Text>
             <TouchableOpacity onPress={onClose}>
               <X size={22} color="#000" />
             </TouchableOpacity>
@@ -78,14 +92,20 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
                 <TouchableOpacity
                   key={role}
                   onPress={() => setSelectedRole(role)}
-                  className={`border rounded-xl px-4 py-3 mb-3 ${
-                    isSelected
-                      ? 'border-[#169953] bg-[#D7FCE8]'
-                      : 'border-gray-300 bg-white'
-                  }`}
+                  style={{
+                    borderWidth: 1,
+                    borderRadius: 16,
+                    paddingVertical: 12,
+                    paddingHorizontal: 16,
+                    marginBottom: 12,
+                    borderColor: isSelected ? '#169953' : '#ccc',
+                    backgroundColor: isSelected ? '#D7FCE8' : '#fff',
+                  }}
                 >
-                  <Text className="text-black font-medium text-base">
-                    {role}
+                  <Text
+                    style={{ color: '#000', fontWeight: '500', fontSize: 16 }}
+                  >
+                    {role.charAt(0).toUpperCase() + role.slice(1)}
                   </Text>
                 </TouchableOpacity>
               );
@@ -96,18 +116,24 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
           <TouchableOpacity
             disabled={!selectedRole}
             onPress={handleSubmit}
-            className={`mt-5 rounded-xl py-3 border ${
-              selectedRole
-                ? 'bg-primary border-primary'
-                : 'bg-[#E9E9E9] border-[#E9E9E9]'
-            }`}
+            style={{
+              marginTop: 20,
+              borderRadius: 16,
+              paddingVertical: 14,
+              borderWidth: 1,
+              backgroundColor: selectedRole ? '#169953' : '#E9E9E9',
+              borderColor: selectedRole ? '#169953' : '#E9E9E9',
+            }}
           >
             <Text
-              className={`text-center text-base font-semibold ${
-                selectedRole ? 'text-white' : 'text-[#B0B0B0]'
-              }`}
+              style={{
+                textAlign: 'center',
+                fontSize: 16,
+                fontWeight: '600',
+                color: selectedRole ? '#fff' : '#B0B0B0',
+              }}
             >
-              Carry On
+              Try Now
             </Text>
           </TouchableOpacity>
         </View>
