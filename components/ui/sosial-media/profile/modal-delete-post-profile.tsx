@@ -1,19 +1,46 @@
 import { router } from 'expo-router';
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import CustomButtonSecundary from '../../component-globals/button-secundary';
 import CustomButton from '../../component-globals/button-primary';
+import { useMediaSosial } from '@/store/sosial-media/sosial-media';
+import { useMutation } from '@tanstack/react-query';
+import api from '@/utils/api/api';
 
 interface ModalDeletePostProps {
   setModalDeletePost: (visible: boolean) => void;
+  refrest: () => void;
 }
 
 const ModalDeletePost: React.FC<ModalDeletePostProps> = ({
   setModalDeletePost,
+  refrest,
 }) => {
   const handleDiscard = () => {
     setModalDeletePost(false);
   };
+  const { idSlugStore } = useMediaSosial();
+
+  const mutationDelete = useMutation({
+    mutationFn: async () => {
+      try {
+        const res = await api.delete(`/social-media/posts/${idSlugStore}/`);
+        return res.data;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+    onSuccess: res => {
+      console.log(res);
+      refrest();
+      setModalDeletePost(false);
+    },
+
+    onError: error => {
+      console.log(error);
+    },
+  });
 
   return (
     <View
@@ -71,7 +98,7 @@ const ModalDeletePost: React.FC<ModalDeletePostProps> = ({
             <CustomButton
               title="Yes, delete"
               className="py-[10px] px-[20px]"
-              onPress={() => setModalDeletePost(false)}
+              onPress={() => mutationDelete.mutate()}
             />
           </View>
         </View>

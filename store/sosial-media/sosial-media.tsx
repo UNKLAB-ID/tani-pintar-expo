@@ -7,6 +7,9 @@ interface MediaSosialStore {
 
   modalDeletePost: boolean;
   setModalDeletePost: (visible: boolean) => void;
+
+  idSlugStore: string;
+  setIdSlugStore: (value: string) => void;
 }
 
 export const useMediaSosial = create<MediaSosialStore>(set => ({
@@ -16,4 +19,7 @@ export const useMediaSosial = create<MediaSosialStore>(set => ({
 
   modalDeletePost: false,
   setModalDeletePost: visible => set({ modalDeletePost: visible }),
+
+  idSlugStore: '',
+  setIdSlugStore: value => set({ idSlugStore: value }),
 }));
