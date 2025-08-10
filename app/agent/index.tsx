@@ -11,13 +11,13 @@ const AgentScreenIndex = () => {
   const [search, setSearch] = useState<string>('');
   const [toggleButton, setToggleButton] = useState<boolean>(true);
   const insets = useSafeAreaInsets();
-  const { type_akses } = useLocalSearchParams()
+  const { type_akses } = useLocalSearchParams();
 
   useEffect(() => {
-    if (type_akses === "history") {
-      setToggleButton(false)
+    if (type_akses === 'history') {
+      setToggleButton(false);
     }
-  }, [type_akses])
+  }, [type_akses]);
 
   const dataDummy = [
     {

@@ -27,7 +27,7 @@ const ButtonKalenderAgent: React.FC<ButtonKalenderAgentProps> = ({
   forms,
   nameForms,
   setNameForm,
-  isDisable
+  isDisable,
 }) => {
   const error = forms.formState.errors[nameForms]?.message;
   const formattedValue = formatDateID(value);

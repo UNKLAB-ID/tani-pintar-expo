@@ -31,7 +31,7 @@ type FormValues = {
 
 const KonfirmasiPenawaranTani = () => {
   const [toggleKalender, setToggleKalender] = useState<boolean>(false);
-  const [toggleSuccess, setToggleSuccess] = useState<boolean>(false)
+  const [toggleSuccess, setToggleSuccess] = useState<boolean>(false);
   const [nameForm, setNameForm] = useState<string>('');
   const { id } = useLocalSearchParams();
   const insets = useSafeAreaInsets();
@@ -189,14 +189,12 @@ const KonfirmasiPenawaranTani = () => {
         />
       )}
 
-      {
-        toggleSuccess && (
-          <ModalSuccessTani
-            setModalSuccess={setToggleSuccess}
-            modalSuccess={toggleSuccess}
-          />
-        )
-      }
+      {toggleSuccess && (
+        <ModalSuccessTani
+          setModalSuccess={setToggleSuccess}
+          modalSuccess={toggleSuccess}
+        />
+      )}
     </SafeAreaView>
   );
 };
