@@ -18,6 +18,8 @@ interface ModalPostMenuProfileProps {
   setModalShare: (value: boolean) => void;
   setModalDeletePost: (value: boolean) => void;
   typeQuery?: string;
+  idParamsProfile?: string;
+  idProfile?: string;
   idSlug?: string;
   statusSavePost: boolean;
   refrest: () => void;
@@ -31,6 +33,8 @@ const ModalPostMenuProfile: React.FC<ModalPostMenuProfileProps> = ({
   typeQuery,
   idSlug,
   statusSavePost,
+  idParamsProfile,
+  idProfile,
   refrest,
 }) => {
   const mutationSave = useMutation({
@@ -60,7 +64,6 @@ const ModalPostMenuProfile: React.FC<ModalPostMenuProfileProps> = ({
     },
   });
 
-  console.log(statusSavePost);
   return (
     <Modal
       animationType="slide"
@@ -90,14 +93,15 @@ const ModalPostMenuProfile: React.FC<ModalPostMenuProfileProps> = ({
             borderTopRightRadius: 20,
             paddingHorizontal: 16,
             paddingVertical: 20,
-            height: typeQuery === 'user' ? 250 : 289,
+            height:
+              typeQuery === 'user' && idParamsProfile !== idProfile ? 250 : 289,
           }}
         >
           {/* Garis horizontal */}
           <View style={{ alignItems: 'center', marginBottom: 16 }}>
             <GarisHorizotal width={86} height={6} />
           </View>
-          {typeQuery === 'profile' ? (
+          {typeQuery === 'profile' || idParamsProfile === idProfile ? (
             <View>
               <TouchableOpacity
                 onPress={() => {

@@ -21,6 +21,8 @@ interface ModalUserMenuProfileProps {
   setModalCopyLink: (value: boolean) => void;
   setModalAboutThisProfile: (value: boolean) => void;
   typeQuery?: string;
+  idParams: string;
+  idProfile: string;
 }
 
 const ModalUserMenuProfile: React.FC<ModalUserMenuProfileProps> = ({
@@ -32,6 +34,8 @@ const ModalUserMenuProfile: React.FC<ModalUserMenuProfileProps> = ({
   setModalCopyLink,
   setModalAboutThisProfile,
   typeQuery,
+  idParams,
+  idProfile,
 }) => {
   return (
     <Modal
@@ -62,7 +66,8 @@ const ModalUserMenuProfile: React.FC<ModalUserMenuProfileProps> = ({
             borderTopRightRadius: 20,
             paddingHorizontal: 16,
             paddingVertical: 20,
-            height: typeQuery === 'profile' ? 170 : 390, // Adjust height based on typeQuery
+            height:
+              typeQuery === 'profile' || idParams === idProfile ? 170 : 390, // Adjust height based on typeQuery
           }}
         >
           {/* Garis horizontal */}
@@ -70,7 +75,7 @@ const ModalUserMenuProfile: React.FC<ModalUserMenuProfileProps> = ({
             <GarisHorizotal width={86} height={6} />
           </View>
 
-          {typeQuery === 'profile' ? (
+          {typeQuery === 'profile' || idParams === idProfile ? (
             <View>
               <TouchableOpacity
                 onPress={() => {

@@ -15,6 +15,7 @@ interface CustomButtonProps {
   disabled?: boolean;
   rounded?: number;
   fontSize?: number;
+  color?: string;
 }
 
 const CustomButtonSecundary: React.FC<CustomButtonProps> = ({
@@ -25,6 +26,7 @@ const CustomButtonSecundary: React.FC<CustomButtonProps> = ({
   disabled = false,
   rounded = 12,
   fontSize = 14,
+  color = '#169953',
 }) => {
   const borderColor = disabled ? Colors.color.border : '#fff';
 
@@ -36,7 +38,7 @@ const CustomButtonSecundary: React.FC<CustomButtonProps> = ({
         {
           backgroundColor: borderColor,
           borderWidth: 1,
-          borderColor: '#169953',
+          borderColor: color,
           borderRadius: rounded,
         },
       ]}
@@ -44,8 +46,8 @@ const CustomButtonSecundary: React.FC<CustomButtonProps> = ({
       disabled={disabled}
     >
       <Text
-        className={`text-primary font-bold ${textClassName}`}
-        style={{ fontSize: fontSize }}
+        className={`font-bold ${textClassName}`}
+        style={{ fontSize: fontSize, color: color }}
       >
         {title}
       </Text>
