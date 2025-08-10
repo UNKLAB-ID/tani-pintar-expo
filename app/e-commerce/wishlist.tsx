@@ -63,7 +63,10 @@ const WishlistScreen = () => {
         </View>
 
         {/* Main content */}
-        <ScrollView>
+        <ScrollView
+          className=" bg-white"
+          contentContainerStyle={{ paddingBottom: 100 }}
+        >
           {datadummy.length === 0 ? (
             <View className="flex-1 justify-center items-center mt-20">
               <Image

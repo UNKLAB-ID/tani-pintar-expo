@@ -64,7 +64,7 @@ const RecomendationCard: React.FC<RecomendationCardProps> = ({
     router.push('/e-commerce');
   };
   return (
-    <SafeAreaView edges={['bottom']} className="flex-1">
+    <SafeAreaView edges={['bottom']}>
       <View
         className="bg-white pt-4 pb-4"
         style={{ borderTopLeftRadius: 12, borderTopRightRadius: 12 }}

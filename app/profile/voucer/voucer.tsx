@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 import { Tag, Truck } from 'lucide-react-native';
 import ChevronRight from '@/assets/icons/e-commerce/chevronright-icons';
+import ModalVoucher from '@/components/ui/order/modal-voucher';
 
 // VoucherCard Component
 const VoucherCard = ({
@@ -83,6 +84,23 @@ const VoucherScreen = () => {
   interface Voucher {
     id: number;
     type: VoucherType;
+    code: string;
+    title: string;
+    desc: string;
+    minTransaction: number;
+    amount: string;
+    daysLeft: number;
+  }
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [modalStatus, setModalStatus] = React.useState<'success' | 'error'>(
+    'error'
+  );
+  const [promoCode, setPromoCode] = React.useState('');
+
+  interface Voucher {
+    id: number;
+    code: string;
+    type: 'discount' | 'shipping';
     title: string;
     desc: string;
     minTransaction: number;
@@ -93,6 +111,7 @@ const VoucherScreen = () => {
   const vouchers: Voucher[] = [
     {
       id: 1,
+      code: 'PROMO10',
       type: 'discount',
       title: 'Discount 10%',
       desc: 'Get 10% discount max. discount Rp20.000',
@@ -102,6 +121,7 @@ const VoucherScreen = () => {
     },
     {
       id: 2,
+      code: 'ONGKIR10K',
       type: 'shipping',
       title: 'Free Shipping',
       desc: 'Get free shipping with a max discount of Rp10,000',
@@ -111,15 +131,17 @@ const VoucherScreen = () => {
     },
     {
       id: 3,
+      code: 'PROMO15',
       type: 'discount',
       title: 'Discount 15%',
-      desc: 'Get 10% discount max. discount Rp25.000',
+      desc: 'Get 15% discount max. discount Rp25.000',
       minTransaction: 70000,
       amount: '15%',
       daysLeft: 5,
     },
     {
       id: 4,
+      code: 'ONGKIRMERDEKA',
       type: 'shipping',
       title: 'Free Shipping',
       desc: 'Get free shipping with a max discount of Rp10,000',
@@ -149,9 +171,27 @@ const VoucherScreen = () => {
             placeholder="Input promo code"
             placeholderTextColor="#BCBCBC"
             className="text-base text-black flex-1"
+            value={promoCode}
+            onChangeText={setPromoCode}
           />
         </View>
-        <TouchableOpacity className="bg-primary px-4 py-[10px] rounded-xl">
+        <TouchableOpacity
+          onPress={() => {
+            const found = vouchers.find(
+              v => v.code.toLowerCase() === promoCode.trim().toLowerCase()
+            );
+
+            if (found) {
+              setModalStatus('success');
+              // bisa simpan voucher terpakai ke global state kalau perlu
+            } else {
+              setModalStatus('error');
+            }
+
+            setModalVisible(true);
+          }}
+          className="bg-primary px-4 py-[10px] rounded-xl"
+        >
           <Text className="text-white font-semibold text-sm">Check Code</Text>
         </TouchableOpacity>
       </View>
@@ -167,6 +207,15 @@ const VoucherScreen = () => {
           <Text className="text-primary font-semibold">Show More</Text>
         </TouchableOpacity>
       </ScrollView>
+      <ModalVoucher
+        visible={modalVisible}
+        status={modalStatus}
+        onClose={() => setModalVisible(false)}
+        onUseVoucher={() => {
+          setModalVisible(false);
+          // Simpan promo code valid di sini
+        }}
+      />
     </SafeAreaView>
   );
 };
