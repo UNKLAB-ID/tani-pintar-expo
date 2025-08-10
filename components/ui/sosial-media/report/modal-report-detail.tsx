@@ -23,7 +23,6 @@ const ModalReportDetail: React.FC<ModalReportDetailProps> = ({
   setReportDetailType,
   reportDetailTypeContent,
 }) => {
-  console.log(reportDetailTypeContent);
   return (
     <Modal
       visible={modalReportDetail}

@@ -14,40 +14,50 @@ import api from '@/utils/api/api';
 import LoveActiveIcons from '@/assets/icons/global/love-active-icons';
 import { useMediaSosial } from '@/store/sosial-media/sosial-media';
 
-interface UserProfile {
+interface PostItem {
+  slug: string;
+  content: string;
+  privacy: string;
+  likes_count: number;
+  comments_count: number;
+  is_liked: boolean;
+  is_saved: boolean;
   created_at: string;
-  email: string;
-  full_name?: string;
-  id: number;
-  id_card_validation_status: string;
-  phone_number: string;
-  profile_type: string;
   updated_at: string;
-}
-
-interface User {
-  date_joined: string;
-  id: number;
-  profile: UserProfile;
-  username: string;
+  images: ImageItem[];
+  user: User;
 }
 
 interface ImageItem {
+  id: number;
   image: string;
+  created_at: string;
 }
 
-interface PostItem {
-  comments_count: number;
-  content: string;
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  date_joined: string;
+  profile: UserProfile;
+}
+
+interface UserProfile {
+  id: number;
+  full_name: string;
+  about: string;
+  headline: string;
+  farmer_community: string;
+  country: number;
+  city: number;
+  email: string;
+  phone_number: string;
+  profile_type: string;
+  id_card_validation_status: string;
+  profile_picture_url: string;
+  thumbnail_profile_picture_url: string;
+  cover_picture_url: string;
   created_at: string;
-  images: ImageItem[];
-  likes_count: number;
-  is_liked: boolean;
-  is_saved: boolean;
-  shared_count: number;
-  slug: string;
-  updated_at: string;
-  user: User;
 }
 
 interface RenderPostCardProps {
@@ -135,7 +145,13 @@ const RenderPostCard: React.FC<RenderPostCardProps> = ({
             disabled={query === 'user' || query === 'profile'}
           >
             <Image
-              source={require('../../../assets/images/profile-default.png')}
+              source={
+                item.user?.profile?.profile_picture_url
+                  ? {
+                      uri: item.user?.profile?.profile_picture_url,
+                    }
+                  : require('../../../assets/images/profile-default.png')
+              }
               className="w-[40px] h-[40px] rounded-full"
               style={{ marginLeft: -6 }}
             />

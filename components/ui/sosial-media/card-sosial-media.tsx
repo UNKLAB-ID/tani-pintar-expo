@@ -19,6 +19,8 @@ interface CardSosialMediaProps {
   data: any[];
   setData: (data: any[]) => void;
   typeQuery?: string;
+  idParamsProfile?: string;
+  idProfile?: string;
   refresData: () => void;
 }
 
@@ -26,6 +28,8 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
   data,
   setData,
   typeQuery,
+  idParamsProfile,
+  idProfile,
   refresData,
 }) => {
   const [containerWidth, setContainerWidth] = useState<number>(0);
@@ -151,6 +155,8 @@ const CardSosialMedia: React.FC<CardSosialMediaProps> = ({
           setModalShare={() => setModalShare(true)}
           setModalDeletePost={setModalDeletePost}
           typeQuery={typeQuery}
+          idParamsProfile={idParamsProfile}
+          idProfile={idProfile}
           idSlug={id}
           refrest={refresData}
           statusSavePost={statusSavePost}

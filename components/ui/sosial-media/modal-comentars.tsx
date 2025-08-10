@@ -215,7 +215,13 @@ const ModalComentars: React.FC<ModalComentarsProps> = ({
                     <View style={{ flexDirection: 'row', marginBottom: 16 }}>
                       {/* Avatar dan isi komentar */}
                       <Image
-                        source={require('../../../assets/images/profile-default.png')}
+                        source={
+                          value?.user?.profile?.profile_picture_url
+                            ? {
+                                uri: value?.user?.profile?.profile_picture_url,
+                              }
+                            : require('../../../assets/images/profile-default.png')
+                        }
                         style={{
                           width: 40,
                           height: 40,

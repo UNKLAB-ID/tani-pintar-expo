@@ -1,10 +1,15 @@
 import * as React from 'react';
 import Svg, { SvgProps, Path } from 'react-native-svg';
 
-const Location2Icons = ({ width = 16, height = 16, ...props }: SvgProps) => (
+const Location2Icons = ({
+  width = 16,
+  height = 16,
+  color = '#6F6F6F',
+  ...props
+}: SvgProps) => (
   <Svg fill="none" width={width} height={height} viewBox="0 0 20 20" {...props}>
     <Path
-      stroke="#6F6F6F"
+      stroke={color}
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={1.5}
@@ -12,7 +17,7 @@ const Location2Icons = ({ width = 16, height = 16, ...props }: SvgProps) => (
       clipRule="evenodd"
     />
     <Path
-      stroke="#6F6F6F"
+      stroke={color}
       strokeLinecap="round"
       strokeWidth={1.5}
       d="M10 17.708s-6.064-3.95-6.216-8.877C3.676 5.37 6.566 2.29 10 2.29c3.433 0 6.322 3.08 6.216 6.54C16.063 13.86 10 17.708 10 17.708Z"

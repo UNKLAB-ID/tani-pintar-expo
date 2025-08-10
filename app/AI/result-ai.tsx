@@ -18,8 +18,6 @@ const ResultScreen = () => {
   const insets = useSafeAreaInsets();
   const { resuldata } = useAiStore();
 
-  console.log(resuldata.disease_name);
-
   return (
     <SafeAreaView
       style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom }}

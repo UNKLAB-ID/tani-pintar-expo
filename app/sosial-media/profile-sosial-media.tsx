@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useProfile } from '@/hooks/useProfile';
 import { useMediaSosial } from '@/store/sosial-media/sosial-media';
 import api from '@/utils/api/api';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
@@ -67,6 +67,8 @@ const ProfileSosialMedia = () => {
     return response.data;
   };
 
+  console.log(id);
+
   const {
     data: profileById,
     isLoading: loadingById,
@@ -86,11 +88,9 @@ const ProfileSosialMedia = () => {
 
   useEffect(() => {
     if (query === 'profile' && !id) {
-      console.log(profile?.user.id);
       setIduser(String(profile?.user.id));
       setDataProfile(profile);
     } else if (query === 'user' && id) {
-      console.log(profileById?.id);
       setIduser(String(profileById?.user.id));
       setDataProfile(profileById);
     }
@@ -122,6 +122,12 @@ const ProfileSosialMedia = () => {
       refetch();
     }
   }, [idUser]);
+
+  // const mutationFollowers = useMutation({
+  //   mutationFn: async (payload: { user_id: string }) => {
+  //     return api.post(`/accounts/users/${payload.user_id}/follow/`)
+  //   }
+  // })
 
   return (
     <SafeAreaView
@@ -175,7 +181,7 @@ const ProfileSosialMedia = () => {
               zIndex: 10,
             }}
             onPress={() => router.push('/sosial-media/picture-profile')}
-            disabled={query !== 'profile'}
+            disabled={query !== 'profile' && id !== String(profile?.id)}
           >
             <Image
               source={
@@ -196,7 +202,7 @@ const ProfileSosialMedia = () => {
               }}
             />
           </TouchableOpacity>
-          {query === 'profile' && (
+          {(query === 'profile' || id === String(profile?.id)) && (
             <TouchableOpacity
               className="bg-white rounded-full flex-row items-center justify-center"
               style={{
@@ -232,13 +238,29 @@ const ProfileSosialMedia = () => {
             {dataProfile?.full_name}
           </Text>
           <View className="flex-row justify-center items-center my-2">
-            <Text className="text-primary font-semibold mr-2">
-              {dataProfile?.followers_count} followers
-            </Text>
+            <TouchableOpacity
+              onPress={() =>
+                router.push(
+                  `/sosial-media/follow?type_follow=Followers&user_id=${dataProfile?.user.id}`
+                )
+              }
+            >
+              <Text className="text-primary font-semibold mr-2">
+                {dataProfile?.followers_count} followers
+              </Text>
+            </TouchableOpacity>
             <PointIcons width={6} height={6} />
-            <Text className="text-primary font-semibold ml-2">
-              {dataProfile?.following_count} following
-            </Text>
+            <TouchableOpacity
+              onPress={() =>
+                router.push(
+                  `/sosial-media/follow?type_follow=Following&user_id=${dataProfile?.user.id}`
+                )
+              }
+            >
+              <Text className="text-primary font-semibold ml-2">
+                {dataProfile?.following_count} following
+              </Text>
+            </TouchableOpacity>
           </View>
           <Text className="text-center">
             Surabaya - Jakarta✨ | Petani Indonesia
@@ -253,7 +275,7 @@ const ProfileSosialMedia = () => {
 
         {/* Button dan About */}
         <View className="px-4 py-4 flex-row justify-between items-center bg-white">
-          {query === 'profile' ? (
+          {query === 'profile' || id === String(profile?.id) ? (
             <View style={{ width: 310 }}>
               <CustomButton
                 title="Edit profile"
@@ -304,7 +326,7 @@ const ProfileSosialMedia = () => {
             >
               About
             </Text>
-            {query === 'profile' && (
+            {(query === 'profile' || id === String(profile?.id)) && (
               <TouchableOpacity
                 className="flex-row items-center justify-center"
                 onPress={() => router.push('/sosial-media/edit-about')}
@@ -324,7 +346,7 @@ const ProfileSosialMedia = () => {
           </Text>
         </View>
 
-        {query === 'profile' && (
+        {(query === 'profile' || id === String(profile?.id)) && (
           <View
             className="flex-row justify-between items-center bg-white px-4 pt-3"
             style={{ marginBottom: -3 }}
@@ -356,6 +378,8 @@ const ProfileSosialMedia = () => {
               }}
               refresData={refetch}
               typeQuery={query === 'profile' ? 'profile' : 'user'}
+              idParamsProfile={String(id)}
+              idProfile={String(profile?.id)}
             />
           ))}
         </View>
@@ -372,6 +396,8 @@ const ProfileSosialMedia = () => {
           setModalShare={setModalShare}
           setModalCopyLink={setModalCopyLink}
           typeQuery={String(query)}
+          idParams={String(id)}
+          idProfile={String(profile?.id)}
         />
       )}
 
