@@ -8,6 +8,8 @@ jobs:
   build-apk:
     name: Build APK
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     
     steps:
       - name: Checkout repository
