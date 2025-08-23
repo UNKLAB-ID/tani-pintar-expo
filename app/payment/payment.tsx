@@ -3,7 +3,6 @@ import NotificationIcons from '@/assets/icons/global/notification-icons';
 import WalletIcons from '@/assets/icons/global/wallet-icons';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import ModalCashback from '@/components/ui/payment/modal-cashback';
@@ -128,20 +127,22 @@ const TaniPay = () => {
         </TouchableOpacity>
       </View>
       {/* Main Menu Overlapping */}
-      <View style={{ top: 185 }} className="absolute w-full px-4  z-10">
+      <View style={{ top: 150 }} className="absolute w-full px-4  z-10">
         <View className="flex-row justify-around rounded-xl bg-white p-4 shadow-md">
           <TouchableOpacity
             onPress={() => router.push('/payment/topup')}
             className="items-center"
           >
             <TopUpMenuIcon width={32} height={32} />
-
             <Text className="mt-1 text-xs">Topup</Text>
           </TouchableOpacity>
-          <View className="items-center">
+          <TouchableOpacity
+            onPress={() => router.push('/payment/send-money')}
+            className="items-center"
+          >
             <SendMoneyIcon width={32} height={32} />
             <Text className="mt-1 text-xs">Send Money</Text>
-          </View>
+          </TouchableOpacity>
           <View className="items-center">
             <WithDrawIcon width={32} height={32} />
             <Text className="mt-1 text-xs">Withdraw</Text>

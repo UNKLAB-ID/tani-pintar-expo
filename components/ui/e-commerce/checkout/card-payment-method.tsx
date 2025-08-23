@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  ImageSourcePropType,
+} from 'react-native';
 import { Check } from 'lucide-react-native';
 import ChevronTopIcon from '@/assets/icons/e-commerce/chevron-top';
 import { useEcommerceStore } from '@/store/e-commerce/ecommerce';
@@ -7,7 +14,7 @@ import { useEcommerceStore } from '@/store/e-commerce/ecommerce';
 interface Option {
   id: number;
   label: string;
-  logo: any;
+  logo: ImageSourcePropType;
   description?: string;
 }
 

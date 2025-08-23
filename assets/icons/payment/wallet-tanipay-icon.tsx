@@ -1,7 +1,12 @@
 import * as React from 'react';
 import Svg, { SvgProps, Path } from 'react-native-svg';
-const WalletPay = (props: SvgProps) => (
-  <Svg fill="none" {...props}>
+
+const WalletPay: React.FC<SvgProps> = ({
+  width = 24,
+  height = 24,
+  ...props
+}) => (
+  <Svg width={width} height={height} viewBox="0 0 24 24" fill="none" {...props}>
     <Path
       fill="#169953"
       fillRule="evenodd"
@@ -10,4 +15,5 @@ const WalletPay = (props: SvgProps) => (
     />
   </Svg>
 );
+
 export default WalletPay;

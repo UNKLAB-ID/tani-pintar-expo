@@ -6,6 +6,7 @@ import {
   ScrollView,
   Image,
   StatusBar,
+  ImageSourcePropType,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -35,7 +36,11 @@ const PaymentScreen = () => {
     setExpandedSection(prev => (prev === section ? null : section));
   };
 
-  const handleSelect = (id: number, label: string, logo: any) => {
+  const handleSelect = (
+    id: number,
+    label: string,
+    logo: ImageSourcePropType
+  ) => {
     setSelected(id);
     setPaymentOption({ id, label, logo });
   };
@@ -48,7 +53,7 @@ const PaymentScreen = () => {
   }: {
     id: number;
     label: string;
-    logo: any;
+    logo: ImageSourcePropType;
     description?: string;
   }) => {
     const isSelected = selected === id;
