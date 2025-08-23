@@ -33,7 +33,7 @@ const TransferHistory: React.FC<TransferHistoryProps> = ({
             className="p-2 "
             style={{ backgroundColor: '#D7FCE8', borderRadius: 16 }}
           >
-            <TopUpIcon width={20} height={20} />;
+            <TopUpIcon width={20} height={20} />
           </View>
         );
       case 'payment':
@@ -42,7 +42,7 @@ const TransferHistory: React.FC<TransferHistoryProps> = ({
             className="p-2 "
             style={{ backgroundColor: '#D7FCE8', borderRadius: 16 }}
           >
-            <PaymentIcon width={20} height={20} />;
+            <PaymentIcon width={20} height={20} />
           </View>
         );
       case 'transfer':
@@ -51,7 +51,7 @@ const TransferHistory: React.FC<TransferHistoryProps> = ({
             className="p-2 "
             style={{ backgroundColor: '#d7f5fc', borderRadius: 16 }}
           >
-            <TransferIcon width={20} height={20} />;
+            <TransferIcon width={20} height={20} />
           </View>
         );
       case 'receive':
@@ -60,7 +60,7 @@ const TransferHistory: React.FC<TransferHistoryProps> = ({
             className="p-2 "
             style={{ backgroundColor: '#d7f5fc', borderRadius: 16 }}
           >
-            <TransferReceiveIcon width={20} height={20} />;
+            <TransferReceiveIcon width={20} height={20} />
           </View>
         );
       default:

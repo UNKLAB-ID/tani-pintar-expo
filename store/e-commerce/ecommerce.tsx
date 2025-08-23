@@ -1,3 +1,4 @@
+import { ImageSourcePropType } from 'react-native';
 import { create } from 'zustand';
 
 type ShippingOption = {
@@ -12,7 +13,7 @@ type ShippingOption = {
 type PaymentMethod = {
   id: number;
   label: string;
-  logo: any;
+  logo: ImageSourcePropType;
   description?: string;
 };
 

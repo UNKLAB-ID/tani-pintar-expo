@@ -9,13 +9,7 @@ const SearchIconPrimary: React.FC<SearchIconPrimaryProps> = ({
   color = '#000', // default hitam
   ...props
 }) => (
-  <Svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
-    fill="none"
-    {...props}
-  >
+  <Svg width={24} height={24} fill="none" {...props}>
     <Circle
       cx={10.998}
       cy={10.789}
