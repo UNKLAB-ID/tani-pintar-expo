@@ -111,7 +111,9 @@ const SendMoney = () => {
           <View className="flex-row justify-center gap-x-6 rounded-xl bg-white p-4 shadow-md">
             <View className="items-center">
               <TouchableOpacity
-                onPress={() => router.push('/payment/add-bank-account')}
+                onPress={() =>
+                  router.push('/payment/sendmoney/add-bank-account')
+                }
                 className="items-center border border-[#C8C8C8] rounded-2xl p-4"
               >
                 <BankSendMoneyIcon width={24} height={24} />
@@ -120,7 +122,9 @@ const SendMoney = () => {
             </View>
             <View className="items-center">
               <TouchableOpacity
-                onPress={() => router.push('/payment/e-wallet')}
+                onPress={() =>
+                  router.push('/payment/sendmoney/wallet-list-screen')
+                }
                 className="items-center border border-[#C8C8C8] rounded-2xl p-4"
               >
                 <EwalletSendMoneyIcon width={24} height={24} />
@@ -128,16 +132,24 @@ const SendMoney = () => {
               <Text className="mt-3 text-[12px] font-medium">E-wallet</Text>
             </View>
             <View className="items-center">
-              <TouchableOpacity className="items-center border border-[#C8C8C8] rounded-2xl p-4">
+              <TouchableOpacity
+                onPress={() => router.push('/payment/sendmoney/tanipay')}
+                className="items-center border border-[#C8C8C8] rounded-2xl p-4"
+              >
                 <WalletSendMoneyIcon width={24} height={24} />
               </TouchableOpacity>
               <Text className="mt-3 text-[12px] font-medium">Tani Pay</Text>
             </View>
             <View className="items-center">
-              <TouchableOpacity className="items-center border border-[#C8C8C8] rounded-2xl p-4">
+              <TouchableOpacity
+                onPress={() => router.push('/payment/sendmoney/request-money')}
+                className="items-center border border-[#C8C8C8] rounded-2xl p-4"
+              >
                 <CashHandIcon width={24} height={24} />
               </TouchableOpacity>
-              <Text className="mt-3 text-[12px] font-medium">Asking Money</Text>
+              <Text className="mt-3 text-[12px] font-medium">
+                Request Money
+              </Text>
             </View>
           </View>
         </View>

@@ -1,4 +1,3 @@
-// app/top-up/TopUpScreen.tsx
 import React, { useState } from 'react';
 import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { TopUpMethodCard } from '@/components/ui/payment/card-topup-method';
@@ -111,15 +110,8 @@ export default function TopUpScreen() {
               methodType = 'pos';
             }
 
-            console.log(
-              '[DEBUG] Sending bankId to PaymentTopUpScreen:',
-              id,
-              'From selected:',
-              selected
-            );
-
             router.push({
-              pathname: '/payment/payment-topup',
+              pathname: '/payment/topup/payment-topup',
               params: { bankId: id, methodType },
             });
           }}

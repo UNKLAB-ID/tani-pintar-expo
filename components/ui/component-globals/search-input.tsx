@@ -1,24 +1,35 @@
 import SearchIconPrimary from '@/assets/icons/global/search-icons';
 import React from 'react';
-import { View, TextInput, StyleSheet, TextInputProps } from 'react-native';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  TextInputProps,
+  ViewStyle,
+  TextStyle,
+} from 'react-native';
 
 interface SearchInputProps extends TextInputProps {
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
+  containerStyle?: ViewStyle; // bisa custom container
+  inputStyle?: TextStyle; // bisa custom input
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
   value,
   onChangeText,
-  placeholder = 'Enter name ',
+  placeholder = 'Enter name',
+  containerStyle,
+  inputStyle,
   ...rest
 }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <SearchIconPrimary width={24} height={24} />
       <TextInput
-        style={styles.input}
+        style={[styles.input, inputStyle]}
         placeholder={placeholder}
         placeholderTextColor="#AAAAAA"
         value={value}

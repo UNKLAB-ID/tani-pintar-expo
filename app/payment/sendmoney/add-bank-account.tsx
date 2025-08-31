@@ -89,7 +89,7 @@ const AddBankAccount = () => {
           style={{ top: 755 }}
         >
           <TouchableOpacity
-            onPress={() => router.push('/payment/send-to-bank')}
+            onPress={() => router.push('/payment/sendmoney/send-to-bank')}
             disabled={!accountNumber.trim()}
             className={` rounded-xl w-full py-3 items-center
            ${accountNumber.trim() ? 'bg-primary' : 'bg-[#e9e9e9]'}`}

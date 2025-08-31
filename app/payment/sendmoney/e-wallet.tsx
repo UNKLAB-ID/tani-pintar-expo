@@ -1,8 +1,7 @@
-import SearchIconPrimary from '@/assets/icons/global/search-icons';
 import SearchInput from '@/components/ui/component-globals/search-input';
 import ContactItem from '@/components/ui/payment/card-contact-item';
 import { TransferHeader } from '@/components/ui/payment/transfer-header';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Text, View, StatusBar, TextInput, SectionList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -73,8 +72,8 @@ const EwalletScreen = () => {
           }}
         >
           <TransferHeader
-            title="Send to TaniPay"
-            subtitle="select the contacts you want to transfer"
+            title="E-Wallet Transfer"
+            subtitle="Select the e-wallet you want to transfer to"
             onBack={() => router.back()}
           />
         </View>
@@ -98,6 +97,19 @@ const EwalletScreen = () => {
                 phone={item.phone}
                 image={item.image}
                 initials={item.initials}
+                walletType="linkaja"
+                onPress={() =>
+                  router.push({
+                    pathname: '/payment/sendmoney/send-to-tanipay',
+                    params: {
+                      name: item.name,
+                      phone: item.phone,
+                      initials: item.initials || '',
+                      image: item.image || '',
+                      walletType: 'linkaja',
+                    },
+                  })
+                }
               />
             )}
             renderSectionHeader={({ section: { title } }) => (
