@@ -98,7 +98,7 @@ const ModalSelectMethod: React.FC<ModalSelectMethodProps> = ({
               <Text
                 style={{
                   fontSize: 12,
-                  color: isInsufficient ? '#6F6F6F' : '#166553',
+                  color: isInsufficient ? '#FF0808' : '#166553',
                   marginTop: 4,
                 }}
               >
@@ -117,7 +117,7 @@ const ModalSelectMethod: React.FC<ModalSelectMethodProps> = ({
               }}
               onPress={() => {
                 onClose();
-                router.push('/payment/send-money-topup'); // langsung ke halaman top up
+                router.push('/payment/sendmoney/send-money-topup'); // langsung ke halaman top up
               }}
             >
               <Text style={{ color: '#16A34A', fontWeight: '600' }}>

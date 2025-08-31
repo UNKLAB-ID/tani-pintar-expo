@@ -1,7 +1,14 @@
 import * as React from 'react';
 import Svg, { SvgProps, G, Path, Defs, ClipPath } from 'react-native-svg';
+
 const WalletSendMoneyIcon = (props: SvgProps) => (
-  <Svg fill="none" {...props}>
+  <Svg
+    viewBox="0 0 24 24" // ✅ bikin responsive
+    width={props.width || 24}
+    height={props.height || 24}
+    fill="none"
+    {...props}
+  >
     <G clipPath="url(#a)">
       <Path
         fill="#169953"
@@ -15,4 +22,5 @@ const WalletSendMoneyIcon = (props: SvgProps) => (
     </Defs>
   </Svg>
 );
+
 export default WalletSendMoneyIcon;

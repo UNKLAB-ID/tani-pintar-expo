@@ -1,6 +1,6 @@
-// screens/SendToBank.tsx
+import MoneyBalanceIcon from '@/assets/icons/payment/money-balance-icon';
 import { PrimaryButton } from '@/components/ui/payment/button-primary';
-import { BankInfoCard } from '@/components/ui/payment/card-bank-info';
+import { InfoBalanceCard } from '@/components/ui/payment/card-bank-info';
 import { PaymentMethodCard } from '@/components/ui/payment/card-payment-method';
 import { AmountInput } from '@/components/ui/payment/input-amount';
 import { TransferHeader } from '@/components/ui/payment/transfer-header';
@@ -48,17 +48,19 @@ const SendToBank = () => {
           }}
         >
           <TransferHeader
-            title="Topup"
-            subtitle="Select a method for TaniPay topup payments"
+            title="Send to Bank"
+            subtitle="Enter the amount of money you want to send"
             onBack={() => router.back()}
           />
         </View>
         <View style={{ marginTop: 140, paddingHorizontal: 16 }}>
-          <BankInfoCard
-            bankName="BANK BCA"
-            accountName="MAMBAUS SOLIHIN"
-            maskedNumber={maskedNumber}
+          <InfoBalanceCard
+            icon={require('@/assets/images/payment/bank/bca.png')}
+            title="BCA"
+            subtitle="John Doe"
+            maskedInfo={maskedNumber}
             balance={balance}
+            renderCustomIcon={<MoneyBalanceIcon width={22} height={22} />}
           />
         </View>
 

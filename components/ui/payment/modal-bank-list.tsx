@@ -9,7 +9,6 @@ import {
   Image,
 } from 'react-native';
 import { X } from 'lucide-react-native';
-import SearchIconPrimary from '@/assets/icons/global/search-icons';
 import RectangleIcon from '@/assets/icons/global/rectangle-icon';
 import { useState } from 'react';
 import { ImageSourcePropType } from 'react-native';
