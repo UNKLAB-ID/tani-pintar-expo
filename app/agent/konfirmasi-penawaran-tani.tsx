@@ -5,7 +5,7 @@ import KonfirmasiPenawaranTaniForm from '@/components/ui/agent/konfirmasita-pena
 import ModalKalenderTani from '@/components/ui/agent/modal/modal-kalender-tani';
 import ModalSuccessTani from '@/components/ui/agent/modal/modal-success-tani';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   SafeAreaView,
@@ -17,6 +17,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Keyboard,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -32,6 +33,7 @@ type FormValues = {
 const KonfirmasiPenawaranTani = () => {
   const [toggleKalender, setToggleKalender] = useState<boolean>(false);
   const [toggleSuccess, setToggleSuccess] = useState<boolean>(false);
+  const [behavior, setBehavior] = useState<"padding" | "height" | undefined>(Platform.OS === "ios" ? "padding" : "height");
   const [nameForm, setNameForm] = useState<string>('');
   const { id } = useLocalSearchParams();
   const insets = useSafeAreaInsets();
@@ -48,6 +50,19 @@ const KonfirmasiPenawaranTani = () => {
     mode: 'all',
   });
 
+  useEffect(() => {
+    const showSub = Keyboard.addListener("keyboardDidShow", () => {
+      setBehavior(Platform.OS === "ios" ? "padding" : "height");
+    });
+    const hideSub = Keyboard.addListener("keyboardDidHide", () => {
+      setBehavior(undefined); // reset pas keyboard ditutup
+    });
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
+
   return (
     <SafeAreaView
       style={{
@@ -60,8 +75,8 @@ const KonfirmasiPenawaranTani = () => {
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
+        behavior={behavior}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 10}
       >
         <ScrollView
           contentContainerStyle={{

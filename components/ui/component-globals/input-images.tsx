@@ -4,7 +4,6 @@ import * as ImagePicker from 'expo-image-picker';
 import { ImagePickerAsset } from 'expo-image-picker';
 import { Colors } from '@/constants/Colors';
 import FileUpladIcons from '@/assets/icons/global/file-upload-icons';
-
 type Props = {
   label?: string;
   value: ImagePickerAsset | null;
@@ -13,6 +12,8 @@ type Props = {
   textClassName?: string;
   placeholder?: string;
   error?: boolean;
+  required?: string;
+  fontSize?: number;
 };
 
 const ImagePickerInput: React.FC<Props> = ({
@@ -23,8 +24,11 @@ const ImagePickerInput: React.FC<Props> = ({
   className = '',
   textClassName = '',
   error = false,
+  required,
+  fontSize = 14,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
+
   const borderColor = error
     ? Colors.color.error
     : isFocused || value
@@ -36,6 +40,7 @@ const ImagePickerInput: React.FC<Props> = ({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.7,
       allowsEditing: true,
+      aspect: [4, 3],
     });
 
     if (!result.canceled) {
@@ -46,8 +51,8 @@ const ImagePickerInput: React.FC<Props> = ({
   return (
     <View>
       {label && (
-        <Text className={`mb-2 text-lg text-black`} style={{ fontWeight: 500 }}>
-          {label}
+        <Text className={`mb-2 text-black`} style={{ fontWeight: 500, fontSize: fontSize }}>
+          {label}{required && <Text style={{ color: Colors.color.error }}>{required}</Text>}
         </Text>
       )}
       <TouchableOpacity

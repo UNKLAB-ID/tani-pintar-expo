@@ -20,6 +20,7 @@ interface CustomTextInputProps extends TextInputProps {
   labelColor?: string;
   fontSize?: number;
   fontWheight?: TextStyle['fontWeight'];
+  required?: string;
 }
 
 const CustomTextInput: React.FC<CustomTextInputProps> = ({
@@ -32,6 +33,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
   labelColor = '#1F1F1F',
   fontSize = 14,
   fontWheight = '500',
+  required,
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -52,7 +54,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
             color: labelColor,
           }}
         >
-          {label}
+          {label}{required && <Text style={{ color: Colors.color.error }}>{required}</Text>}
         </Text>
       )}
       <TextInput
@@ -62,8 +64,8 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
         onChangeText={onChangeText}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className={`w-full py-[16px] px-[20px] text-xl border bg-white ${className}`}
-        style={[styles.input, { borderColor }]}
+        className={`w-full py-[16px] px-[20px] border bg-white ${className}`}
+        style={[styles.input, { borderColor, fontSize: fontSize }]}
         placeholderTextColor={Colors.color.border}
         {...props}
       />

@@ -22,11 +22,9 @@ const ModalShipped = ({ visible, onClose, onCancel }: ModalShippedProps) => {
             Yeay! Your order is complete 🎉
           </Text>
           <Text className="text-center text-[14px] text-[#B3B3B3] my-1">
-            {`
             Make sure the items you receive are complete and in good condition
-            before clicking 'Confirm'. After that, the order will be completed,
+            before clicking &apos;Confirm&apos;. After that, the order will be completed,
             and payment will be forwarded to the Seller.
-            `}
           </Text>
 
           {/* Buttons */}

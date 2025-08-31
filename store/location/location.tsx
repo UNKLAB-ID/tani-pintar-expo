@@ -11,6 +11,10 @@ type LocationStore = {
   selectedCity: Location | null;
   setSelectedCountry: (country: Location) => void;
   setSelectedCity: (city: Location) => void;
+  latAddress: Number | null;
+  longAddress: Number | null;
+  setLatAddress: (lat: Number) => void;
+  setLongAddress: (long: Number) => void;
 };
 
 export const useUserLocation = create<LocationStore>()(set => ({
@@ -18,4 +22,8 @@ export const useUserLocation = create<LocationStore>()(set => ({
   selectedCity: null,
   setSelectedCountry: country => set({ selectedCountry: country }),
   setSelectedCity: city => set({ selectedCity: city }),
+  latAddress: null,
+  longAddress: null,
+  setLatAddress: lat => set({ latAddress: lat }),
+  setLongAddress: long => set({ longAddress: long }),
 }));
