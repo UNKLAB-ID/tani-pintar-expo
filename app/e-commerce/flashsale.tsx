@@ -10,7 +10,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
 import ShareSquareIcons from '@/assets/icons/e-commerce/share-icons';
-import InputSearchPrimary from '@/components/ui/component-globals/input-seach-primary';
 import BackIcons from '@/assets/icons/global/back-icons';
 import FlashSaleTabCard from '@/components/ui/e-commerce/flashsale/card-tab-flashsale';
 import { router, useRouter } from 'expo-router';
