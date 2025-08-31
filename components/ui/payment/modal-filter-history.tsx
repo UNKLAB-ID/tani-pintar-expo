@@ -9,7 +9,7 @@ import {
 import { Calendar, Check } from 'lucide-react-native';
 import RectangleIcon from '@/assets/icons/global/rectangle-icon';
 import { useState } from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Calendar as RNCalendar } from 'react-native-calendars';
 
 interface ModelFilterHistoryProps {
   visible: boolean;
@@ -30,17 +30,20 @@ const ModelFilterHistory: React.FC<ModelFilterHistoryProps> = ({
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   // state date picker
-  const [fromDate, setFromDate] = useState<Date>(new Date());
-  const [toDate, setToDate] = useState<Date>(new Date());
-  const [showPicker, setShowPicker] = useState<{ mode: 'from' | 'to' | null }>({
-    mode: null,
-  });
+  const [fromDate, setFromDate] = useState<string>(
+    new Date().toISOString().split('T')[0]
+  ); // format "YYYY-MM-DD"
+  const [toDate, setToDate] = useState<string>(
+    new Date().toISOString().split('T')[0]
+  );
+  const [showPicker, setShowPicker] = useState<'from' | 'to' | null>(null);
 
   const handleReset = () => {
     setSelectedTimeSpan(null);
-    setSelectedCategory('All');
-    setFromDate(new Date());
-    setToDate(new Date());
+    setSelectedCategory('all');
+    const today = new Date().toISOString().split('T')[0];
+    setFromDate(today);
+    setToDate(today);
     onReset?.();
   };
 
@@ -166,7 +169,7 @@ const ModelFilterHistory: React.FC<ModelFilterHistoryProps> = ({
               style={{ flexDirection: 'row', justifyContent: 'space-between' }}
             >
               <TouchableOpacity
-                onPress={() => setShowPicker({ mode: 'from' })}
+                onPress={() => setShowPicker('from')}
                 style={{
                   flex: 1,
                   padding: 12,
@@ -185,13 +188,13 @@ const ModelFilterHistory: React.FC<ModelFilterHistoryProps> = ({
                 >
                   <Calendar size={16} color="#888" />
                   <Text style={{ fontSize: 12, color: '#888', marginLeft: 6 }}>
-                    {formatDate(fromDate)}
+                    {formatDate(new Date(fromDate))}
                   </Text>
                 </View>
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() => setShowPicker({ mode: 'to' })}
+                onPress={() => setShowPicker('to')}
                 style={{
                   flex: 1,
                   padding: 12,
@@ -211,7 +214,7 @@ const ModelFilterHistory: React.FC<ModelFilterHistoryProps> = ({
                 >
                   <Calendar size={16} color="#888" />
                   <Text style={{ fontSize: 12, color: '#888', marginLeft: 6 }}>
-                    {formatDate(toDate)}
+                    {formatDate(new Date(toDate))}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -278,23 +281,72 @@ const ModelFilterHistory: React.FC<ModelFilterHistoryProps> = ({
         </View>
       </View>
 
-      {/* DateTime Picker */}
-      {showPicker.mode && (
-        <DateTimePicker
-          value={showPicker.mode === 'from' ? fromDate : toDate}
-          mode="date"
-          display={Platform.OS === 'ios' ? 'inline' : 'default'}
-          onChange={(event, selectedDate) => {
-            if (selectedDate) {
-              if (showPicker.mode === 'from') {
-                setFromDate(selectedDate);
-              } else {
-                setToDate(selectedDate);
-              }
-            }
-            setShowPicker({ mode: null });
-          }}
-        />
+      {/* Calendar modal */}
+      {showPicker && (
+        <Modal transparent visible animationType="fade">
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              justifyContent: 'center',
+            }}
+          >
+            <View
+              style={{
+                margin: 20,
+                backgroundColor: 'white',
+                borderRadius: 12,
+                padding: 10,
+              }}
+            >
+              <RNCalendar
+                current={fromDate} // string "2025-08-31"
+                onDayPress={day => {
+                  if (showPicker === 'from') {
+                    setFromDate(day.dateString); // hasil: "2025-08-31"
+                  } else {
+                    setToDate(day.dateString);
+                  }
+                  setShowPicker(null);
+                }}
+                markedDates={{
+                  [fromDate]: { selected: true, selectedColor: '#16A34A' },
+                  [toDate]: { selected: true, selectedColor: '#16A34A' },
+                }}
+                // 🔽 ini yang hilangin jam GMT
+                renderHeader={date => (
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: '600',
+                      textAlign: 'center',
+                      paddingVertical: 8,
+                    }}
+                  >
+                    {new Date(date).toLocaleDateString('en-US', {
+                      month: 'long',
+                      year: 'numeric',
+                    })}
+                  </Text>
+                )}
+              />
+
+              <TouchableOpacity
+                style={{
+                  marginTop: 10,
+                  padding: 12,
+                  borderRadius: 8,
+                  backgroundColor: '#16A34A',
+                }}
+                onPress={() => setShowPicker(null)}
+              >
+                <Text style={{ color: '#fff', textAlign: 'center' }}>
+                  Close
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       )}
     </Modal>
   );
