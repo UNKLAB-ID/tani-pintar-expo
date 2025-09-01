@@ -17,7 +17,7 @@ interface ChangeUserModalProps {
   onClose: () => void;
 }
 
-const USER_ROLES = ['tani', 'vendor'];
+const USER_ROLES = ['tani', 'vendor', 'agent'];
 
 const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
   visible,
@@ -30,16 +30,17 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
   const handleSubmit = () => {
     if (!selectedRole) return;
 
-    console.log('Simpan role:', selectedRole);
-
-    setRole(selectedRole as 'tani' | 'vendor');
+    setRole(selectedRole as 'tani' | 'vendor' | 'agent');
 
     switch (selectedRole) {
       case 'vendor':
-        router.replace('/(tabs)/ai');
+        router.replace('/profile/register-role-user');
+        break;
+      case 'agent':
+        router.replace('/profile/register-role-user');
         break;
       case 'tani':
-        router.replace('/splash');
+        router.replace('/(tabs)/sosmed');
         break;
       default:
         router.replace('/');

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type Role = 'vendor' | 'tani' | null;
+type Role = 'vendor' | 'tani' | 'agent' | null;
 
 interface AuthState {
   role: Role;

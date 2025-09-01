@@ -242,17 +242,17 @@ const ModalPaymentInstruction: React.FC<ModalPaymentInstructionProps> = ({
   onClose,
   item,
 }) => {
-  if (!item) return null;
-
-  const bankInstructions = instructionsData[item.name] || {};
-  const tabs = Object.keys(bankInstructions);
   const [activeTab, setActiveTab] = useState<string>('ATM');
+  const bankInstructions = item ? instructionsData[item.name] || {} : {};
+  const tabs = Object.keys(bankInstructions);
 
   useEffect(() => {
     if (tabs.length > 0) {
       setActiveTab(tabs[0]);
     }
   }, [item]);
+
+  if (!item) return null;
 
   return (
     <Modal transparent animationType="slide" visible={visible}>
