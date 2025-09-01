@@ -1,9 +1,10 @@
 import { Text, View, TouchableOpacity, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
 import CustomTextInput from "../../component-globals/input-text";
 import { Controller, useForm } from "react-hook-form";
 import ImagePickerInput from "../../component-globals/input-images";
-import React, { useEffect } from "react";
+import React from "react";
 import ArrowRightIcons from "@/assets/icons/e-commerce/arrow-right-icons";
 import LatLongPinAddressIcon from "@/assets/icons/global/lat-long-pin-address-icon";
 import { router } from "expo-router";
@@ -11,14 +12,16 @@ import { useUserLocation } from "@/store/location/location";
 import api from "@/utils/api/api";
 import { useMutation } from "@tanstack/react-query";
 import { useRegisterRoleStore } from "@/store/auth/register-role";
+import AlertlatLongAddressIcons from "@/assets/icons/profile/alert-lat-long-address-icons";
+import FileUpladIcons from "@/assets/icons/global/file-upload-icons";
 
 interface ComponentFormIndividuChangeRoleProps {
-    toggleButton: boolean;
+    togglePerusahaanAtauIndividu: boolean;
     setToggleModalAddress: (visible: boolean) => void;
 }
 
 const ComponentFormIndividuChangeRole: React.FC<ComponentFormIndividuChangeRoleProps> = ({
-    toggleButton,
+    togglePerusahaanAtauIndividu,
     setToggleModalAddress,
 }) => {
     const { latAddress, longAddress } = useUserLocation();
@@ -29,6 +32,7 @@ const ComponentFormIndividuChangeRole: React.FC<ComponentFormIndividuChangeRoleP
         watch,
         setError,
         reset,
+        resetField,
         formState: { errors, isValid },
     } = useForm({
         defaultValues: vendorData,
@@ -42,25 +46,53 @@ const ComponentFormIndividuChangeRole: React.FC<ComponentFormIndividuChangeRoleP
         return val && typeof val === "object" && "uri" in val;
     };
 
-    console.log("vendorData", vendorData.city, vendorData.district, vendorData.province);
-
     const mutate = useMutation({
         mutationFn: async (data: any) => {
             const formData = new FormData();
 
-            Object.entries(data).forEach(([key, value]) => {
-                if (value !== null && value !== undefined && value !== "") {
-                    if (isFileAsset(value)) {
-                        formData.append(key, {
-                            uri: value.uri,
-                            name: value.fileName || `${key}.jpg`,
-                            type: value.mimeType || "image/jpeg",
-                        } as any);
-                    } else {
-                        formData.append(key, value as any); // langsung masukin apa adanya
-                    }
-                }
-            });
+            // String fields
+            if (data.vendor_type) formData.append("vendor_type", data.vendor_type); // 1
+            if (data.phone_number) formData.append("phone_number", data.phone_number); // 2
+            if (data.address) formData.append("address", data.address); // 3
+            if (data.full_name) formData.append("full_name", data.full_name); // 4
+            if (data.business_name) formData.append("business_name", data.business_name); // 5
+            if (data.npwp) formData.append("npwp", data.npwp); // 6
+            if (data.latitude) formData.append("latitude", data.latitude); // 7
+            if (data.longitude) formData.append("longitude", data.longitude);
+            if (data.address_detail) formData.append("address_detail", data.address_detail); // 8
+            if (data.postal_code) formData.append("postal_code", data.postal_code); // 9
+            if (data.name) formData.append("name", data.name); // 10
+
+            // Number fields (ubah ke string biar aman di FormData)
+            if (data.business_number) formData.append("business_number", String(data.business_number)); // 11
+            if (data.province) formData.append("province", String(data.province)); // 12
+            if (data.city) formData.append("city", String(data.city));  // 13
+            if (data.district) formData.append("district", String(data.district)); // 14
+
+            // File fields
+            if (data.logo && isFileAsset(data.logo)) {
+                formData.append("logo", {
+                    uri: data.logo.uri,
+                    name: data.logo.fileName || "logo.jpg",
+                    type: data.logo.mimeType || "image/jpeg",
+                } as any); // 15
+            }
+
+            if (data.id_card_photo && isFileAsset(data.id_card_photo)) {
+                formData.append("id_card_photo", {
+                    uri: data.id_card_photo.uri,
+                    name: data.id_card_photo.fileName || "id_card_photo.jpg",
+                    type: data.id_card_photo.mimeType || "image/jpeg",
+                } as any); // 16
+            }
+
+            if (data.business_nib && isFileAsset(data.business_nib)) {
+                formData.append("business_nib", {
+                    uri: data.business_nib.uri,
+                    name: data.business_nib.fileName || "business_nib.jpg",
+                    type: data.business_nib.mimeType || "image/jpeg",
+                } as any); // 17
+            }
 
             return api.post("/vendors/", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
@@ -95,22 +127,17 @@ const ComponentFormIndividuChangeRole: React.FC<ComponentFormIndividuChangeRoleP
         mutate.mutate(data);
     }
 
-    // useEffect(() => {
-    //     reset(vendorData);
-    // }, [vendorData, reset]);
-
-
     return (
         <View>
             {/* Nama Lengkap */}
             <Controller
                 control={control}
-                name="name"
+                name={"name"}
                 rules={{ required: "Name is required" }}
                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                     <CustomTextInput
-                        label="Nama Lengkap"
-                        placeholder="Masukkan nama lengkap"
+                        label={togglePerusahaanAtauIndividu ? "Nama Badan Usaha" : "Nama Lengkap"}
+                        placeholder={togglePerusahaanAtauIndividu ? "Masukkan nama badan usaha" : "Masukkan nama lengkap"}
                         type="default"
                         value={value}
                         onChangeText={(text) => {
@@ -133,7 +160,7 @@ const ComponentFormIndividuChangeRole: React.FC<ComponentFormIndividuChangeRoleP
                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                     <View style={{ marginTop: 16 }}>
                         <CustomTextInput
-                            label="Nomor Handphone"
+                            label={togglePerusahaanAtauIndividu ? "Nomor Telepon Kantor" : "Nomor Handphone"}
                             placeholder="Contoh: 081234567890"
                             type="phone-pad"
                             value={value}
@@ -150,27 +177,96 @@ const ComponentFormIndividuChangeRole: React.FC<ComponentFormIndividuChangeRoleP
                 )}
             />
 
-            {/* Upload KTP */}
-            <Controller
-                control={control}
-                name="id_card_photo"
-                rules={{ required: "KTP photo is required" }}
-                render={({ field: { onChange, value }, fieldState: { error } }) => (
-                    <View style={{ marginTop: 16 }}>
-                        <ImagePickerInput
-                            value={value}
-                            onChange={(image: ImagePicker.ImagePickerAsset) => {
-                                onChange(image)
-                                setField("id_card_photo", image)
-                            }}
-                            label="Unggah KTP"
-                            required="*"
-                            error={!!error}
-                            placeholder="Unggah File"
-                        />
-                    </View>
-                )}
-            />
+            {/* Nomor Badan Usaha */}
+            {
+                togglePerusahaanAtauIndividu && (
+                    <Controller
+                        control={control}
+                        name="business_number"
+                        rules={{ required: "Nomor induk berusaha perusahaan required" }}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <View style={{ marginTop: 16 }}>
+                                <CustomTextInput
+                                    label="Nomor Induk Berusaha Perusahaan"
+                                    placeholder="Masukkan nomor induk berusaha perusahaan"
+                                    type="phone-pad"
+                                    value={String(value)}
+                                    onChangeText={(text) => {
+                                        onChange(text);           // update ke useForm
+                                        setField("phone_number", text);   // update ke zustand
+                                    }}
+                                    error={!!error}
+                                    fontWheight={"600"}
+                                    fontSize={14}
+                                    required="*"
+                                />
+                            </View>
+                        )}
+                    />
+                )
+            }
+
+            {
+                togglePerusahaanAtauIndividu ? (
+                    <Controller
+                        control={control}
+                        name="business_nib"
+                        rules={{ required: "File business nib is required" }}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <View style={{ marginTop: 16 }}>
+                                <TouchableOpacity
+                                    style={{
+                                        borderWidth: 1,
+                                        borderColor: "#ccc",
+                                        padding: 12,
+                                        borderRadius: 8,
+                                        backgroundColor: "#f5f5f5",
+                                    }}
+                                    onPress={async () => {
+                                        const result = await DocumentPicker.getDocumentAsync({
+                                            type: "*/*", // bisa filter misal "application/pdf"
+                                            copyToCacheDirectory: true,
+                                        });
+
+                                        if (!result.canceled) {
+                                            const file = result.assets[0]; // ambil file pertama
+                                            onChange(file); // simpan ke react-hook-form
+                                        }
+                                    }}
+                                >
+                                    <FileUpladIcons width={28} height={28} color={'#AAAAAA'} />
+                                    <Text>
+                                        {value ? value.name : "Pilih File Business NIB"}
+                                    </Text>
+                                </TouchableOpacity>
+
+                                {error && <Text style={{ color: "red", marginTop: 4 }}>{error.message}</Text>}
+                            </View>
+                        )}
+                    />
+                ) : (
+                    <Controller
+                        control={control}
+                        name="id_card_photo"
+                        rules={{ required: "KTP photo is required" }}
+                        render={({ field: { onChange, value }, fieldState: { error } }) => (
+                            <View style={{ marginTop: 16 }}>
+                                <ImagePickerInput
+                                    value={value}
+                                    onChange={(image: ImagePicker.ImagePickerAsset) => {
+                                        onChange(image)
+                                        setField("id_card_photo", image)
+                                    }}
+                                    label="Unggah KTP"
+                                    required="*"
+                                    error={!!error}
+                                    placeholder="Unggah File"
+                                />
+                            </View>
+                        )}
+                    />
+                )
+            }
 
             {/* Nama Toko */}
             <Controller
@@ -225,7 +321,7 @@ const ComponentFormIndividuChangeRole: React.FC<ComponentFormIndividuChangeRoleP
                 render={({ fieldState: { error } }) => (
                     <>
                         <Text style={{ fontSize: 14, fontWeight: "600", marginTop: 16 }}>
-                            Alamat Toko<Text style={{ color: "#FF0808" }}>*</Text>
+                            {togglePerusahaanAtauIndividu ? "Alamat Kantor" : "Alamat Toko"}<Text style={{ color: "#FF0808" }}>*</Text>
                         </Text>
                         <TouchableOpacity
                             style={{
@@ -289,6 +385,12 @@ const ComponentFormIndividuChangeRole: React.FC<ComponentFormIndividuChangeRoleP
                                     : "Pin Lokasi Alamat Kamu"}
                             </Text>
                         </TouchableOpacity>
+                        <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: "#fff" }}>
+                            <AlertlatLongAddressIcons width={16} height={16} />
+                            <Text style={{ fontSize: 12, color: "#6F6F6F", marginLeft: 10, marginTop: 4 }}>
+                                Isi alamat terlebih dahulu untuk menetapkan lokasi di peta dengan akurat
+                            </Text>
+                        </View>
                     </>
                 )}
             />
@@ -337,7 +439,7 @@ const ComponentFormIndividuChangeRole: React.FC<ComponentFormIndividuChangeRoleP
             />
 
             {/* NPWP kalau toggle */}
-            {toggleButton && (
+            {togglePerusahaanAtauIndividu && (
                 <>
                     <Controller
                         control={control}

@@ -9,7 +9,7 @@ interface VendorFormState {
     full_name: string;
     id_card_photo: any;
     business_name: string;
-    business_number: number;
+    business_number: string;
     business_nib: any;
     npwp: string;
     province: number;
@@ -37,7 +37,7 @@ const initialState = {
     full_name: "",
     id_card_photo: null,
     business_name: "",
-    business_number: 0,
+    business_number: "",
     business_nib: null,
     npwp: "",
     province: 0,

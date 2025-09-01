@@ -93,7 +93,7 @@ const RegisterRoleUser = () => {
                     </View>
                     <View style={{ paddingHorizontal: 14 }}>
                         <ComponentFormIndividuChangeRole
-                            toggleButton={toggleButton}
+                            togglePerusahaanAtauIndividu={toggleButton}
                             setToggleModalAddress={setToggleAddress}
                         />
                     </View>
