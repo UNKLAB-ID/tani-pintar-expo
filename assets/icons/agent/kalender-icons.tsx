@@ -1,12 +1,7 @@
 import * as React from 'react';
 import Svg, { SvgProps, Path } from 'react-native-svg';
 const KalenderIconsAgent = (props: SvgProps) => (
-  <Svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    {...props}
-  >
+  <Svg fill="none" viewBox="0 0 24 24" {...props}>
     <Path
       stroke="#000"
       strokeLinecap="round"
