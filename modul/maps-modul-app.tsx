@@ -1,6 +1,6 @@
-const MAPBOX_TOKEN = process.env.EXPO_PUBLIC_TOKEN_MAPBOX ;
+const MAPBOX_TOKEN = process.env.EXPO_PUBLIC_TOKEN_MAPBOX;
 
-export const generateMap = (lat: number, lng: number,) => `
+export const generateMap = (lat: number, lng: number) => `
 <!DOCTYPE html>
 <html>
 <head>

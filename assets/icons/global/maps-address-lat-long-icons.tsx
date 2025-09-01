@@ -1,5 +1,5 @@
-import * as React from "react"
-import Svg, { SvgProps, G, Path, Defs, ClipPath } from "react-native-svg"
+import * as React from 'react';
+import Svg, { SvgProps, G, Path, Defs, ClipPath } from 'react-native-svg';
 const MapsLatLongAddressIcons = (props: SvgProps) => (
   <Svg fill="none" {...props}>
     <G clipPath="url(#a)">
@@ -14,5 +14,5 @@ const MapsLatLongAddressIcons = (props: SvgProps) => (
       </ClipPath>
     </Defs>
   </Svg>
-)
-export default MapsLatLongAddressIcons
+);
+export default MapsLatLongAddressIcons;

@@ -51,8 +51,14 @@ const ImagePickerInput: React.FC<Props> = ({
   return (
     <View>
       {label && (
-        <Text className={`mb-2 text-black`} style={{ fontWeight: 500, fontSize: fontSize }}>
-          {label}{required && <Text style={{ color: Colors.color.error }}>{required}</Text>}
+        <Text
+          className={`mb-2 text-black`}
+          style={{ fontWeight: 500, fontSize: fontSize }}
+        >
+          {label}
+          {required && (
+            <Text style={{ color: Colors.color.error }}>{required}</Text>
+          )}
         </Text>
       )}
       <TouchableOpacity

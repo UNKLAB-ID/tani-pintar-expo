@@ -54,7 +54,10 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
             color: labelColor,
           }}
         >
-          {label}{required && <Text style={{ color: Colors.color.error }}>{required}</Text>}
+          {label}
+          {required && (
+            <Text style={{ color: Colors.color.error }}>{required}</Text>
+          )}
         </Text>
       )}
       <TextInput

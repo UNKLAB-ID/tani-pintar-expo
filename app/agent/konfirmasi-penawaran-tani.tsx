@@ -33,7 +33,9 @@ type FormValues = {
 const KonfirmasiPenawaranTani = () => {
   const [toggleKalender, setToggleKalender] = useState<boolean>(false);
   const [toggleSuccess, setToggleSuccess] = useState<boolean>(false);
-  const [behavior, setBehavior] = useState<"padding" | "height" | undefined>(Platform.OS === "ios" ? "padding" : "height");
+  const [behavior, setBehavior] = useState<'padding' | 'height' | undefined>(
+    Platform.OS === 'ios' ? 'padding' : 'height'
+  );
   const [nameForm, setNameForm] = useState<string>('');
   const { id } = useLocalSearchParams();
   const insets = useSafeAreaInsets();
@@ -51,10 +53,10 @@ const KonfirmasiPenawaranTani = () => {
   });
 
   useEffect(() => {
-    const showSub = Keyboard.addListener("keyboardDidShow", () => {
-      setBehavior(Platform.OS === "ios" ? "padding" : "height");
+    const showSub = Keyboard.addListener('keyboardDidShow', () => {
+      setBehavior(Platform.OS === 'ios' ? 'padding' : 'height');
     });
-    const hideSub = Keyboard.addListener("keyboardDidHide", () => {
+    const hideSub = Keyboard.addListener('keyboardDidHide', () => {
       setBehavior(undefined); // reset pas keyboard ditutup
     });
     return () => {
