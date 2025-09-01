@@ -253,7 +253,6 @@ const ModalPaymentInstruction: React.FC<ModalPaymentInstructionProps> = ({
   }, [item]);
 
   if (!item) return null;
-
   return (
     <Modal transparent animationType="slide" visible={visible}>
       <View

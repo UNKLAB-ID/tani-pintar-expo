@@ -115,30 +115,50 @@ const HistoryScreen = () => {
   };
 
   // Grouping by month
+  // Grouping by month, tapi tahun sebelumnya ditaruh di bawah
   const groupByMonth = (data: any[]) => {
     const now = new Date();
-    const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
 
-    return data.reduce(
-      (acc, item) => {
-        const d = new Date(item.date);
-        const month = d.getMonth();
-        const year = d.getFullYear();
-
-        let monthLabel =
-          month === currentMonth && year === currentYear
-            ? 'This Month'
-            : d
-                .toLocaleString('default', { month: 'short', year: 'numeric' })
-                .toUpperCase();
-
-        if (!acc[monthLabel]) acc[monthLabel] = [];
-        acc[monthLabel].push(item);
-        return acc;
-      },
-      {} as Record<string, any[]>
+    // Pisahkan tahun ini vs sebelumnya
+    const currentYearData = data.filter(
+      item => new Date(item.date).getFullYear() === currentYear
     );
+    const previousYearData = data.filter(
+      item => new Date(item.date).getFullYear() < currentYear
+    );
+
+    // Helper untuk group by month
+    const group = (items: any[]) =>
+      items.reduce(
+        (acc, item) => {
+          const d = new Date(item.date);
+          const month = d.getMonth();
+          const year = d.getFullYear();
+
+          let monthLabel =
+            year === currentYear && month === currentMonth
+              ? 'This Month'
+              : d
+                  .toLocaleString('default', {
+                    month: 'short',
+                    year: 'numeric',
+                  })
+                  .toUpperCase();
+
+          if (!acc[monthLabel]) acc[monthLabel] = [];
+          acc[monthLabel].push(item);
+          return acc;
+        },
+        {} as Record<string, any[]>
+      );
+
+    const groupedCurrent = group(currentYearData);
+    const groupedPrevious = group(previousYearData);
+
+    // gabungkan: tahun sekarang dulu, lalu tahun sebelumnya
+    return { ...groupedCurrent, ...groupedPrevious };
   };
 
   const grouped = groupByMonth(filteredData);
@@ -290,6 +310,7 @@ const HistoryScreen = () => {
               </View>
             )}
             showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 100 }}
           />
         </View>
         <ModalFilterHistory
