@@ -1,23 +1,34 @@
-import BackIcons from '@/assets/icons/global/back-icons';
-import BottomTextInputModal from '@/components/ui/component-globals/modal-input';
-import ModalGender from '@/components/ui/profile/modal-gender';
-import ModalLogout from '@/components/ui/profile/modal-logout';
-import { Entypo } from '@expo/vector-icons';
+import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import api from '@/utils/api/api';
+//icons
+import BackIcons from '@/assets/icons/global/back-icons';
+import { Entypo } from '@expo/vector-icons';
+//components
+import BottomTextInputModal from '@/components/ui/component-globals/modal-input';
+import ModalGender from '@/components/ui/profile/modal-gender';
+import ModalLogout from '@/components/ui/profile/modal-logout';
 
 type User = {
-  name: string;
+  full_name: string;
   email: string;
-  phone: string;
+  phone_number: string;
+  profile_picture_url?: string;
   avatar: string;
   gender: string;
   birthDate: string;
 };
+const fetchProfileById = async (): Promise<User> => {
+  const res = await api.get('/accounts/profile');
+  return res.data;
+};
+
 const EditProfileScreen = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [showNameModal, setShowNameModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -26,10 +37,23 @@ const EditProfileScreen = () => {
   const [editedName, setEditedName] = useState('');
   const { newEmail, newPhone } = useLocalSearchParams();
 
-  const maskPhone = (phone: string) => {
-    if (!phone) return '';
-    const cleaned = phone.replace(/\s|-/g, '');
-    return cleaned.replace(/(\+62)(\d{3})(\d{4})/, '$1 $2-****');
+  const {
+    data: dataProfile,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['profile'],
+    queryFn: fetchProfileById,
+  });
+  if (!dataProfile) return null;
+
+  const maskPhone = (phone_number: string) => {
+    if (!phone_number) return '';
+    const cleaned = phone_number.replace(/\s|-/g, '');
+    if (cleaned.length <= 8) return cleaned;
+
+    const suffix = cleaned.slice(-2);
+    return `********${suffix}`;
   };
 
   const maskEmail = (email: string) => {
@@ -39,32 +63,32 @@ const EditProfileScreen = () => {
     return `${maskedName}@${domain}`;
   };
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const dummyData: User = {
-          name: 'Mambaus Baus',
-          email: newEmail ? String(newEmail) : 'baus@gmail.com',
-          phone: newPhone ? String(newPhone) : '+62 812-3456-7890',
-          avatar: 'https://i.pravatar.cc/100',
-          gender: 'Male',
-          birthDate: 'Not yet determined',
-        };
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const dummyData: User = {
+  //         full_name: 'Mambaus Baus',
+  //         email: newEmail ? String(newEmail) : 'baus@gmail.com',
+  //         phone: newPhone ? String(newPhone) : '+62 812-3456-7890',
+  //         avatar: 'https://i.pravatar.cc/100',
+  //         gender: 'Male',
+  //         birthDate: 'Not yet determined',
+  //       };
 
-        setTimeout(() => {
-          setUser(dummyData);
-          setEditedName(dummyData.name);
-          setEditedGender(dummyData.gender);
-          setLoading(false);
-        }, 800);
-      } catch (err) {
-        console.error('Failed to fetch user', err);
-        setLoading(false);
-      }
-    };
+  //       setTimeout(() => {
+  //         setUser(dummyData);
+  //         setEditedName(dummyData.full_name);
+  //         setEditedGender(dummyData.gender);
+  //         setLoading(false);
+  //       }, 800);
+  //     } catch (err) {
+  //       console.error('Failed to fetch user', err);
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchUser();
-  }, [newEmail, newPhone]); // <-- tambahkan di sini
+  //   fetchUser();
+  // }, [newEmail, newPhone]);
 
   //   if (loading || !user) {
   //     return (
@@ -77,7 +101,7 @@ const EditProfileScreen = () => {
   const handleNameSave = (newName: string) => {
     setEditedName(newName);
     if (user) {
-      setUser({ ...user, name: newName });
+      setUser({ ...user, full_name: newName });
     }
   };
   const handleGenderSave = (newGender: string) => {
@@ -103,7 +127,13 @@ const EditProfileScreen = () => {
         </View>
         <View className="flex-row mt-3 bg-white p-4 ">
           <Image
-            source={{ uri: user?.avatar }}
+            source={
+              profileImage
+                ? { uri: profileImage }
+                : dataProfile?.profile_picture_url
+                  ? { uri: dataProfile.profile_picture_url }
+                  : require('@/assets/images/profile-default.png')
+            }
             className="w-[80px] h-[80px] rounded-full mr-4"
           />
           <View className=" flex-1 p-3 justify-center">
@@ -133,7 +163,7 @@ const EditProfileScreen = () => {
                 <Text className="text-[#6F6F6F] text-[14px]">Full Name</Text>
                 <View className="flex-1" />
                 <Text className="text-[#AAAAAA] text-[14px] mr-4">
-                  {user?.name}
+                  {dataProfile?.full_name}
                 </Text>
                 <Entypo name="chevron-right" size={20} color="#6F6F6F" />
               </View>
@@ -147,7 +177,7 @@ const EditProfileScreen = () => {
                 <Text className="text-[#6F6F6F] text-[14px]">Email</Text>
                 <View className="flex-1" />
                 <Text className="text-[#AAAAAA] text-[14px] mr-4">
-                  {user?.email ? maskEmail(user.email) : ''}
+                  {dataProfile?.email ? maskEmail(dataProfile.email) : ''}
                 </Text>
                 <Entypo name="chevron-right" size={20} color="#6F6F6F" />
               </View>
@@ -161,7 +191,9 @@ const EditProfileScreen = () => {
                 <Text className="text-[#6F6F6F] text-[14px]">Phone</Text>
                 <View className="flex-1" />
                 <Text className="text-[#AAAAAA] text-[14px] mr-4">
-                  {user?.phone ? maskPhone(user.phone) : ''}
+                  {dataProfile?.phone_number
+                    ? maskPhone(dataProfile.phone_number)
+                    : ''}
                 </Text>
                 <Entypo name="chevron-right" size={20} color="#6F6F6F" />
               </View>
@@ -175,7 +207,7 @@ const EditProfileScreen = () => {
                 <Text className="text-[#6F6F6F] text-[14px]">Gender</Text>
                 <View className="flex-1" />
                 <Text className="text-[#AAAAAA] text-[14px] mr-4">
-                  {user?.gender}
+                  {user?.gender || 'Not yet determined'}
                 </Text>
                 <Entypo name="chevron-right" size={20} color="#6F6F6F" />
               </View>
@@ -190,7 +222,7 @@ const EditProfileScreen = () => {
                 </Text>
                 <View className="flex-1" />
                 <Text className="text-[#AAAAAA] text-[14px] mr-4">
-                  {user?.birthDate}
+                  {user?.birthDate || 'Not yet determined'}
                 </Text>
                 <Entypo name="chevron-right" size={20} color="#6F6F6F" />
               </View>

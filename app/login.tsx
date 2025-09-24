@@ -57,7 +57,6 @@ const LoginScreen = () => {
     if (!data.phone_number) {
       return;
     }
-
     mutation.mutate(data);
   };
 

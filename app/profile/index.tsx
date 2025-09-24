@@ -7,7 +7,12 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import api from '@/utils/api/api';
+import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useQuery } from '@tanstack/react-query';
+//icons
 import { Ionicons, Entypo } from '@expo/vector-icons';
 import RateIcons from '@/assets/icons/e-commerce/rate-icon';
 import ExpressDeliveryIcon from '@/assets/icons/e-commerce/express-delivery-icon';
@@ -26,44 +31,34 @@ import TermInfoIcon from '@/assets/icons/e-commerce/term-info-icon';
 import PrivacyPolicyIcon from '@/assets/icons/profile/privacy-policy-icon';
 import AboutUsIcon from '@/assets/icons/profile/about-icon';
 import SettingProfileIcon from '@/assets/icons/profile/setting-profile-icon';
-import { router } from 'expo-router';
+//components
 import ChangeUserModal from '@/components/ui/profile/modal-change-user';
-import { LinearGradient } from 'expo-linear-gradient';
 
-type User = {
-  name: string;
+type ProfileResponse = {
+  full_name: string;
   email: string;
-  avatar: string;
+  profile_picture_url?: string;
 };
+
+const fetchProfileById = async (): Promise<ProfileResponse> => {
+  const res = await api.get('/accounts/profile');
+  return res.data;
+};
+
 const ProfileScreen = () => {
-  const [user, setUser] = useState<User | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
 
-  const [selectedRole, setSelectedRole] = useState<string | null>(null);
-  const handleOpenModal = () => setModalVisible(true);
-  const handleCloseModal = () => setModalVisible(false);
+  const {
+    data: dataProfile,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['profile'],
+    queryFn: fetchProfileById,
+  });
+  if (!dataProfile) return null;
 
-  const handleRoleSubmit = (role: string) => {
-    setSelectedRole(role);
-    console.log('Role terpilih:', role);
-  };
-
-  useEffect(() => {
-    // Simulasi fetch API
-    const loadUserData = async () => {
-      const dummyUser: User = {
-        name: 'Mambaus Baus',
-        email: 'baus@gmail.com',
-        avatar: 'https://i.pravatar.cc/100',
-      };
-
-      setTimeout(() => {
-        setUser(dummyUser);
-      }, 500);
-    };
-    loadUserData();
-  }, []);
-  if (!user) return null;
   return (
     <View>
       <StatusBar
@@ -77,14 +72,20 @@ const ProfileScreen = () => {
           <View className="bg-[#5AD598] pb-6 px-5 mt-8">
             <View className="flex-row items-center">
               <Image
-                source={{ uri: user.avatar }}
+                source={
+                  profileImage
+                    ? { uri: profileImage }
+                    : dataProfile?.profile_picture_url
+                      ? { uri: dataProfile.profile_picture_url }
+                      : require('@/assets/images/profile-default.png')
+                }
                 className="w-16 h-16 rounded-full mr-4"
               />
               <View>
                 <Text className="text-white text-lg font-bold">
-                  {user.name}
+                  {dataProfile?.full_name ?? 'Guest'}
                 </Text>
-                <Text className="text-white text-sm">{user.email}</Text>
+                <Text className="text-white text-sm">{dataProfile?.email}</Text>
               </View>
               <TouchableOpacity
                 className="ml-auto"
@@ -307,7 +308,7 @@ const ProfileScreen = () => {
 
           <ChangeUserModal
             visible={isModalVisible}
-            onClose={handleCloseModal}
+            onClose={() => setModalVisible(false)}
           />
         </SafeAreaView>
       </ScrollView>

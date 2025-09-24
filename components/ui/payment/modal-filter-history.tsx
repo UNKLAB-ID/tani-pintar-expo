@@ -28,8 +28,6 @@ const ModelFilterHistory: React.FC<ModelFilterHistoryProps> = ({
     'last7days' | 'thismonth' | null
   >(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
-
-  // state date picker
   const [fromDate, setFromDate] = useState<string>(
     new Date().toISOString().split('T')[0]
   ); // format "YYYY-MM-DD"
