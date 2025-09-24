@@ -4,7 +4,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import CustomTextInput from '../../component-globals/input-text';
 import { Controller, useForm } from 'react-hook-form';
 import ImagePickerInput from '../../component-globals/input-images';
-import React from 'react';
+import React, { useEffect } from 'react';
 import ArrowRightIcons from '@/assets/icons/e-commerce/arrow-right-icons';
 import LatLongPinAddressIcon from '@/assets/icons/global/lat-long-pin-address-icon';
 import { router } from 'expo-router';
@@ -14,6 +14,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRegisterRoleStore } from '@/store/auth/register-role';
 import AlertlatLongAddressIcons from '@/assets/icons/profile/alert-lat-long-address-icons';
 import FileUpladIcons from '@/assets/icons/global/file-upload-icons';
+import { Colors } from '@/constants/Colors';
 
 interface ComponentFormIndividuChangeRoleProps {
   togglePerusahaanAtauIndividu: boolean;
@@ -37,6 +38,10 @@ const ComponentFormIndividuChangeRole: React.FC<
     defaultValues: vendorData,
     mode: 'onChange',
   });
+
+  useEffect(() => {
+    reset(vendorData);
+  }, [togglePerusahaanAtauIndividu]);
 
   const allValues = watch();
   const isFormEmpty = Object.values(allValues).every(v => !v);
@@ -129,6 +134,26 @@ const ComponentFormIndividuChangeRole: React.FC<
   const handleRegsiterSumbit = (data: any) => {
     mutate.mutate(data);
   };
+
+  // const getFieldStatus = () => {
+  //   return Object.keys(allValues).reduce(
+  //     (acc, key) => {
+  //       const value = allValues[key as keyof typeof allValues];
+
+  //       if (value === '' || value === null || value === undefined) {
+  //         acc.empty[key] = value;
+  //       } else {
+  //         acc.filled[key] = value;
+  //       }
+
+  //       return acc;
+  //     },
+  //     { empty: {} as Record<string, any>, filled: {} as Record<string, any> }
+  //   );
+  // };
+
+  // console.log(getFieldStatus());
+
 
   return (
     <View>
@@ -224,28 +249,49 @@ const ComponentFormIndividuChangeRole: React.FC<
           rules={{ required: 'File business nib is required' }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <View style={{ marginTop: 16 }}>
+              <Text
+                className={`mb-1`}
+                style={{
+                  fontWeight: "600",
+                  fontSize: 14,
+                  color: "#1F1F1F",
+                }}
+              >
+                Unggah NIB/SIUP
+                <Text style={{ color: Colors.color.error }}>*</Text>
+              </Text>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
                   borderColor: '#ccc',
                   padding: 12,
                   borderRadius: 8,
-                  backgroundColor: '#f5f5f5',
+                  backgroundColor: '#fff',
+                  flexDirection: "column",   // susun icon + text ke bawah
+                  alignItems: "center",      // center horizontal
+                  justifyContent: "center",  // center vertical
+                  gap: 8,                    // jarak antara ikon & teks (React Native 0.71+)
                 }}
                 onPress={async () => {
                   const result = await DocumentPicker.getDocumentAsync({
-                    type: '*/*', // bisa filter misal "application/pdf"
+                    type: '*/*',
                     copyToCacheDirectory: true,
                   });
 
                   if (!result.canceled) {
-                    const file = result.assets[0]; // ambil file pertama
-                    onChange(file); // simpan ke react-hook-form
+                    const file = result.assets[0];
+                    onChange(file);
                   }
                 }}
               >
                 <FileUpladIcons width={28} height={28} color={'#AAAAAA'} />
-                <Text>{value ? value.name : 'Pilih File Business NIB'}</Text>
+                <Text style={{
+                  textAlign: "center",
+                  color: "#AAAAAA",
+                  fontWeight: "500"
+                }}>
+                  {value?.name ?? 'Pilih File Business NIB'}
+                </Text>
               </TouchableOpacity>
 
               {error && (
@@ -341,8 +387,8 @@ const ComponentFormIndividuChangeRole: React.FC<
                 borderColor: error
                   ? '#FF0808' // merah kalau error
                   : vendorData.province_name &&
-                      vendorData.city_name &&
-                      vendorData.district_name
+                    vendorData.city_name &&
+                    vendorData.district_name
                     ? '#169953' // hijau kalau datanya ada
                     : '#AAAAAA', // abu2 default
                 borderRadius: 12,
@@ -358,15 +404,15 @@ const ComponentFormIndividuChangeRole: React.FC<
                 style={{
                   color:
                     vendorData.province_name &&
-                    vendorData.city_name &&
-                    vendorData.district_name
+                      vendorData.city_name &&
+                      vendorData.district_name
                       ? '#000'
                       : '#AAAAAA',
                 }}
               >
                 {vendorData.province_name &&
-                vendorData.city_name &&
-                vendorData.district_name
+                  vendorData.city_name &&
+                  vendorData.district_name
                   ? `${vendorData.province_name}, ${vendorData.city_name}, ${vendorData.district_name}`
                   : 'Pilih Provinsi, Kota, Kecamatan, Kelurahan'}
               </Text>

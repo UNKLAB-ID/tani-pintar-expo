@@ -55,7 +55,7 @@ const ModalAddressDropdown: React.FC<ModalAddressDropdownProps> = ({
         url = `/location/cities/?province__id=${idProvinsi}&search=${kota}`;
       } else if (typeAddress === 'kecamatan') {
         if (!idKota) return { results: [] };
-        url = `/location/districts/?regency_id=${idKota}&search=${kecamatan}`;
+        url = `/location/districts/?city__id=${idKota}`;
       } else if (typeAddress === 'negara') {
         url = `/location/countries/?search=${provinsi}`;
       }
