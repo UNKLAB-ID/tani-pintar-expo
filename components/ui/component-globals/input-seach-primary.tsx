@@ -44,7 +44,7 @@ const InputSearchPrimary: React.FC<InputSearchProps> = ({
 
   return (
     <View
-      className={`flex-row items-center border ${className}`}
+      className={`flex-row items-center border px-2 ${className}`}
       style={{
         borderRadius: rounded,
         borderWidth: 1,

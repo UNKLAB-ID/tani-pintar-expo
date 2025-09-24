@@ -7,11 +7,13 @@ import {
   ScrollView,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+//icons
 import BackIcons from '@/assets/icons/global/back-icons';
 import LocationIcons from '@/assets/icons/e-commerce/locations-icons';
 import ChevronRight from '@/assets/icons/e-commerce/chevronright-icons';
-import { router } from 'expo-router';
+//components
 import VoucherCard from '@/components/ui/e-commerce/checkout/voucher-card';
 import ShippingOptionCard from '@/components/ui/e-commerce/checkout/card-shipping-options';
 import { useEcommerceStore } from '@/store/e-commerce/ecommerce';

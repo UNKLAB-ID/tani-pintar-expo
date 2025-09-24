@@ -10,8 +10,10 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import LoveIcons from '@/assets/icons/global/love-icons';
 import StarIcons from '@/assets/icons/e-commerce/stars-icons';
+import { formatPrice } from '@/utils/format-currency/currency';
 
 interface ProductImage {
   id: number;
@@ -44,6 +46,8 @@ export default function ProductDetailCard({
   flatListRef,
   onScrollEnd,
 }: ProductDetailCardProps) {
+  const { uuid } = useLocalSearchParams<{ uuid: string }>();
+
   const { width } = useWindowDimensions();
 
   return (
@@ -58,7 +62,7 @@ export default function ProductDetailCard({
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={onScrollEnd}
-          initialScrollIndex={1}
+          initialScrollIndex={product.images.length > 1 ? 1 : 0}
           getItemLayout={(_, index) => ({
             length: width,
             offset: width * index,
@@ -106,7 +110,7 @@ export default function ProductDetailCard({
         <View className="flex-row justify-between items-start">
           <View className="flex-1">
             <Text className="text-[24px] font-bold text-black">
-              Rp{product.price.toLocaleString('id-ID')}
+              {formatPrice(product.price)}
             </Text>
             {product.discount && product.originalPrice && (
               <View className="flex-row items-center space-x-2 mt-1">

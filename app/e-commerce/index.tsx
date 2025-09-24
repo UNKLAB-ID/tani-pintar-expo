@@ -12,19 +12,24 @@ import {
 } from 'react-native';
 import { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import api from '@/utils/api/api';
+import { formatPrice } from '@/utils/format-currency/currency';
+import { useQuery } from '@tanstack/react-query';
+// components
 import InputSearchPrimary from '@/components/ui/component-globals/input-seach-primary';
-import MessageIcons from '@/assets/icons/global/message-icons';
-import CartIcons from '@/assets/icons/e-commerce/cart-icons';
-import ArrowRightIcons from '@/assets/icons/e-commerce/arrow-right-icons';
 import FlashSaleCard from '@/components/ui/e-commerce/card-flashsale';
 import ProductCard from '@/components/ui/e-commerce/card-product';
 import MainCategoryCard from '@/components/ui/e-commerce/main-category';
 import LocationInfo from '@/components/ui/e-commerce/location-info';
+// icons
+import MessageIcons from '@/assets/icons/global/message-icons';
+import CartIcons from '@/assets/icons/e-commerce/cart-icons';
+import ArrowRightIcons from '@/assets/icons/e-commerce/arrow-right-icons';
 import VoucherIcons from '@/assets/icons/global/voucher-icons';
 import Wallet2Icons from '@/assets/icons/global/wallet2-icons';
 import WalletIcons from '@/assets/icons/global/wallet-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
@@ -136,12 +141,39 @@ const banners = [
 ];
 
 const EcommerceIndex = () => {
+  const [dataProduct, setDataProduct] = useState<any[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [timeLeftMs, setTimeLeftMs] = useState(3600 * 1000);
   const intervalRef = useRef<number | undefined>(undefined);
   const router = useRouter();
+
+  // Fetch function
+  const fetchListProduct = async () => {
+    const response = await api.get('/ecommerce/products/');
+    return response.data;
+  };
+
+  // Query
+  const {
+    data: listProduct,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ['listProduct'],
+    queryFn: fetchListProduct,
+    refetchOnWindowFocus: false,
+  });
+
+  // ✅ Update state kalau data berubah
+  useEffect(() => {
+    if (listProduct?.results) {
+      // console.log('📦 Data produk dari API:', listProduct.results);
+      setDataProduct(listProduct.results);
+    }
+  }, [listProduct]);
 
   useEffect(() => {
     if (timeLeftMs <= 0) {
@@ -171,12 +203,9 @@ const EcommerceIndex = () => {
   const handleFlashsale = () => {
     router.push('/e-commerce/flashsale');
   };
-  const handleProductDetail = () => {
-    router.push('/e-commerce/detail-product');
-  };
 
   const handleMessage = () => {
-    router.push('/e-commerce/message');
+    router.push('/message/message');
   };
 
   const handleCart = () => {
@@ -444,20 +473,20 @@ const EcommerceIndex = () => {
               {/* List Produk: Scroll Horizontal */}
 
               <FlatList
-                data={productData}
-                keyExtractor={item => item.id.toString()}
+                data={dataProduct}
+                keyExtractor={item => item.uuid}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 onContentSizeChange={handleScrollToIndex}
                 renderItem={({ item }) => (
                   <View className="mr-2 pb-3">
                     <FlashSaleCard
-                      image={item.image}
+                      image={{ uri: item.image }}
                       name={item.name}
-                      price={item.price}
-                      sold={item.sold}
-                      total={item.total}
-                      discount={item.discount}
+                      price={formatPrice(item.prices?.[0]?.price)}
+                      sold={item.available_stock}
+                      total={item.available_stock}
+                      discount="10%"
                     />
                   </View>
                 )}
@@ -470,22 +499,30 @@ const EcommerceIndex = () => {
                 <Text className="text-[16px] font-bold py-3">For You!</Text>
               </View>
 
-              {/* List Produk: Grid 2 Kolom */}
+              {/* Grid For You */}
               <View className="flex-row flex-wrap justify-between -mx-1">
-                {productData.map(item => (
-                  <View key={item.id} className="w-1/2 px-1 mb-1">
-                    <ProductCard
-                      image={item.image}
-                      name={item.name}
-                      discount={item.discount}
-                      price={item.price}
-                      rating={item.rating ?? 0}
-                      sold={item.sold}
-                      location={item.location}
-                      onPress={handleProductDetail}
-                    />
-                  </View>
-                ))}
+                {dataProduct.map(item => {
+                  const price = item.prices?.[0]?.price ?? 0;
+                  return (
+                    <View key={item.uuid} className="w-1/2 px-1 mb-1">
+                      <ProductCard
+                        image={{ uri: item.image }}
+                        name={item.name}
+                        discount="10%" // sementara
+                        price={formatPrice(item.prices?.[0]?.price)}
+                        rating={5}
+                        sold={item.available_stock}
+                        location={item.lokasi?.name ?? 'Unknown'}
+                        onPress={() =>
+                          router.push({
+                            pathname: '/e-commerce/detail/[uuid]',
+                            params: { uuid: item.uuid },
+                          })
+                        }
+                      />
+                    </View>
+                  );
+                })}
               </View>
             </View>
           </View>

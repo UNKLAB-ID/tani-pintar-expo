@@ -9,10 +9,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
+import { router, useRouter } from 'expo-router';
+//icons
 import ShareSquareIcons from '@/assets/icons/e-commerce/share-icons';
 import BackIcons from '@/assets/icons/global/back-icons';
+//components
 import FlashSaleTabCard from '@/components/ui/e-commerce/flashsale/card-tab-flashsale';
-import { router, useRouter } from 'expo-router';
 import InputSearchFlashSale from '@/components/ui/e-commerce/flashsale/input-seach-primary';
 
 const realBanners = [

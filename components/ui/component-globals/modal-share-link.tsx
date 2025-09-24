@@ -19,13 +19,16 @@ import MessengerIcons from '@/assets/icons/global/messenger-icons';
 interface ModalShareLinkProps {
   visible: boolean;
   onClose: () => void;
+  title?: string;
+  link: string;
 }
 const ModalShareLink: React.FC<ModalShareLinkProps> = ({
   visible,
   onClose,
+  title = 'Share link',
+  link = 'https://www.taniverse.id/tani-pay-request-money/uqwqeewewq',
 }) => {
   const [copiedLink, setCopiedLink] = useState(false);
-  const link = 'https://www.taniverse.id/tani-pay-request-money/uqwqeewewq';
 
   const handleCopyLink = () => {
     Clipboard.setString(link);
@@ -76,7 +79,7 @@ const ModalShareLink: React.FC<ModalShareLinkProps> = ({
                 marginLeft: 12,
               }}
             >
-              Share link
+              {title}
             </Text>
           </View>
           <View className="border-b border-gray-200 pb-4 mb-4">

@@ -9,12 +9,12 @@ import {
   StatusBar,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+//icons
 import StarIcons from '@/assets/icons/e-commerce/stars-icons';
 import ChevronDownIcon from '@/assets/icons/e-commerce/chevrondown-icons';
 import PointThreeHorizontal from '@/assets/icons/global/point-three-horizontal';
-import { useState } from 'react';
 
 const user = [
   {

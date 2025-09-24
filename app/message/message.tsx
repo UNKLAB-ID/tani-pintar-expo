@@ -100,7 +100,10 @@ const MessageEcommerce = () => {
           keyExtractor={item => item.id.toString()}
           className="mt-4"
           renderItem={({ item }) => (
-            <TouchableOpacity className="flex-row items-start px-4 mt-3">
+            <TouchableOpacity
+              onPress={() => router.push('/message/display-message')}
+              className="flex-row items-start px-4 mt-3"
+            >
               <Image
                 source={item.image}
                 className="rounded-full mr-3"
