@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,9 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { useQuery } from '@tanstack/react-query';
+import { useLocalSearchParams } from 'expo-router';
+import api from '@/utils/api/api';
 //icons
 import CartIcons from '@/assets/icons/e-commerce/cart-icons';
 import BackIcons from '@/assets/icons/global/back-icons';
@@ -131,6 +133,7 @@ export const otherProducts = [
 ];
 
 const ProductDetailScreen = () => {
+  const [dataProduct, setDataProduct] = useState<any[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const product = products[0];
@@ -139,21 +142,62 @@ const ProductDetailScreen = () => {
     product.variants[0]?.size || ''
   );
   const [quantity, setQuantity] = useState(1);
+  const { uuid } = useLocalSearchParams<{ uuid: string }>();
 
-  if (products.length === 0) {
-    return (
-      <SafeAreaView>
-        <Text className="text-center mt-10 text-black">
-          Produk tidak tersedia
-        </Text>
-      </SafeAreaView>
-    );
+  const fecthDetailProduct = async (uuid: any) => {
+    // console.log('🚀 Fetching product detail dengan uuid:', uuid);
+    const response = await api.get(`/ecommerce/products/${uuid}`);
+    // console.log('✅ API Response:', response.data);
+    return response.data;
+  };
+
+  // ...
+  const {
+    data: detailProduct,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['detailProduct', uuid], // uuid harus di-pass dari route params
+    queryFn: () => fecthDetailProduct(uuid),
+    enabled: !!uuid, // supaya query jalan hanya kalau ada uuid
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    // console.log('🔎 useEffect detailProduct:', detailProduct);
+  }, [detailProduct]);
+
+  // mapping data API biar sesuai props ProductDetailCard
+  const mappedProduct = detailProduct
+    ? {
+        id: detailProduct.uuid,
+        name: detailProduct.name,
+        price: 100000, // sementara hardcode (API belum ada harga)
+        discount: 0,
+        originalPrice: 0,
+        sold: 0,
+        rating: 0,
+        totalReview: 0,
+        photoReview: 0,
+        images: detailProduct.images?.map((img: any, idx: number) => ({
+          id: img.id || idx,
+          image: { uri: img.image }, // penting: pakai { uri }
+        })),
+      }
+    : null;
+
+  if (isLoading) {
+    return <Text className="text-center mt-10">Loading...</Text>;
   }
-  const productImagesWithBuffer = [
-    product.images[product.images.length - 1],
-    ...product.images,
-    product.images[0],
-  ].map((img, idx) => ({ ...img, id: idx }));
+
+  if (!mappedProduct) {
+    return <Text className="text-center mt-10">Produk tidak ditemukan</Text>;
+  }
+  // const productImagesWithBuffer = [
+  //   product.images[product.images.length - 1],
+  //   ...product.images,
+  //   product.images[0],
+  // ].map((img, idx) => ({ ...img, id: idx }));
 
   const onScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetX = e.nativeEvent.contentOffset.x;
@@ -227,7 +271,7 @@ const ProductDetailScreen = () => {
         </View>
         <ScrollView>
           <ProductDetailCard
-            product={product}
+            product={mappedProduct}
             activeIndex={activeIndex}
             flatListRef={flatListRef}
             onScrollEnd={onScrollEnd}
@@ -250,7 +294,10 @@ const ProductDetailScreen = () => {
             />
           </View>
           <View className="bg-white h-[148px] w-[390px] px-4 pt-4 pb-4 mt-4">
-            {storeList[0] && <StoreInfo toko={storeList[0]} />}
+            <StoreInfo
+              toko={storeList[0]}
+              onPress={() => router.push('/e-commerce/store')}
+            />
 
             <View className="mt-4 flex-row justify-around">
               <TouchableOpacity className="border border-[#169953] w-[173px] h-[40px] rounded-xl px-6 py-2 flex-1 mr-2 items-center">

@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import BackIcons from '@/assets/icons/global/back-icons';
 import ChangeEmailForm from '@/components/ui/profile/change-email-form';
 import VerifyCodeEmail from './verify-code-email';
+import { router } from 'expo-router';
 
 const ChangeEmail = () => {
   const [showVerify, setShowVerify] = useState(false);
@@ -42,7 +43,7 @@ const ChangeEmail = () => {
         className="flex-row items-center px-5 pt-4 pb-3"
         style={{ borderBottomWidth: 1, borderColor: '#F4F4F4' }}
       >
-        <TouchableOpacity onPress={handleBack}>
+        <TouchableOpacity onPress={() => router.back()}>
           <BackIcons width={24} height={24} />
         </TouchableOpacity>
         <Text className="text-[16px] font-semibold ml-3">Change Email</Text>

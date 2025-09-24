@@ -116,78 +116,79 @@ const ShippingOptionsScreen = () => {
             </Text>
             <ShippingIcon width={24} height={24} color="#fff" />
           </View>
+          <View className=" bg-white">
+            {/* List Shipping Options */}
+            <View className="bg-white rounded-xl px-3 py-4">
+              <FlatList
+                data={shippingOptions}
+                keyExtractor={item => item.id.toString()}
+                scrollEnabled={false}
+                renderItem={({ item }) => {
+                  const selected = selectedId === item.id;
 
-          {/* List Shipping Options */}
-          <View className="bg-white rounded-xl px-3 py-4">
-            <FlatList
-              data={shippingOptions}
-              keyExtractor={item => item.id.toString()}
-              scrollEnabled={false}
-              renderItem={({ item }) => {
-                const selected = selectedId === item.id;
-
-                return (
-                  <TouchableOpacity
-                    onPress={() => handleSelect(item)}
-                    className="flex-row items-start space-x-3 p-4 mb-3 rounded-xl border-b border-[#f0f0f0]"
-                  >
-                    <View className="mt-1 mr-2">
-                      {selected ? (
-                        <Ionicons
-                          name="radio-button-on"
-                          size={18}
-                          color="#169953"
-                        />
-                      ) : (
-                        <Ionicons
-                          name="radio-button-off"
-                          size={18}
-                          color="#DCDCDC"
-                        />
-                      )}
-                    </View>
-
-                    <ShippingIcon width={24} height={24} color="#169953" />
-
-                    <View className="flex-1 ml-3">
-                      <View className="flex-row items-center mb-1 flex-wrap">
-                        <Text className="text-[14px] text-[#1F1F1F] font-medium">
-                          {item.label}
-                        </Text>
-
-                        {item.isVoucherApplied ? (
-                          <>
-                            <Text className="text-[12px] text-[#9E9E9E] line-through">
-                              Rp{item.discountCost?.toLocaleString()}
-                            </Text>
-                            <Text className="text-[14px] text-[#00A86B] font-semibold">
-                              Rp{item.cost.toLocaleString()}
-                            </Text>
-                          </>
+                  return (
+                    <TouchableOpacity
+                      onPress={() => handleSelect(item)}
+                      className="flex-row items-start space-x-3 p-4 mb-3 rounded-xl border-b border-[#f0f0f0]"
+                    >
+                      <View className="mt-1 mr-2">
+                        {selected ? (
+                          <Ionicons
+                            name="radio-button-on"
+                            size={18}
+                            color="#169953"
+                          />
                         ) : (
-                          <Text className="text-[14px] text-[#1F1F1F]">
-                            Rp{item.cost.toLocaleString()}
-                          </Text>
+                          <Ionicons
+                            name="radio-button-off"
+                            size={18}
+                            color="#DCDCDC"
+                          />
                         )}
                       </View>
 
-                      <Text className="text-[12px] text-[#9E9E9E]">
-                        {item.eta}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          </View>
+                      <ShippingIcon width={24} height={24} color="#169953" />
 
-          <View className="mt-6">
-            <TouchableOpacity
-              onPress={() => router.back()}
-              className="bg-primary rounded-xl py-3 items-center border"
-            >
-              <Text className="text-white text-[14px] font-medium">Save</Text>
-            </TouchableOpacity>
+                      <View className="flex-1 ml-3">
+                        <View className="flex-row items-center mb-1 flex-wrap">
+                          <Text className="text-[14px] text-[#1F1F1F] font-medium">
+                            {item.label}
+                          </Text>
+
+                          {item.isVoucherApplied ? (
+                            <>
+                              <Text className="text-[12px] text-[#9E9E9E] line-through">
+                                Rp{item.discountCost?.toLocaleString()}
+                              </Text>
+                              <Text className="text-[14px] text-[#00A86B] font-semibold">
+                                Rp{item.cost.toLocaleString()}
+                              </Text>
+                            </>
+                          ) : (
+                            <Text className="text-[14px] text-[#1F1F1F]">
+                              Rp{item.cost.toLocaleString()}
+                            </Text>
+                          )}
+                        </View>
+
+                        <Text className="text-[12px] text-[#9E9E9E]">
+                          {item.eta}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            </View>
+
+            <View className="mt-6">
+              <TouchableOpacity
+                onPress={() => router.back()}
+                className="bg-primary rounded-xl py-3 items-center border"
+              >
+                <Text className="text-white text-[14px] font-medium">Save</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </SafeAreaView>
