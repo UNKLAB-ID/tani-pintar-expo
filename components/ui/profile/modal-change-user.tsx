@@ -11,6 +11,7 @@ import { X } from 'lucide-react-native';
 import { router } from 'expo-router';
 
 import { useAuthStore } from '@/store/auth/role';
+import { useRegisterRoleStore } from '@/store/auth/register-role';
 
 interface ChangeUserModalProps {
   visible: boolean;
@@ -24,6 +25,7 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
   onClose,
 }) => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const { resetForm } = useRegisterRoleStore()
 
   const setRole = useAuthStore(state => state.setRole);
 
@@ -34,17 +36,17 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
 
     switch (selectedRole) {
       case 'vendor':
-        router.replace('/profile/register-role-user');
+        router.push('/profile/register-role-user');
         break;
       case 'agent':
-        router.replace('/profile/register-role-user');
-        break;
-      case 'tani':
-        router.replace('/(tabs)/sosmed');
+        router.push('/profile/register-role-user');
         break;
       default:
-        router.replace('/');
+        router.push('/(tabs)/sosmed');
         break;
+      // default:
+      //   router.replace('/');
+      //   break;
     }
 
     onClose();
@@ -92,7 +94,10 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
               return (
                 <TouchableOpacity
                   key={role}
-                  onPress={() => setSelectedRole(role)}
+                  onPress={() => {
+                    resetForm()
+                    setSelectedRole(role)
+                  }}
                   style={{
                     borderWidth: 1,
                     borderRadius: 16,

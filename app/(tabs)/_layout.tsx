@@ -24,6 +24,7 @@ export default function Layout() {
       <Tabs
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size, focused }) => {
+            console.log(route.name)
             if (route.name === 'sosmed') {
               const IconComponent = focused ? HomeIconsActive : HomeIcons;
               return <IconComponent width={size} height={size} />;
