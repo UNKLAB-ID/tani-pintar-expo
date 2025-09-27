@@ -8,6 +8,7 @@ import PayTab from '../../../components/ui/order/pay';
 import ProcessingTab from '../../../components/ui/order/processing';
 import ShippedTab from '../../../components/ui/order/shipped';
 import CanceledTab from '../../../components/ui/order/canceled';
+import ComplatedTab from '../../../components/ui/order/complated';
 
 const OrderScreen = () => {
   const { tab } = useLocalSearchParams();
@@ -22,7 +23,7 @@ const OrderScreen = () => {
 
   console.log('Component render - activeTab:', activeTab);
 
-  const tabs = ['Pay', 'Processing', 'Shipped', 'Canceled'];
+  const tabs = ['Pay', 'Processing', 'Shipped', 'Completed', 'Canceled'];
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -32,6 +33,9 @@ const OrderScreen = () => {
         return <ProcessingTab />;
       case 'Shipped':
         return <ShippedTab />;
+      case 'Completed':
+        return <ComplatedTab />;
+
       case 'Canceled':
         return <CanceledTab />;
       default:
@@ -46,7 +50,7 @@ const OrderScreen = () => {
         <TouchableOpacity onPress={() => router.back()}>
           <BackIcons width={24} height={24} fill="#000" />
         </TouchableOpacity>
-        <Text className="text-black text-[16px] font-bold ml-3">Order</Text>
+        <Text className="text-black text-[16px] font-bold ml-3">My Order</Text>
         <View className="flex-1" />
         <SearchIconPrimary width={24} height={24} />
       </View>

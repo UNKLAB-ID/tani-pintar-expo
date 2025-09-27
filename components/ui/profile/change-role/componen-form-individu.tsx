@@ -154,7 +154,6 @@ const ComponentFormIndividuChangeRole: React.FC<
 
   // console.log(getFieldStatus());
 
-
   return (
     <View>
       {/* Nama Lengkap */}
@@ -252,9 +251,9 @@ const ComponentFormIndividuChangeRole: React.FC<
               <Text
                 className={`mb-1`}
                 style={{
-                  fontWeight: "600",
+                  fontWeight: '600',
                   fontSize: 14,
-                  color: "#1F1F1F",
+                  color: '#1F1F1F',
                 }}
               >
                 Unggah NIB/SIUP
@@ -267,10 +266,10 @@ const ComponentFormIndividuChangeRole: React.FC<
                   padding: 12,
                   borderRadius: 8,
                   backgroundColor: '#fff',
-                  flexDirection: "column",   // susun icon + text ke bawah
-                  alignItems: "center",      // center horizontal
-                  justifyContent: "center",  // center vertical
-                  gap: 8,                    // jarak antara ikon & teks (React Native 0.71+)
+                  flexDirection: 'column', // susun icon + text ke bawah
+                  alignItems: 'center', // center horizontal
+                  justifyContent: 'center', // center vertical
+                  gap: 8, // jarak antara ikon & teks (React Native 0.71+)
                 }}
                 onPress={async () => {
                   const result = await DocumentPicker.getDocumentAsync({
@@ -285,11 +284,13 @@ const ComponentFormIndividuChangeRole: React.FC<
                 }}
               >
                 <FileUpladIcons width={28} height={28} color={'#AAAAAA'} />
-                <Text style={{
-                  textAlign: "center",
-                  color: "#AAAAAA",
-                  fontWeight: "500"
-                }}>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color: '#AAAAAA',
+                    fontWeight: '500',
+                  }}
+                >
                   {value?.name ?? 'Pilih File Business NIB'}
                 </Text>
               </TouchableOpacity>
@@ -387,8 +388,8 @@ const ComponentFormIndividuChangeRole: React.FC<
                 borderColor: error
                   ? '#FF0808' // merah kalau error
                   : vendorData.province_name &&
-                    vendorData.city_name &&
-                    vendorData.district_name
+                      vendorData.city_name &&
+                      vendorData.district_name
                     ? '#169953' // hijau kalau datanya ada
                     : '#AAAAAA', // abu2 default
                 borderRadius: 12,
@@ -404,15 +405,15 @@ const ComponentFormIndividuChangeRole: React.FC<
                 style={{
                   color:
                     vendorData.province_name &&
-                      vendorData.city_name &&
-                      vendorData.district_name
+                    vendorData.city_name &&
+                    vendorData.district_name
                       ? '#000'
                       : '#AAAAAA',
                 }}
               >
                 {vendorData.province_name &&
-                  vendorData.city_name &&
-                  vendorData.district_name
+                vendorData.city_name &&
+                vendorData.district_name
                   ? `${vendorData.province_name}, ${vendorData.city_name}, ${vendorData.district_name}`
                   : 'Pilih Provinsi, Kota, Kecamatan, Kelurahan'}
               </Text>
