@@ -25,7 +25,7 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
   onClose,
 }) => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
-  const { resetForm } = useRegisterRoleStore()
+  const { resetForm } = useRegisterRoleStore();
 
   const setRole = useAuthStore(state => state.setRole);
 
@@ -95,8 +95,8 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
                 <TouchableOpacity
                   key={role}
                   onPress={() => {
-                    resetForm()
-                    setSelectedRole(role)
+                    resetForm();
+                    setSelectedRole(role);
                   }}
                   style={{
                     borderWidth: 1,

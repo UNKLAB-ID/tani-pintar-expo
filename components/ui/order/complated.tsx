@@ -4,8 +4,12 @@ import type { ImageSourcePropType } from 'react-native';
 import { formatPrice } from '@/utils/format-currency/currency';
 import MessageIcons from '@/assets/icons/global/message-icons';
 import RecomendationCard from '../e-commerce/card-recomendation';
-import ModalOrderCancel from './modal-order-cancel';
+
+import { formatShortDate } from '@/utils/format-date/date';
+import ModalShipped from './modal-shipped';
 import { router } from 'expo-router';
+
+type DeliveryStatus = 'complated';
 
 type Order = {
   id: number;
@@ -17,7 +21,10 @@ type Order = {
   price: number;
   amountPaid: number;
   idOrder: string;
+  estimate: string;
   totalItems: number;
+  orderDate: string;
+  deliveryStatus: DeliveryStatus;
 };
 
 const orders: Order[] = [
@@ -26,32 +33,23 @@ const orders: Order[] = [
     storeName: 'Fashion Store',
     storeImage: require('../../../assets/images/trash/bottle.png'),
     image: require('../../../assets/images/trash/image25.png'),
-    productName:
-      'BELI 3 GRATIS 1 PUPUK BUAH BOOSTER BUAH BOOSTER 76 HORMON PEMBUNGAAN DAN PEMBUAHAN',
+    productName: 'BELI 3 GRATIS 1 PUPUK BUAH BOOSTER...',
     variant: '',
     price: 150000,
     amountPaid: 150000,
+    estimate: '1-2 hari',
     idOrder: 'INV-FSN-001',
     totalItems: 1,
-  },
-  {
-    id: 2,
-    storeName: 'Tech Shop',
-    storeImage: require('../../../assets/images/trash/Image1.png'),
-    image: require('../../../assets/images/trash/image25.png'),
-    productName: 'Simodis 100EC Insektisida Syngenta - 100ml ',
-    variant: 'Black Edition',
-    price: 350000,
-    amountPaid: 350000,
-    idOrder: 'INV-TECH-002',
-    totalItems: 2,
+    orderDate: '2025-08-06',
+    deliveryStatus: 'complated', // ✨
   },
 ];
 
-const PayTab: FC = () => {
+const ComplatedTab: FC = () => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const handleCancel = () => {
+    // logika cancel order bisa di sini
     console.log('Order canceled');
     setModalVisible(false);
   };
@@ -105,16 +103,16 @@ const PayTab: FC = () => {
                 </Text>
                 <View className="flex-1" />
                 <View
-                  className=" px-3 py-1 "
+                  className="px-3 py-1 "
                   style={{
-                    borderWidth: 1,
+                    backgroundColor: '#DBFDDB',
                     borderRadius: 12,
-                    borderColor: '#CC0606',
-                    backgroundColor: '#CC0606',
+                    borderWidth: 1,
+                    borderColor: '#DBFDDB',
                   }}
                 >
-                  <Text className="text-[14px] font-semibold text-white">
-                    Not Paid
+                  <Text className="text-[14px] font-semibold text-primary">
+                    {order.deliveryStatus === 'complated' ? 'Completed' : ''}
                   </Text>
                 </View>
               </View>
@@ -131,10 +129,10 @@ const PayTab: FC = () => {
           <View className="mt-3 space-y-1">
             <View className="flex-row justify-between">
               <Text className="text-[16px] font-semiblod text-[#6F6F6F]">
-                Amount Paid
+                Item Estimate
               </Text>
-              <Text className="text-[16px] font-semiblod text-[#1F1F1F]">
-                {formatPrice(Number(order.amountPaid))}
+              <Text className="text-[16px] font-semiblod text-primary">
+                {formatShortDate(String(order.orderDate))}
               </Text>
             </View>
 
@@ -158,25 +156,14 @@ const PayTab: FC = () => {
           </View>
 
           <View className="flex-row  items-center gap-x-3 mt-4 px-2">
-            <TouchableOpacity className="border border-[#C8C8C8] p-2 rounded-xl">
-              <MessageIcons width={24} height={24} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setModalVisible(true)}
-              className="border border-primary p-2 w-[151px] rounded-xl"
-              style={{ width: 151, height: 40 }}
-            >
-              <Text className="text-primary text-center font-semibold text-[16px]">
-                Cancel Purchase
+            <TouchableOpacity className="border border-[#C8C8C8] p-2 rounded-xl w-1/2">
+              <Text className=" text-center font-semibold text-[16px]">
+                View Rating
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => router.push('/profile/order/payment-now')}
-              className="bg-primary just p-2 rounded-xl"
-              style={{ width: 151 }}
-            >
-              <Text className="text-white text-center font-semibold text-[16px]">
-                Pay Now
+            <TouchableOpacity className="border border-primary just p-2 rounded-xl w-1/2">
+              <Text className="text-primary text-center font-semibold text-[16px]">
+                Buy Again
               </Text>
             </TouchableOpacity>
           </View>
@@ -196,17 +183,13 @@ const PayTab: FC = () => {
         <RecomendationCard />
       </View> */}
 
-      <ModalOrderCancel
+      <ModalShipped
         visible={isModalVisible}
         onClose={() => setModalVisible(false)}
         onCancel={handleCancel}
-        onConfirm={reason => {
-          console.log('User selected reason:', reason);
-          setModalVisible(false);
-        }}
       />
     </ScrollView>
   );
 };
 
-export default PayTab;
+export default ComplatedTab;

@@ -17,7 +17,7 @@ const RegisterRoleUser = () => {
   const [behavior, setBehavior] = useState<'padding' | 'height' | undefined>(
     Platform.OS === 'ios' ? 'padding' : 'height'
   );
-  const { resetForm } = useRegisterRoleStore()
+  const { resetForm } = useRegisterRoleStore();
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
@@ -81,7 +81,8 @@ const RegisterRoleUser = () => {
                     marginTop: 10,
                   }}
                 >
-                  Silahkan lengkapi data toko kamu untuk bergabung dengan Tani Verse
+                  Silahkan lengkapi data toko kamu untuk bergabung dengan Tani
+                  Verse
                 </Text>
               </View>
               <View
@@ -106,8 +107,8 @@ const RegisterRoleUser = () => {
               >
                 <TouchableOpacity
                   onPress={() => {
-                    resetForm()
-                    setToggleButton(false)
+                    resetForm();
+                    setToggleButton(false);
                   }}
                   style={{
                     flex: 1,
@@ -130,8 +131,8 @@ const RegisterRoleUser = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    resetForm()
-                    setToggleButton(true)
+                    resetForm();
+                    setToggleButton(true);
                   }}
                   style={{
                     flex: 1,

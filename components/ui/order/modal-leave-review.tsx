@@ -1,14 +1,18 @@
-import { router } from 'expo-router';
+import { Modal, View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { View, Text, Image, Modal, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
 
-interface ModalShippedProps {
+interface ModalLeaveReviewProps {
   visible: boolean;
   onClose: () => void;
-  onCancel?: () => void;
+  onSubmit?: () => void;
 }
 
-const ModalShipped = ({ visible, onClose, onCancel }: ModalShippedProps) => {
+const ModalLeaveReview = ({
+  visible,
+  onClose,
+  onSubmit,
+}: ModalLeaveReviewProps) => {
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View
@@ -19,32 +23,28 @@ const ModalShipped = ({ visible, onClose, onCancel }: ModalShippedProps) => {
         }}
       >
         <View className="bg-white rounded-xl items-center pt-4 px-3  w-full">
-          <Text className="font-semibold text-[18px]">
-            Yeay! Your order is complete 🎉
-          </Text>
+          <Text className="font-semibold text-[18px]">Leave Review?</Text>
           <Text className="text-center text-[14px] text-[#B3B3B3] my-1">
-            Make sure the items you receive are complete and in good condition
-            before clicking &apos;Confirm&apos;. After that, the order will be
-            completed, and payment will be forwarded to the Seller.
+            You’re about to leave the review page. Changes will not be saved.
           </Text>
 
           {/* Buttons */}
           <View className="flex-row px-5 pb-6 pt-4 w-full">
             <>
               <TouchableOpacity
-                onPress={onClose}
+                onPress={() => router.back()}
                 className="flex-1 py-3 bg-[#F5F5F5] rounded-xl border border-primary mr-2"
               >
                 <Text className="text-center text-primary font-semibold">
-                  Cancel
+                  Leave
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => router.push('/profile/order/rate-product')}
+                onPress={onClose}
                 className="flex-1 py-3 bg-primary rounded-xl"
               >
                 <Text className="text-center text-white font-semibold">
-                  Confirm
+                  Stay
                 </Text>
               </TouchableOpacity>
             </>
@@ -54,5 +54,4 @@ const ModalShipped = ({ visible, onClose, onCancel }: ModalShippedProps) => {
     </Modal>
   );
 };
-
-export default ModalShipped;
+export default ModalLeaveReview;
