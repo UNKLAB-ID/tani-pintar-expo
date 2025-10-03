@@ -9,6 +9,7 @@ import ProcessingTab from '../../../components/ui/order/processing';
 import ShippedTab from '../../../components/ui/order/shipped';
 import CanceledTab from '../../../components/ui/order/canceled';
 import ComplatedTab from '../../../components/ui/order/complated';
+import RefundTab from '@/components/ui/order/refund';
 
 const OrderScreen = () => {
   const { tab } = useLocalSearchParams();
@@ -23,7 +24,14 @@ const OrderScreen = () => {
 
   console.log('Component render - activeTab:', activeTab);
 
-  const tabs = ['Pay', 'Processing', 'Shipped', 'Completed', 'Canceled'];
+  const tabs = [
+    'Pay',
+    'Processing',
+    'Shipped',
+    'Completed',
+    'Canceled',
+    'Refund',
+  ];
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -38,6 +46,8 @@ const OrderScreen = () => {
 
       case 'Canceled':
         return <CanceledTab />;
+      case 'Refund':
+        return <RefundTab />;
       default:
         return null;
     }
