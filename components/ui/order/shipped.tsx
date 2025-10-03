@@ -127,7 +127,7 @@ const ShippedTab: FC = () => {
                   }}
                 >
                   <Text className="text-[14px] font-semibold text-primary">
-                    Shipping
+                    {order.deliveryStatus === 'shipped' ? 'Shipped' : 'Arrived'}
                   </Text>
                 </View>
               </View>
@@ -201,6 +201,7 @@ const ShippedTab: FC = () => {
             ) : (
               <>
                 <TouchableOpacity
+                  onPress={() => router.push('/profile/order/order-refund')}
                   className="border-2 p-2 rounded-xl"
                   style={{ width: 151, borderColor: '#C8C8C8' }}
                 >

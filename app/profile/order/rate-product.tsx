@@ -14,6 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Star, X, CameraIcon, Video } from 'lucide-react-native';
 import ModalLeaveReview from '@/components/ui/order/modal-leave-review';
 import { useLocalSearchParams } from 'expo-router';
+import DescriptionInput from '@/components/ui/component-globals/description-input';
 
 const RateProduct = () => {
   const [modalLeave, setModalLeave] = useState(false);
@@ -228,27 +229,7 @@ const RateProduct = () => {
         </View>
 
         {/* Experience */}
-        <View className="bg-white rounded-xl p-4">
-          <Text className="text-black font-medium mb-2">
-            Tell us about your shopping experience (max. 50 characters!)
-          </Text>
-
-          <View className="border border-gray-300 rounded-xl">
-            <TextInput
-              value={experience}
-              onChangeText={t => setExperience(t)}
-              placeholder="Tell us about the quality, delivery, or service of the seller."
-              placeholderTextColor="#9CA3AF" // abu-abu halus
-              maxLength={50}
-              multiline
-              className="p-3 text-sm text-black"
-              style={{ minHeight: 80, textAlignVertical: 'top' }} // biar teks dari atas
-            />
-            <Text className="text-right text-gray-400 text-xs pr-3 pb-2">
-              {experience.length} Characters
-            </Text>
-          </View>
-        </View>
+        <DescriptionInput value={experience} onChangeText={setExperience} />
       </ScrollView>
       {/* Submit */}
       <View className="bg-white p-2 ">
