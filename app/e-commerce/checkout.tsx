@@ -72,10 +72,6 @@ type PaymentSummary = {
   grandTotal: number;
 };
 
-const handleBack = () => {
-  router.push('/e-commerce/detail-product');
-};
-
 export const addresses: Address[] = [
   {
     id: 1,
@@ -204,18 +200,18 @@ const CheckoutScreen = () => {
       />
       <SafeAreaView
         edges={['top', 'right', 'left', 'bottom']}
-        className="bg-[#F8F8F8] "
+        className="bg-[#F8F8F8] flex-1 "
       >
         {/* Header */}
         <View className="relative flex-row bg-white items-center p-4">
-          <TouchableOpacity onPress={handleBack}>
+          <TouchableOpacity onPress={() => router.back()}>
             <BackIcons width={24} height={24} />
           </TouchableOpacity>
           <View className="flex-1 items-center -ml-6">
             <Text className="font-semibold text-[18px]">Checkout</Text>
           </View>
         </View>
-        <ScrollView contentContainerStyle={{ paddingBottom: 45 }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 50, flexGrow: 1 }}>
           {/* Shipping Address */}
           {selectedAddress && (
             <View className="bg-white mt-3 px-4 py-3 rounded-md mx-3">
@@ -366,27 +362,40 @@ const CheckoutScreen = () => {
               </View>
             </View>
           )}
-
-          {/* Total & Pay Button */}
-          {summary && summary.grandTotal > 0 && (
-            <View className="bg-white px-4 pb-5 pt-2 rounded-t-xl flex-row justify-between items-center">
-              <View>
-                <Text className="text-[14px] text-[#9E9E9E]">Total Bill</Text>
-                <Text className="text-[14px] text-[#00A86B] font-semibold">
-                  Rp{summary.grandTotal.toLocaleString()}
-                </Text>
-              </View>
-              <TouchableOpacity
-                className="bg-[#00A86B] px-6 py-2 rounded-xl"
-                onPress={() => router.push('/e-commerce/checkout/success')}
-              >
-                <Text className="text-white font-semibold text-[14px]">
-                  Pay Now
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </ScrollView>
+
+        {/* Total & Pay Button */}
+        {summary && summary.grandTotal > 0 && (
+          <View
+            className="bg-white flex-row justify-between items-center px-4 py-3 rounded-t-2xl"
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: -2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 4,
+              elevation: 10, // Android
+            }}
+          >
+            <View>
+              <Text className="text-[14px] text-[#9E9E9E]">Total Bill</Text>
+              <Text className="text-[14px] text-[#00A86B] font-semibold">
+                Rp{summary.grandTotal.toLocaleString()}
+              </Text>
+            </View>
+            <TouchableOpacity
+              className="bg-[#00A86B] px-6 py-2 rounded-xl"
+              onPress={() => router.push('/e-commerce/checkout/success')}
+            >
+              <Text className="text-white font-semibold text-[14px]">
+                Pay Now
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </SafeAreaView>
     </>
   );
