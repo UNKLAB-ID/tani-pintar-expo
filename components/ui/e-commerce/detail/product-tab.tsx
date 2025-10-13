@@ -1,4 +1,3 @@
-import { formatPrice } from '@/utils/format-currency/currency';
 import {
   ChevronDownIcon,
   SlidersHorizontal,
@@ -17,6 +16,9 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
+import { formatPrice } from '@/utils/format-currency/currency';
+import ModaFilterStore from '../checkout/modal-filter-store';
+import ModalShowRecomendation from '../checkout/modal-show-recomendation';
 
 const { width } = Dimensions.get('window');
 const products = [
@@ -66,7 +68,9 @@ const ProductTab = () => {
   const [layoutMode, setLayoutMode] = useState<'grid4' | 'grid2' | 'list'>(
     'grid2'
   );
-  const [timeLeft, setTimeLeft] = useState(12 * 60 * 60); // 12 jam
+  const [timeLeft, setTimeLeft] = useState(12 * 60 * 60);
+  const [showModal, setShowModal] = useState(false);
+  const [showModalRecomendation, setShowModalRecomendation] = useState(false);
 
   // Timer countdown
   useEffect(() => {
@@ -154,11 +158,17 @@ const ProductTab = () => {
       <View className="p-4">
         {/* Filter & Sort */}
         <View className="flex-row gap-x-3">
-          <TouchableOpacity className="border border-[#D3D3D3] flex-row py-2 px-4 rounded-full">
+          <TouchableOpacity
+            onPress={() => setShowModal(true)}
+            className="border border-[#D3D3D3] flex-row py-2 px-4 rounded-full"
+          >
             <SlidersHorizontal size={20} color="#000" />
             <Text className="text-[14px] ml-2">Filter</Text>
           </TouchableOpacity>
-          <TouchableOpacity className="border border-[#D3D3D3] flex-row py-2 px-4 rounded-full">
+          <TouchableOpacity
+            onPress={() => setShowModalRecomendation(true)}
+            className="border border-[#D3D3D3] flex-row py-2 px-4 rounded-full"
+          >
             <Text className="text-[14px] ml-2">Recomendation</Text>
             <ChevronDownIcon size={20} color="#000" />
           </TouchableOpacity>
@@ -264,6 +274,17 @@ const ProductTab = () => {
           ))}
         </View>
       </View>
+      <ModaFilterStore
+        visible={showModal}
+        onReset={() => {
+          // Add your reset logic here
+        }}
+        onClose={() => setShowModal(false)}
+      />
+      <ModalShowRecomendation
+        visible={showModalRecomendation}
+        onClose={() => setShowModalRecomendation(false)}
+      />
     </ScrollView>
   );
 };
