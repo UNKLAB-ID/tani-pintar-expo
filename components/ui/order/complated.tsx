@@ -2,12 +2,9 @@ import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { FC, useState } from 'react';
 import type { ImageSourcePropType } from 'react-native';
 import { formatPrice } from '@/utils/format-currency/currency';
-import MessageIcons from '@/assets/icons/global/message-icons';
-import RecomendationCard from '../e-commerce/card-recomendation';
 
 import { formatShortDate } from '@/utils/format-date/date';
 import ModalShipped from './modal-shipped';
-import { router } from 'expo-router';
 
 type DeliveryStatus = 'complated';
 

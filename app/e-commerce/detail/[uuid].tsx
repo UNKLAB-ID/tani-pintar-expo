@@ -163,10 +163,6 @@ const ProductDetailScreen = () => {
     refetchOnWindowFocus: false,
   });
 
-  useEffect(() => {
-    // console.log('🔎 useEffect detailProduct:', detailProduct);
-  }, [detailProduct]);
-
   // mapping data API biar sesuai props ProductDetailCard
   const mappedProduct = detailProduct
     ? {
@@ -193,11 +189,6 @@ const ProductDetailScreen = () => {
   if (!mappedProduct) {
     return <Text className="text-center mt-10">Produk tidak ditemukan</Text>;
   }
-  // const productImagesWithBuffer = [
-  //   product.images[product.images.length - 1],
-  //   ...product.images,
-  //   product.images[0],
-  // ].map((img, idx) => ({ ...img, id: idx }));
 
   const onScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetX = e.nativeEvent.contentOffset.x;
@@ -233,13 +224,15 @@ const ProductDetailScreen = () => {
     }
   };
 
-  const handleBack = () => {
-    router.push('/(tabs)/ecommerce');
-  };
-
   const handleCheckout = () => {
     router.push('/e-commerce/checkout');
   };
+
+  // console.log('🟢 mappedProduct:', mappedProduct);
+  // useEffect(() => {
+  //   console.log('🔎 detailProduct dari API:', detailProduct);
+  // }, [detailProduct]);
+
   return (
     <>
       <StatusBar
@@ -253,7 +246,7 @@ const ProductDetailScreen = () => {
       >
         {/* Header */}
         <View className="flex-row bg-white items-center justify-between  px-3 pb-5 pt-4">
-          <TouchableOpacity className="ml-4" onPress={handleBack}>
+          <TouchableOpacity className="ml-4" onPress={() => router.back()}>
             <BackIcons width={20} height={20} color="#7D7D7D" />
           </TouchableOpacity>
 

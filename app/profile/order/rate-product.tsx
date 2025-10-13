@@ -1,11 +1,4 @@
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  ScrollView,
-  Image,
-  TextInput,
-} from 'react-native';
+import { View, TouchableOpacity, Text, ScrollView, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import BackIcons from '@/assets/icons/global/back-icons';

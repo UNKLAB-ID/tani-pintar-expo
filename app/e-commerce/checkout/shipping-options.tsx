@@ -109,16 +109,33 @@ const ShippingOptionsScreen = () => {
           <Text className="text-white text-[14px]">Back to Checkout</Text>
         </View>
 
-        <View className="flex-1 bg-primary p-4">
-          <View className="flex-row items-center mb-4">
+        <View className="flex-1 bg-primary ">
+          <View
+            className="flex-row items-center mb-4 p-4"
+            style={{ paddingBottom: 120 }}
+          >
             <Text className="text-[20px] font-semibold text-white mr-3">
               Select Shipping
             </Text>
             <ShippingIcon width={24} height={24} color="#fff" />
           </View>
-          <View className=" bg-white">
-            {/* List Shipping Options */}
-            <View className="bg-white rounded-xl px-3 py-4">
+          {/* List Shipping Options */}
+          <View
+            className="flex-1 absolute w-full h-ful "
+            style={{ top: 90, zIndex: 10 }}
+          >
+            <View
+              className="bg-white rounded-xl p-4 mx-4"
+              style={{
+                // Android
+                elevation: 10,
+                // iOS
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 3 },
+                shadowOpacity: 0.15,
+                shadowRadius: 10,
+              }}
+            >
               <FlatList
                 data={shippingOptions}
                 keyExtractor={item => item.id.toString()}
@@ -180,11 +197,16 @@ const ShippingOptionsScreen = () => {
                 }}
               />
             </View>
+          </View>
 
-            <View className="mt-6">
+          <View className="flex-1 bg-white w-full">
+            <View
+              className="flex-1 justify-end p-4 mb-4"
+              style={{ bottom: 300 }}
+            >
               <TouchableOpacity
                 onPress={() => router.back()}
-                className="bg-primary rounded-xl py-3 items-center border"
+                className="bg-primary rounded-xl py-3 items-center "
               >
                 <Text className="text-white text-[14px] font-medium">Save</Text>
               </TouchableOpacity>

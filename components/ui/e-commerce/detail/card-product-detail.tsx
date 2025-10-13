@@ -80,7 +80,7 @@ export default function ProductDetailCard({
             </View>
           )}
         />
-        {/* Dot Indicator */}
+        {/* Dot Indicator - FIXED */}
         <View
           style={{
             position: 'absolute',
@@ -94,11 +94,11 @@ export default function ProductDetailCard({
             {product.images.map((_, index) => (
               <View
                 key={index}
-                className={`mx-[2px] rounded-full ${
+                className={`mx-[2px] rounded-full h-[8px] ${
                   index === activeIndex
                     ? 'bg-[#28a745] w-[20px]'
                     : 'bg-[#dcdcdc] w-[8px]'
-                } h-[8px]`}
+                }`}
               />
             ))}
           </View>
@@ -112,26 +112,27 @@ export default function ProductDetailCard({
             <Text className="text-[24px] font-bold text-black">
               {formatPrice(product.price)}
             </Text>
-            {product.discount && product.originalPrice && (
-              <View className="flex-row items-center space-x-2 mt-1">
-                <View
-                  className=" px-2 py-0.5 rounded-full items-center justify-center "
-                  style={{
-                    backgroundColor: '#FF0808',
-                    width: 45,
-                    height: 24,
-                    marginRight: 5,
-                  }}
-                >
-                  <Text className="text-white text-[14px] font-semibold">
-                    {product.discount}%
+            {(product.discount ?? 0) > 0 &&
+              (product.originalPrice ?? 0) > 0 && (
+                <View className="flex-row items-center space-x-2 mt-1">
+                  <View
+                    className="px-2 py-0.5 rounded-full items-center justify-center"
+                    style={{
+                      backgroundColor: '#FF0808',
+                      width: 45,
+                      height: 24,
+                      marginRight: 5,
+                    }}
+                  >
+                    <Text className="text-white text-[14px] font-semibold">
+                      {product.discount}%
+                    </Text>
+                  </View>
+                  <Text className="text-[14px] text-gray-500 line-through">
+                    {formatPrice(product.originalPrice || 0)}
                   </Text>
                 </View>
-                <Text className="text-[14px] text-gray-500 line-through">
-                  Rp{product.originalPrice.toLocaleString('id-ID')}
-                </Text>
-              </View>
-            )}
+              )}
           </View>
           <TouchableOpacity className="mt-1 ml-2" activeOpacity={0.7}>
             <LoveIcons width={25} height={24} color={'#C8C8C8'} />
@@ -140,14 +141,14 @@ export default function ProductDetailCard({
 
         {/* Product Title */}
         <Text
-          className="mt-3  text-black leading-6 font-semibold"
+          className="mt-3 text-black leading-6 font-semibold"
           style={{ fontSize: 20 }}
         >
           {product.name}
         </Text>
 
         {/* Rating & Reviews */}
-        <View className="flex-row items-center mt-4  ">
+        <View className="flex-row items-center mt-4">
           <Text className="text-[14px] text-gray-600">Sold {product.sold}</Text>
 
           <TouchableOpacity
@@ -160,7 +161,7 @@ export default function ProductDetailCard({
             <Text className="ml-1 text-[14px] text-black font-semibold">
               {product.rating}
             </Text>
-            <Text className="ml-2  text-[14px] text-gray-600">
+            <Text className="ml-2 text-[14px] text-gray-600">
               ({product.totalReview} Reviews)
             </Text>
           </TouchableOpacity>
