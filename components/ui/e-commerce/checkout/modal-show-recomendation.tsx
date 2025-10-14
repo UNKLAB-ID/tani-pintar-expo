@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Modal, Pressable } from 'react-native';
 import RectangleIcon from '@/assets/icons/global/rectangle-icon';
 import { X, Check } from 'lucide-react-native';
@@ -6,6 +6,8 @@ import { X, Check } from 'lucide-react-native';
 interface ModalShowRecomendationProps {
   visible: boolean;
   onClose: () => void;
+  onSelectSort: (id: string) => void;
+  selectedOption: string;
 }
 
 type SortOption = {
@@ -15,7 +17,7 @@ type SortOption = {
 
 const sortOptions: SortOption[] = [
   { id: 'latest', label: 'Latest' },
-  { id: 'popular', label: 'Most popular' },
+  { id: 'popular', label: 'Most Popular' },
   { id: 'highest_price', label: 'Highest Price' },
   { id: 'lowest_price', label: 'Lowest Price' },
   { id: 'most_buyers', label: 'Most Buyers' },
@@ -25,15 +27,24 @@ const sortOptions: SortOption[] = [
 const ModalShowRecomendation: React.FC<ModalShowRecomendationProps> = ({
   visible,
   onClose,
+  onSelectSort,
+  selectedOption,
 }) => {
-  const [selectedOption, setSelectedOption] = useState<string>('latest');
+  const [localSelected, setLocalSelected] = useState(selectedOption);
+
+  // Sync perubahan dari parent
+  useEffect(() => {
+    setLocalSelected(selectedOption);
+  }, [selectedOption]);
 
   const handleSelect = (id: string) => {
-    setSelectedOption(id);
+    setLocalSelected(id);
+    onSelectSort(id);
   };
 
   const handleReset = () => {
-    setSelectedOption('latest');
+    setLocalSelected('latest');
+    onSelectSort('latest');
   };
 
   return (
@@ -67,7 +78,6 @@ const ModalShowRecomendation: React.FC<ModalShowRecomendationProps> = ({
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-
               marginBottom: 16,
             }}
           >
@@ -95,7 +105,7 @@ const ModalShowRecomendation: React.FC<ModalShowRecomendationProps> = ({
           {/* Daftar Opsi */}
           <View>
             {sortOptions.map(option => {
-              const isSelected = selectedOption === option.id;
+              const isSelected = localSelected === option.id;
               return (
                 <TouchableOpacity
                   key={option.id}

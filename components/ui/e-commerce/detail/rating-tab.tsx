@@ -1,37 +1,51 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Star } from 'lucide-react-native';
 
-const RatingTab = () => {
-  const ratingData = {
-    average: 4.6,
-    totalReviews: 500,
-    breakdown: [
-      { stars: 5, count: 280, percentage: 56 },
-      { stars: 4, count: 150, percentage: 30 },
-      { stars: 3, count: 50, percentage: 10 },
-      { stars: 2, count: 15, percentage: 3 },
-      { stars: 1, count: 5, percentage: 1 },
+const reviews = [
+  {
+    id: 1,
+    user: 'Ayu Rahma',
+    product: 'H&L Semprotan Sprayer Manual [2 Liter]',
+    variant: 'Kecil',
+    rating: 4,
+    comment: 'Packagingnya bagus ga ada yang cacat, pengirimannya super cepat',
+    images: [
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMWFTm48Xvp_Qr3Yyndl8ll5qoCX3saj-NzQ&s',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMWFTm48Xvp_Qr3Yyndl8ll5qoCX3saj-NzQ&s',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMWFTm48Xvp_Qr3Yyndl8ll5qoCX3saj-NzQ&s',
     ],
-  };
+    date: '06 Aug 2025',
+  },
+  {
+    id: 2,
+    user: 'Rizky Andika',
+    product: 'H&L Semprotan Sprayer Manual [2 Liter]',
+    variant: 'Kecil',
+    rating: 5,
+    comment: 'Barang sesuai deskripsi, semprotan kuat dan mudah digunakan!',
+    images: [
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMWFTm48Xvp_Qr3Yyndl8ll5qoCX3saj-NzQ&s',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMWFTm48Xvp_Qr3Yyndl8ll5qoCX3saj-NzQ&s',
+    ],
+    date: '04 Aug 2025',
+  },
+  {
+    id: 3,
+    user: 'Nina Kartika',
+    product: 'H&L Semprotan Sprayer Manual [2 Liter]',
+    variant: 'Kecil',
+    rating: 3,
+    comment: 'Produk cukup baik, tapi pengiriman agak lama.',
+    images: [],
+    date: '02 Aug 2025',
+  },
+];
 
-  const reviews = [
-    {
-      id: 1,
-      user: 'John Doe',
-      rating: 5,
-      comment: 'Excellent product quality and fast shipping!',
-      date: '2 days ago',
-    },
-    {
-      id: 2,
-      user: 'Jane Smith',
-      rating: 4,
-      comment: 'Good value for money, recommended.',
-      date: '1 week ago',
-    },
-    // ... more reviews
-  ];
+const RatingTab = () => {
+  const totalReviews = reviews.length;
+  const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
+  const averageRating = totalReviews > 0 ? totalRating / totalReviews : 0;
 
   const renderStars = (rating: any) => {
     return (
@@ -52,49 +66,54 @@ const RatingTab = () => {
     <ScrollView className="flex-1 bg-white">
       <View className="p-4">
         {/* Rating Summary */}
-        <View className="bg-gray-50 p-4 rounded-lg mb-6">
+        <View className="bg-gray-50 pt-4 rounded-lg ">
           <View className="flex-row items-center mb-4">
             <Text className="text-3xl font-bold text-gray-800 mr-2">
-              {ratingData.average}
+              {averageRating.toFixed(1)}
             </Text>
             <View>
-              {renderStars(Math.floor(ratingData.average))}
+              {renderStars(Math.round(averageRating))}
               <Text className="text-sm text-gray-500 mt-1">
-                {ratingData.totalReviews} reviews
+                {totalReviews} reviews
               </Text>
             </View>
           </View>
-
-          {/* Rating Breakdown */}
-          {ratingData.breakdown.map(item => (
-            <View key={item.stars} className="flex-row items-center mb-2">
-              <Text className="text-sm text-gray-600 w-8">{item.stars}★</Text>
-              <View className="flex-1 h-2 bg-gray-200 rounded-full mx-2">
-                <View
-                  className="h-2 bg-yellow-400 rounded-full"
-                  style={{ width: `${item.percentage}%` }}
-                />
-              </View>
-              <Text className="text-sm text-gray-500 w-8">{item.count}</Text>
-            </View>
-          ))}
         </View>
 
         {/* Recent Reviews */}
         <Text className="text-lg font-semibold text-gray-800 mb-4">
           Recent Reviews
         </Text>
-
         {reviews.map(review => (
           <View key={review.id} className="border-b border-gray-100 pb-4 mb-4">
-            <View className="flex-row items-center justify-between mb-2">
-              <Text className="font-medium text-gray-800">{review.user}</Text>
-              <Text className="text-sm text-gray-500">{review.date}</Text>
+            <View className=" mb-2">
+              <Text className="font-medium text-gray-800">
+                {review.product}
+              </Text>
+              <Text className="text-sm text-gray-500">
+                Variant: {review.variant}
+              </Text>
             </View>
-            {renderStars(review.rating)}
-            <Text className="text-gray-600 mt-2 leading-5">
+            {review.images.length > 0 && (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                className="my-2"
+              >
+                {review.images.map((img, index) => (
+                  <Image
+                    key={index}
+                    source={{ uri: img }}
+                    className="w-16 h-16 rounded-md mr-2 border border-gray-200"
+                    resizeMode="cover"
+                  />
+                ))}
+              </ScrollView>
+            )}
+            <Text className="text-gray-600 my-4 leading-5">
               {review.comment}
             </Text>
+            {renderStars(review.rating)}
           </View>
         ))}
       </View>
