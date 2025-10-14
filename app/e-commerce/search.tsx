@@ -41,10 +41,6 @@ const SearchPage = () => {
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
 
-  const handleBackHome = () => {
-    router.push('/ecommerce');
-  };
-
   const handleSearch = () => {
     const trimmed = query.trim();
     if (!trimmed) return;
@@ -72,7 +68,7 @@ const SearchPage = () => {
     >
       <View className="flex-1 bg-[#f8f8f8] ">
         <View className="flex-row justify-between px-4 py-5 bg-white">
-          <TouchableOpacity className="pt-1" onPress={handleBackHome}>
+          <TouchableOpacity className="pt-1" onPress={() => router.back()}>
             <BackIcons />
           </TouchableOpacity>
 
@@ -100,7 +96,9 @@ const SearchPage = () => {
             </TouchableOpacity>
           </View>
           <View className="justify-center items-center">
-            <TouchableOpacity onPress={() => console.log('Camera Search')}>
+            <TouchableOpacity
+              onPress={() => router.push('/e-commerce/search-with-camera')}
+            >
               <CameraSearch width={24} height={24} />
             </TouchableOpacity>
           </View>

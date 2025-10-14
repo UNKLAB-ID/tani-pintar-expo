@@ -14,12 +14,14 @@ interface ModaFilterStoreProps {
   visible: boolean;
   onReset: () => void;
   onClose: () => void;
+  onApply: (filters: any) => void;
 }
 
 const ModaFilterStore: React.FC<ModaFilterStoreProps> = ({
   visible,
   onClose,
   onReset,
+  onApply,
 }) => {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -255,6 +257,13 @@ const ModaFilterStore: React.FC<ModaFilterStoreProps> = ({
           }}
         >
           <TouchableOpacity
+            onPress={() =>
+              onApply({
+                minPrice: minPrice ? Number(minPrice) : null,
+                maxPrice: maxPrice ? Number(maxPrice) : null,
+                rating,
+              })
+            }
             style={{
               borderRadius: 12,
               paddingVertical: 14,

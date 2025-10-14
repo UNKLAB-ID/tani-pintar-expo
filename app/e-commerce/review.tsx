@@ -134,9 +134,6 @@ const Reviews = () => {
     }));
   };
 
-  const handleBack = () => {
-    router.push('/e-commerce/detail-product');
-  };
   interface Reviewer {
     id: string;
     name: string;
@@ -290,7 +287,7 @@ const Reviews = () => {
       >
         {/* Header */}
         <View className="flex-row items-center px-5 py-5 bg-white">
-          <TouchableOpacity onPress={handleBack}>
+          <TouchableOpacity onPress={() => router.back()}>
             <BackIcons width={20} height={20} />
           </TouchableOpacity>
           <Text className="text-start text-[20px] font-bold ml-5">Reviews</Text>

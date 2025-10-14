@@ -7,7 +7,7 @@ import {
   RectangleVertical,
   Star,
 } from 'lucide-react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -29,38 +29,42 @@ const products = [
     originalPrice: 36000,
     discount: 20,
     image: require('@/assets/images/trash/image25.png'),
-    rating: 4.6,
+    rating: 2,
     sold: 500,
+    dateAdded: new Date('2025-10-01'),
   },
   {
     id: 2,
-    name: 'H&L Semprotan Sprayer Manual [2 Liter]',
+    name: 'H&L Sprayer 1L Portable',
     price: 200000,
     originalPrice: 250000,
     discount: 15,
     image: require('@/assets/images/trash/image25.png'),
     rating: 4.8,
     sold: 89,
+    dateAdded: new Date('2025-09-12'),
   },
   {
     id: 3,
-    name: 'H&L Semprotan Sprayer Manual [2 Liter]',
-    price: 200000,
-    originalPrice: 250000,
-    discount: 15,
+    name: 'H&L Electric Sprayer 5L',
+    price: 500000,
+    originalPrice: 600000,
+    discount: 10,
     image: require('@/assets/images/trash/image25.png'),
-    rating: 4.8,
-    sold: 89,
+    rating: 5,
+    sold: 200,
+    dateAdded: new Date('2025-10-10'),
   },
   {
     id: 4,
-    name: 'H&L Semprotan Sprayer Manual [2 Liter]',
-    price: 200000,
-    originalPrice: 250000,
-    discount: 15,
+    name: 'H&L Garden Sprayer 3L',
+    price: 120000,
+    originalPrice: 180000,
+    discount: 25,
     image: require('@/assets/images/trash/image25.png'),
-    rating: 4.8,
-    sold: 89,
+    rating: 1,
+    sold: 65,
+    dateAdded: new Date('2025-08-21'),
   },
 ];
 
@@ -71,6 +75,37 @@ const ProductTab = () => {
   const [timeLeft, setTimeLeft] = useState(12 * 60 * 60);
   const [showModal, setShowModal] = useState(false);
   const [showModalRecomendation, setShowModalRecomendation] = useState(false);
+  const [minPrice, setMinPrice] = useState<number | null>(null);
+  const [maxPrice, setMaxPrice] = useState<number | null>(null);
+  const [rating, setRating] = useState<number | null>(null);
+  const [sortOption, setSortOption] = useState<string>('latest');
+
+  // ⏳ Filtered & Sorted products
+  const filteredProducts = useMemo(() => {
+    let data = [...products];
+
+    if (minPrice) data = data.filter(p => p.price >= minPrice);
+    if (maxPrice) data = data.filter(p => p.price <= maxPrice);
+    if (rating) data = data.filter(p => p.rating >= rating);
+
+    switch (sortOption) {
+      case 'highest_price':
+        data.sort((a, b) => b.price - a.price);
+        break;
+      case 'lowest_price':
+        data.sort((a, b) => a.price - b.price);
+        break;
+      case 'most_reviews':
+        data.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'latest':
+        data.sort((a, b) => b.dateAdded.getTime() - a.dateAdded.getTime());
+        break;
+      default:
+        break;
+    }
+    return data;
+  }, [minPrice, maxPrice, rating, sortOption]);
 
   // Timer countdown
   useEffect(() => {
@@ -193,7 +228,7 @@ const ProductTab = () => {
               layoutMode === 'list' ? 'flex-start' : 'space-between',
           }}
         >
-          {products.map(product => (
+          {filteredProducts.map(product => (
             <TouchableOpacity
               key={product.id}
               className="bg-white rounded-lg"
@@ -277,13 +312,26 @@ const ProductTab = () => {
       <ModaFilterStore
         visible={showModal}
         onReset={() => {
-          // Add your reset logic here
+          setMinPrice(null);
+          setMaxPrice(null);
+          setRating(null);
         }}
         onClose={() => setShowModal(false)}
+        onApply={(filters: any) => {
+          setMinPrice(filters.minPrice);
+          setMaxPrice(filters.maxPrice);
+          setRating(filters.rating);
+          setShowModal(false);
+        }}
       />
       <ModalShowRecomendation
         visible={showModalRecomendation}
         onClose={() => setShowModalRecomendation(false)}
+        onSelectSort={(id: string) => {
+          setSortOption(id);
+          setShowModalRecomendation(false);
+        }}
+        selectedOption={sortOption}
       />
     </ScrollView>
   );
