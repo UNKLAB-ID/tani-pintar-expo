@@ -16,7 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import api from '@/utils/api/api';
 import { formatPrice } from '@/utils/format-currency/currency';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 // components
 import InputSearchPrimary from '@/components/ui/component-globals/input-seach-primary';
 import FlashSaleCard from '@/components/ui/e-commerce/card-flashsale';
@@ -141,6 +141,7 @@ const banners = [
 ];
 
 const EcommerceIndex = () => {
+  const [refreshing, setRefreshing] = useState(false);
   const [dataProduct, setDataProduct] = useState<any[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -167,13 +168,17 @@ const EcommerceIndex = () => {
     refetchOnWindowFocus: false,
   });
 
-  // ✅ Update state kalau data berubah
   useEffect(() => {
     if (listProduct?.results) {
-      // console.log('📦 Data produk dari API:', listProduct.results);
-      setDataProduct(listProduct.results);
+      setDataProduct(listProduct.results || []);
     }
   }, [listProduct]);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
 
   useEffect(() => {
     if (timeLeftMs <= 0) {
@@ -470,8 +475,6 @@ const EcommerceIndex = () => {
                 </TouchableOpacity>
               </View>
 
-              {/* List Produk: Scroll Horizontal */}
-
               <FlatList
                 data={dataProduct}
                 keyExtractor={item => item.uuid}
@@ -502,7 +505,6 @@ const EcommerceIndex = () => {
               {/* Grid For You */}
               <View className="flex-row flex-wrap justify-between -mx-1">
                 {dataProduct.map(item => {
-                  const price = item.prices?.[0]?.price ?? 0;
                   return (
                     <View key={item.uuid} className="w-1/2 px-1 mb-1">
                       <ProductCard

@@ -147,7 +147,7 @@ export const paymentSummary: PaymentSummary = {
 const CheckoutScreen = () => {
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [shippingOption, setShippingOption] = useState<ShippingOption | null>(
+  const [_shippingOption, setShippingOption] = useState<ShippingOption | null>(
     null
   );
   const [voucher, setVoucher] = useState<Voucher | null>(null);
