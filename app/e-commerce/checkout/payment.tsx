@@ -24,7 +24,6 @@ const PaymentScreen = () => {
   const { setPaymentOption } = useEcommerceStore();
 
   useEffect(() => {
-    // Set default BCA VA on first render
     setPaymentOption({
       id: 10,
       label: 'BCA Virtual Account',

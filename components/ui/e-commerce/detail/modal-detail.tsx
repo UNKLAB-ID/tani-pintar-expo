@@ -10,6 +10,9 @@ import {
   Pressable,
 } from 'react-native';
 import { router } from 'expo-router';
+import api from '@/utils/api/api';
+import { useMutation } from '@tanstack/react-query';
+//icons
 import { X } from 'lucide-react-native';
 import ButtonPlusPrimaryIcons from '@/assets/icons/e-commerce/button-plus-primary-icons';
 import MessageIcons from '@/assets/icons/global/message-icons';
@@ -30,6 +33,7 @@ interface AddToCartModalProps {
   setSelectedVariant: (variant: string) => void;
   quantity: number;
   setQuantity: (qty: number) => void;
+  productUuid: string;
 }
 
 const { height } = Dimensions.get('window');
@@ -45,11 +49,39 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
   setSelectedVariant,
   quantity,
   setQuantity,
+  productUuid,
 }) => {
+  const { mutate: addCart, isPending } = useMutation({
+    mutationFn: async (cartData: any) => {
+      const res = await api.post('/ecommerce/cart/', cartData);
+      return res.data;
+    },
+    onSuccess: () => {
+      console.log('Produk berhasil ditambahkan ke keranjang');
+      onClose();
+      router.push('/e-commerce/cart');
+    },
+    onError: err => {
+      console.error(' Gagal menambahkan ke keranjang:', err);
+    },
+  });
+
+  // 🔹 Handler tombol
   const handleAddToCart = () => {
-    onClose();
-    router.push('/e-commerce/cart');
+    if (!productUuid) {
+      console.warn('Missing product_uuid');
+      return;
+    }
+
+    const payload = {
+      product_uuid: productUuid,
+      quantity: quantity,
+    };
+
+    console.log('Payload Add to Cart:', payload);
+    addCart(payload);
   };
+
   return (
     <Modal
       visible={visible}

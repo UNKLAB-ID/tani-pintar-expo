@@ -37,7 +37,6 @@ const SearchWithCamera = () => {
     );
   }
 
-  // Fungsi ambil foto lalu kirim ke API
   const takePicture = async () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync({ base64: true });
@@ -49,7 +48,6 @@ const SearchWithCamera = () => {
     }
   };
 
-  // Fungsi pilih gambar dari galeri lalu kirim ke API
   const openGallery = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       base64: true,

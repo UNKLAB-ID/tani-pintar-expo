@@ -11,12 +11,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { formatPrice } from '@/utils/format-currency/currency';
-
+import { useQuery } from '@tanstack/react-query';
+import api from '@/utils/api/api';
+//icons
 import BackIcons from '@/assets/icons/global/back-icons';
 import LoveIcons from '@/assets/icons/global/love-icons';
 import TrashIcons from '@/assets/icons/e-commerce/trash-icons';
 import BoxPlusCartIcons from '@/assets/icons/e-commerce/plus-box-icons';
 import BoxMinusCartIcons from '@/assets/icons/e-commerce/minus-box-icons';
+//components
 import RecomendationCard from '@/components/ui/e-commerce/card-recomendation';
 import ModalDelete from '@/components/ui/e-commerce/cart/modal-delete';
 import ModalCheckout from '@/components/ui/e-commerce/cart/modal-checkout';
@@ -86,12 +89,35 @@ const CartScreen = () => {
 
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
-  const [cartData, setCartData] = useState(otherProducts);
+  const [cartData, setCartData] = useState<any[]>([]);
+  // const [cartData, setCartData] = useState(otherProducts);
 
-  const handleBack = () => router.push('/(tabs)/ecommerce');
   const handleWhistlist = () => {
     router.push('/e-commerce/wishlist');
   };
+
+  const fetchListCart = async () => {
+    const response = await api.get('/ecommerce/cart/');
+    return response.data;
+  };
+
+  const {
+    data: listCart,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ['listCart'],
+    queryFn: fetchListCart,
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    if (listCart?.results) {
+      console.log(listCart.results);
+      setCartData(listCart.results);
+    }
+  }, [listCart]);
 
   const toggleSelect = (id: string) => {
     setSelectedItems(prev =>
@@ -276,7 +302,7 @@ const CartScreen = () => {
         className="flex-1 bg-[#F8F8F8]"
       >
         <View className="flex-row justify-between bg-white items-center p-4 ">
-          <TouchableOpacity onPress={handleBack}>
+          <TouchableOpacity onPress={() => router.back()}>
             <BackIcons width={24} height={24} />
           </TouchableOpacity>
           <Text className="text-xl font-semibold">Cart</Text>
