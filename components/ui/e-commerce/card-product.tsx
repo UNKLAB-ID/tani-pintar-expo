@@ -36,22 +36,28 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="relative bg-white rounded-2xl"
-      style={{ width: 180, height: 272 }}
+      style={{
+        width: 180,
+        height: 272,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 16,
+      }}
       activeOpacity={0.85}
     >
       {/* Gambar Produk */}
       <View
-        className="bg-gray-50 justify-center items-center"
         style={{
           width: 177,
           height: 172,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#F9F9F9',
         }}
       >
         <Image
           source={image}
           resizeMode="contain"
-          className="w-full h-full rounded-2xl"
+          style={{ width: '100%', height: '100%', borderRadius: 16 }}
         />
       </View>
 
@@ -67,7 +73,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
             borderBottomRightRadius: 20,
           }}
         >
-          <Text className="text-[14px] text-white font-bold">{discount}</Text>
+          <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#FFFFFF' }}>
+            {discount}
+          </Text>
         </View>
       )}
 

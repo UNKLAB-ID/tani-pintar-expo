@@ -6,17 +6,19 @@ import {
   Dimensions,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  ScrollView,
   TouchableOpacity,
   StatusBar,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import api from '@/utils/api/api';
 import { formatPrice } from '@/utils/format-currency/currency';
-import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
+
 // components
 import InputSearchPrimary from '@/components/ui/component-globals/input-seach-primary';
 import FlashSaleCard from '@/components/ui/e-commerce/card-flashsale';
@@ -34,21 +36,9 @@ import WalletIcons from '@/assets/icons/global/wallet-icons';
 const { width } = Dimensions.get('window');
 
 const realBanners = [
-  {
-    id: 1,
-
-    image: require('@/assets/images/trash/Banner-Promotion.png'),
-  },
-  {
-    id: 2,
-
-    image: require('@/assets/images/trash/Banner-Promotion.png'),
-  },
-  {
-    id: 3,
-
-    image: require('@/assets/images/trash/Banner-Promotion.png'),
-  },
+  { id: 1, image: require('@/assets/images/trash/Banner-Promotion.png') },
+  { id: 2, image: require('@/assets/images/trash/Banner-Promotion.png') },
+  { id: 3, image: require('@/assets/images/trash/Banner-Promotion.png') },
 ];
 
 const userAddress = {
@@ -61,77 +51,11 @@ const userAddress = {
   country: 'Indonesia',
 };
 
-const productData = [
-  {
-    id: 1,
-    name: 'Pupuk Organik Cair',
-    price: 'Rp25.000',
-    originalPrice: 'Rp35.000',
-    image: require('@/assets/images/trash/bottle.png'),
-    sold: 250,
-    total: 2000,
-    discount: '29%',
-    rating: 5,
-    location: 'jakarta',
-  },
-  {
-    id: 2,
-    name: 'Benih Sayur Kangkung',
-    price: 'Rp10.000',
-    originalPrice: 'Rp15.000',
-    image: require('@/assets/images/trash/image18.png'),
-    sold: 250,
-    total: 500,
-    discount: '33%',
-    rating: 5,
-    location: 'jakarta',
-  },
-  {
-    id: 3,
-    name: 'Alat Semprot Mini',
-    price: 'Rp70.000',
-    originalPrice: 'Rp90.000',
-    image: require('@/assets/images/trash/image25.png'),
-    sold: 250,
-    total: 1100,
-    rating: 5,
-    location: 'jakarta',
-  },
-  {
-    id: 4,
-    name: 'Alat Mini',
-    price: 'Rp70.000',
-    originalPrice: 'Rp90.000',
-    image: require('@/assets/images/trash/Product1.png'),
-    sold: 250,
-    total: 1100,
-    discount: '22%',
-    rating: 5,
-    location: 'jakarta',
-  },
-];
-
 const mainCategoryData = [
-  {
-    id: 1,
-    icon: 'TopUpIcons',
-    label: 'Top Up\n& Bayar',
-  },
-  {
-    id: 2,
-    icon: 'TopUpIcons',
-    label: 'Alat\nPenyemprot',
-  },
-  {
-    id: 3,
-    icon: 'TopUpIcons',
-    label: 'Obat\nHerbal',
-  },
-  {
-    id: 4,
-    icon: 'TopUpIcons',
-    label: 'Jenis\nSayuran',
-  },
+  { id: 1, icon: 'TopUpIcons', label: 'Top Up\n& Bayar' },
+  { id: 2, icon: 'TopUpIcons', label: 'Alat\nPenyemprot' },
+  { id: 3, icon: 'TopUpIcons', label: 'Obat\nHerbal' },
+  { id: 4, icon: 'TopUpIcons', label: 'Jenis\nSayuran' },
 ];
 
 const banners = [
@@ -141,100 +65,61 @@ const banners = [
 ];
 
 const EcommerceIndex = () => {
-  const [refreshing, setRefreshing] = useState(false);
-  const [dataProduct, setDataProduct] = useState<any[]>([]);
-  const flatListRef = useRef<FlatList>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [timeLeftMs, setTimeLeftMs] = useState(3600 * 1000);
-  const intervalRef = useRef<number | undefined>(undefined);
+  const flatListBannerRef = useRef<FlatList>(null);
   const router = useRouter();
 
-  // Fetch function
-  const fetchListProduct = async () => {
-    const response = await api.get('/ecommerce/products/');
+  const fetchListProduct = async ({ pageParam }: { pageParam?: string }) => {
+    const endpoint = pageParam || '/ecommerce/products/';
+    const response = await api.get(endpoint);
     return response.data;
   };
 
-  // Query
   const {
-    data: listProduct,
-    isLoading,
-    error,
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     refetch,
-  } = useQuery({
+    isRefetching,
+  } = useInfiniteQuery({
     queryKey: ['listProduct'],
     queryFn: fetchListProduct,
+    initialPageParam: '/ecommerce/products/',
+    getNextPageParam: lastPage => {
+      if (!lastPage?.next) return undefined;
+      return lastPage.next.replace(/^https?:\/\/[^/]+/, '');
+    },
     refetchOnWindowFocus: false,
   });
 
-  useEffect(() => {
-    if (listProduct?.results) {
-      setDataProduct(listProduct.results || []);
-    }
-  }, [listProduct]);
-
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  };
+  const allProducts = data?.pages.flatMap(page => page.results) || [];
 
   useEffect(() => {
-    if (timeLeftMs <= 0) {
-      if (intervalRef.current !== null) {
-        clearInterval(intervalRef.current!);
-      }
-      return;
-    }
-
-    intervalRef.current = setInterval(() => {
-      setTimeLeftMs(prev => {
-        if (prev <= 100) {
-          clearInterval(intervalRef.current);
-          return 0;
-        }
-        return prev - 100;
-      });
-    }, 100);
-
-    return () => {
-      if (intervalRef.current !== undefined) {
-        clearInterval(intervalRef.current);
-      }
-    };
+    const interval = setInterval(() => {
+      setTimeLeftMs(prev => (prev > 0 ? prev - 1000 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
-  const handleFlashsale = () => {
-    router.push('/e-commerce/flashsale');
-  };
-
-  const handleMessage = () => {
-    router.push('/message/message');
-  };
-
-  const handleCart = () => {
-    router.push('/e-commerce/cart');
-  };
-  interface FormatTime {
-    (ms: number): string;
-  }
-
-  const formatTime: FormatTime = ms => {
+  const formatTime = (ms: number) => {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-    const milliseconds = Math.floor((ms % 1000) / 100);
-
     return `${minutes.toString().padStart(2, '0')}:${seconds
       .toString()
-      .padStart(2, '0')}.${milliseconds}`;
+      .padStart(2, '0')}`;
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
       let nextIndex = currentIndex + 1;
-      flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+      flatListBannerRef.current?.scrollToIndex({
+        index: nextIndex,
+        animated: true,
+      });
       setCurrentIndex(nextIndex);
     }, 3000);
 
@@ -252,21 +137,15 @@ const EcommerceIndex = () => {
     setActiveIndex(realIndex);
   };
 
-  const handleScrollToIndex = () => {
-    if (productData.length > 5) {
-      flatListRef.current?.scrollToIndex({ index: 5, animated: true });
-    }
-  };
-
   useEffect(() => {
     if (currentIndex === banners.length - 1) {
       setTimeout(() => {
-        flatListRef.current?.scrollToIndex({ index: 1, animated: false });
+        flatListBannerRef.current?.scrollToIndex({ index: 1, animated: false });
         setCurrentIndex(1);
       }, 300);
     } else if (currentIndex === 0) {
       setTimeout(() => {
-        flatListRef.current?.scrollToIndex({
+        flatListBannerRef.current?.scrollToIndex({
           index: banners.length - 2,
           animated: false,
         });
@@ -275,6 +154,16 @@ const EcommerceIndex = () => {
     }
   }, [currentIndex]);
 
+  const handleFlashsale = () => router.push('/e-commerce/flashsale');
+  const handleMessage = () => router.push('/message/message');
+  const handleCart = () => router.push('/e-commerce/cart');
+
+  const handleLoadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage]);
+
   return (
     <>
       <StatusBar
@@ -282,253 +171,237 @@ const EcommerceIndex = () => {
         backgroundColor="#ffffff"
         translucent={false}
       />
-      <SafeAreaView edges={['right', 'left']} className="flex-1">
-        <View className="px-5 py-3 pb-4 bg-white">
-          <View className="flex-row items-center justify-between">
-            <View className="w-[276px] relative">
-              <InputSearchPrimary
-                placeholder="Find what you’re looking for..."
-                className="px-[12px]"
-                coloricon="#000"
-              />
-
-              {/* Overlay Touchable di atas input */}
-              <TouchableOpacity
-                onPress={() => router.push('/e-commerce/search')}
-                className="absolute inset-0"
-                activeOpacity={1}
-              />
-            </View>
-            <View className="flex-row">
-              <TouchableOpacity className="mr-[9px]" onPress={handleMessage}>
-                <MessageIcons width={28} height={28} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleCart}>
-                <CartIcons width={28} height={28} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-        <ScrollView
-          contentContainerStyle={{
-            paddingBottom: 10,
-            backgroundColor: 'white',
-          }}
-          showsVerticalScrollIndicator={false}
-          bounces={true}
-          alwaysBounceVertical={true}
-        >
-          {/* Location */}
-          <LocationInfo address={`${userAddress.street}`} />
-          <View className="mt-4 ">
-            <FlatList
-              ref={flatListRef}
-              data={banners}
-              keyExtractor={(_, i) => i.toString()}
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              onMomentumScrollEnd={handleScrollEnd}
-              initialScrollIndex={1}
-              getItemLayout={(_, index) => ({
-                length: width,
-                offset: width * index,
-                index,
-              })}
-              renderItem={({ item }) => (
-                <View style={{ width, paddingHorizontal: 20 }}>
-                  <TouchableOpacity
-                    onPress={handleFlashsale}
-                    activeOpacity={0.8}
-                  >
-                    <Image
-                      source={item.image}
-                      className="w-full h-[120px] rounded-2xl"
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
+      <SafeAreaView edges={['right', 'left']} className="flex-1 bg-white">
+        <FlatList
+          data={allProducts}
+          keyExtractor={(item, index) => item.uuid || index.toString()}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefetching}
+              onRefresh={refetch}
+              colors={['#28a745']}
             />
-
-            {/* Dot Indicator */}
-            <View className="flex-row justify-center mt-2">
-              {realBanners.map((_, index) => (
-                <View
-                  key={index}
-                  className={`mx-[2px] rounded-full ${
-                    index === activeIndex
-                      ? 'bg-[#28a745] w-[20px]'
-                      : 'bg-[#dcdcdc] w-[8px]'
-                  } h-[8px]`}
-                />
-              ))}
-            </View>
-          </View>
-          <View className="px-5 mt-5">
-            <View className="flex-row w-full bg-[#F0F0F0] justify-between rounded-xl py-4 px-4">
-              <View className="w-1/3 items-start">
-                <View className="flex-row items-center mb-1 mt-1">
-                  <View style={{ marginRight: 3 }}>
-                    <WalletIcons width={16} height={16} />
-                  </View>
-                  <Text className="text-[12px] font-medium text-black">
-                    TaniPay
-                  </Text>
-                </View>
-                <View className="space-y-1">
-                  <Text className="text-[12px] font-bold text-black">
-                    Rp20.000
-                  </Text>
-                  <Text
-                    className="text-[10px] text-gray-500"
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    Topup minimum...
-                  </Text>
-                </View>
-              </View>
-
-              <View className="w-1/3">
-                <View className="flex-row items-center mb-1 mt-1">
-                  <View style={{ marginRight: 3 }}>
-                    <Wallet2Icons width={16} height={16} />
-                  </View>
-                  <Text className="text-[12px] font-medium text-black">
-                    TaniPinjam
-                  </Text>
-                </View>
-                <View className="space-y-1">
-                  <Text className="text-[12px] font-bold text-[#28a745]">
-                    ActivateNow
-                  </Text>
-                  <Text
-                    className="text-[10px] text-gray-500"
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    Limit up to Rp20...
-                  </Text>
-                </View>
-              </View>
-
-              <View className="w-1/3">
-                <View className="flex-row items-center mb-1 mt-1">
-                  <View style={{ marginRight: 3 }}>
-                    <VoucherIcons width={16} height={16} />
-                  </View>
-                  <Text className="text-[12px] font-medium text-black">
-                    Voucher
-                  </Text>
-                </View>
-                <View className="space-y-1">
-                  <Text className="text-[12px] font-bold text-black">
-                    Voucher Discount
-                  </Text>
-                  <Text
-                    className="text-[10px] text-[#28a745]"
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
-                    Free Delivery Service
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          {/* Kategori Utama */}
-          <View className="mt-6 px-5">
-            <View className="flex-row justify-between items-center space-x-4">
-              {mainCategoryData.map(item => (
-                <MainCategoryCard key={item.id} item={item} />
-              ))}
-            </View>
-          </View>
-
-          {/* card */}
-          <LinearGradient colors={['#FFFFFF', '#F0F0F0']}>
-            <View className="mt-6 px-5">
-              <View className="flex-row justify-between items-center mb-4">
-                <View className="flex-row items-center">
-                  <Text className="font-bold text-green-600 text-[17px]">
-                    Flash Sale
-                  </Text>
-                  <View className="ml-3 px-2.5 py-1 rounded-full  bg-red-500/10">
-                    <Text className="text-red-500 font-semibold text-sm">
-                      {formatTime(timeLeftMs)}
-                    </Text>
-                  </View>
-                </View>
-                <TouchableOpacity onPress={handleFlashsale}>
-                  <View className="flex-row items-center">
-                    <Text
-                      className="text-sm"
-                      style={{ color: '#525252', marginLeft: 150 }}
-                    >
-                      See All
-                    </Text>
-
-                    <ArrowRightIcons width={20} height={20} />
-                  </View>
-                </TouchableOpacity>
-              </View>
-
-              <FlatList
-                data={dataProduct}
-                keyExtractor={item => item.uuid}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                onContentSizeChange={handleScrollToIndex}
-                renderItem={({ item }) => (
-                  <View className="mr-2 pb-3">
-                    <FlashSaleCard
-                      image={{ uri: item.image }}
-                      name={item.name}
-                      price={formatPrice(item.prices?.[0]?.price)}
-                      sold={item.available_stock}
-                      total={item.available_stock}
-                      discount="10%"
+          }
+          ListHeaderComponent={
+            <>
+              {/* Header Search */}
+              <View className="px-5 py-3 pb-4 bg-white">
+                <View className="flex-row items-center justify-between">
+                  <View className="w-[276px] relative">
+                    <InputSearchPrimary
+                      placeholder="Find what you’re looking for..."
+                      className="px-[12px]"
+                      coloricon="#000"
+                    />
+                    <TouchableOpacity
+                      onPress={() => router.push('/e-commerce/search')}
+                      className="absolute inset-0"
+                      activeOpacity={1}
                     />
                   </View>
-                )}
-              />
-            </View>
-          </LinearGradient>
-          <View style={{ backgroundColor: '#F0F0F0' }} className="pt-6">
-            <View className="bg-white rounded-t-xl pt-2 px-5">
-              <View className="mb-4">
+                  <View className="flex-row">
+                    <TouchableOpacity
+                      className="mr-[9px]"
+                      onPress={handleMessage}
+                    >
+                      <MessageIcons width={28} height={28} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleCart}>
+                      <CartIcons width={28} height={28} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+
+              {/* Location */}
+              <LocationInfo address={`${userAddress.street}`} />
+
+              {/* Banner Slider */}
+              <View className="mt-4">
+                <FlatList
+                  ref={flatListBannerRef}
+                  data={banners}
+                  keyExtractor={(_, i) => i.toString()}
+                  horizontal
+                  pagingEnabled
+                  showsHorizontalScrollIndicator={false}
+                  onMomentumScrollEnd={handleScrollEnd}
+                  initialScrollIndex={1}
+                  getItemLayout={(_, index) => ({
+                    length: width,
+                    offset: width * index,
+                    index,
+                  })}
+                  renderItem={({ item }) => (
+                    <View style={{ width, paddingHorizontal: 20 }}>
+                      <TouchableOpacity
+                        onPress={handleFlashsale}
+                        activeOpacity={0.8}
+                      >
+                        <Image
+                          source={item.image}
+                          className="w-full h-[120px] rounded-2xl"
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                />
+                <View className="flex-row justify-center mt-2">
+                  {realBanners.map((_, index) => (
+                    <View
+                      key={index}
+                      className={`mx-[2px] rounded-full ${
+                        index === activeIndex
+                          ? 'bg-[#28a745] w-[20px]'
+                          : 'bg-[#dcdcdc] w-[8px]'
+                      } h-[8px]`}
+                    />
+                  ))}
+                </View>
+              </View>
+
+              {/* Wallet & Voucher Section */}
+              <View className="px-5 mt-5">
+                <View className="flex-row w-full bg-[#F0F0F0] justify-between rounded-xl py-4 px-4">
+                  <View className="w-1/3 items-start">
+                    <View className="flex-row items-center mb-1 mt-1">
+                      <WalletIcons width={16} height={16} />
+                      <Text className="text-[12px] font-medium text-black ml-1">
+                        TaniPay
+                      </Text>
+                    </View>
+                    <Text className="text-[12px] font-bold text-black">
+                      Rp20.000
+                    </Text>
+                    <Text className="text-[10px] text-gray-500">
+                      Topup minimum...
+                    </Text>
+                  </View>
+
+                  <View className="w-1/3">
+                    <View className="flex-row items-center mb-1 mt-1">
+                      <Wallet2Icons width={16} height={16} />
+                      <Text className="text-[12px] font-medium text-black ml-1">
+                        TaniPinjam
+                      </Text>
+                    </View>
+                    <Text className="text-[12px] font-bold text-[#28a745]">
+                      ActivateNow
+                    </Text>
+                    <Text className="text-[10px] text-gray-500">
+                      Limit up to Rp20...
+                    </Text>
+                  </View>
+
+                  <View className="w-1/3">
+                    <View className="flex-row items-center mb-1 mt-1">
+                      <VoucherIcons width={16} height={16} />
+                      <Text className="text-[12px] font-medium text-black ml-1">
+                        Voucher
+                      </Text>
+                    </View>
+                    <Text className="text-[12px] font-bold text-black">
+                      Voucher Discount
+                    </Text>
+                    <Text className="text-[10px] text-[#28a745]">
+                      Free Delivery Service
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              {/* Main Category */}
+              <View className="mt-6 px-5">
+                <View className="flex-row justify-between items-center space-x-4">
+                  {mainCategoryData.map(item => (
+                    <MainCategoryCard key={item.id} item={item} />
+                  ))}
+                </View>
+              </View>
+
+              {/* Flash Sale */}
+              <LinearGradient colors={['#FFFFFF', '#F0F0F0']}>
+                <View className="mt-6 px-5">
+                  <View className="flex-row justify-between items-center mb-4">
+                    <View className="flex-row items-center">
+                      <Text className="font-bold text-green-600 text-[17px]">
+                        Flash Sale
+                      </Text>
+                      <View className="ml-3 px-2.5 py-1 rounded-full bg-red-500/10">
+                        <Text className="text-red-500 font-semibold text-sm">
+                          {formatTime(timeLeftMs)}
+                        </Text>
+                      </View>
+                    </View>
+                    <TouchableOpacity onPress={handleFlashsale}>
+                      <View className="flex-row items-center">
+                        <Text className="text-sm text-[#525252] mr-1">
+                          See All
+                        </Text>
+                        <ArrowRightIcons width={20} height={20} />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                  <FlatList
+                    data={allProducts.slice(0, 6)}
+                    horizontal
+                    keyExtractor={(item, index) =>
+                      item.uuid || index.toString()
+                    }
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({ item }) => (
+                      <View className="mr-2 pb-3">
+                        <FlashSaleCard
+                          image={{ uri: item.image }}
+                          name={item.name}
+                          price={formatPrice(item.prices?.[0]?.price)}
+                          sold={item.available_stock}
+                          total={item.available_stock}
+                          discount="10%"
+                        />
+                      </View>
+                    )}
+                  />
+                </View>
+              </LinearGradient>
+
+              <View className="bg-white rounded-t-xl pt-2 px-5 mt-4">
                 <Text className="text-[16px] font-bold py-3">For You!</Text>
               </View>
-
-              {/* Grid For You */}
-              <View className="flex-row flex-wrap justify-between -mx-1">
-                {dataProduct.map(item => {
-                  return (
-                    <View key={item.uuid} className="w-1/2 px-1 mb-1">
-                      <ProductCard
-                        image={{ uri: item.image }}
-                        name={item.name}
-                        discount="10%" // sementara
-                        price={formatPrice(item.prices?.[0]?.price)}
-                        rating={5}
-                        sold={item.available_stock}
-                        location={item.lokasi?.name ?? 'Unknown'}
-                        onPress={() =>
-                          router.push({
-                            pathname: '/e-commerce/detail/[uuid]',
-                            params: { uuid: item.uuid },
-                          })
-                        }
-                      />
-                    </View>
-                  );
-                })}
-              </View>
+            </>
+          }
+          renderItem={({ item }) => (
+            <View className="w-1/2 px-2 mb-2">
+              <ProductCard
+                image={{ uri: item.image }}
+                name={item.name}
+                discount="10%"
+                price={formatPrice(item.prices?.[0]?.price)}
+                rating={5}
+                sold={item.available_stock}
+                location={item.lokasi?.name ?? 'Unknown'}
+                onPress={() =>
+                  router.push({
+                    pathname: '/e-commerce/detail/[uuid]',
+                    params: { uuid: item.uuid },
+                  })
+                }
+              />
             </View>
-          </View>
-        </ScrollView>
+          )}
+          numColumns={2}
+          columnWrapperStyle={{ justifyContent: 'space-between' }}
+          ListFooterComponent={
+            isFetchingNextPage ? (
+              <View className="py-6">
+                <ActivityIndicator size="small" color="#28a745" />
+              </View>
+            ) : null
+          }
+        />
       </SafeAreaView>
     </>
   );
