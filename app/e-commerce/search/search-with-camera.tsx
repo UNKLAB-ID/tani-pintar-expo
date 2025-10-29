@@ -9,7 +9,7 @@ import {
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router'; // pakai ini jika kamu pakai expo-router
+import { useRouter } from 'expo-router';
 
 const SearchWithCamera = () => {
   const router = useRouter();

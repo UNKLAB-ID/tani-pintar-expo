@@ -119,7 +119,19 @@ const ModaFilterStore: React.FC<ModaFilterStoreProps> = ({
               />
             </View>
 
-            <View style={{ width: 12 }} />
+            <View
+              style={{
+                width: 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Text
+                style={{ color: '#A1A1A1', fontSize: 18, fontWeight: '500' }}
+              >
+                –
+              </Text>
+            </View>
             <View
               style={{
                 flex: 1,
@@ -148,7 +160,6 @@ const ModaFilterStore: React.FC<ModaFilterStoreProps> = ({
                   flex: 1,
                   fontSize: 14,
                   color: '#1F1F1F',
-                  padding: 0, // hilangkan padding default
                 }}
                 keyboardType="numeric"
                 placeholder="Maximum"

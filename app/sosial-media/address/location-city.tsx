@@ -71,7 +71,7 @@ export default function LocationCityScreen() {
       const flatData = data.pages.flatMap(page => page.results);
 
       let result = [...flatData];
-      // Jangan tambahkan selectedCity jika sedang mencari (ada input pencarian)
+
       if (!searchQuery && selectedCity) {
         const exists = result.find(c => c.id === selectedCity.id);
         if (!exists) {

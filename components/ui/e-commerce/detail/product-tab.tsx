@@ -80,7 +80,6 @@ const ProductTab = () => {
   const [rating, setRating] = useState<number | null>(null);
   const [sortOption, setSortOption] = useState<string>('latest');
 
-  // ⏳ Filtered & Sorted products
   const filteredProducts = useMemo(() => {
     let data = [...products];
 
