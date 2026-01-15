@@ -5,37 +5,53 @@ import BackIcons from '@/assets/icons/global/back-icons';
 import SearchPrimary from '@/assets/icons/e-commerce/search-primary';
 import SearchGrey from '@/assets/icons/e-commerce/search-grey';
 import CameraSearch from '@/assets/icons/e-commerce/camera-search';
+import { searchHistory } from '@/utils/storage/searchHistory';
 
 interface SearchHeaderProps {
   query: string;
   setQuery: (text: string) => void;
   onSearch?: () => void;
+  onBack?: () => void;
 }
 
 const SearchHeader: React.FC<SearchHeaderProps> = ({
   query,
   setQuery,
   onSearch,
+  onBack,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const showActiveStyle = isFocused || query.trim() !== '';
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!onSearch) {
       if (query.trim()) {
+        // Save to search history
+        await searchHistory.addToHistory(query.trim());
         router.push({
           pathname: '/e-commerce/search/list-search-product',
           params: { query: query.trim() },
         });
       }
     } else {
+      if (query.trim()) {
+        await searchHistory.addToHistory(query.trim());
+      }
       onSearch();
+    }
+  };
+
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      router.back();
     }
   };
 
   return (
     <View className="flex-row justify-between px-4 py-5 bg-white">
-      <TouchableOpacity className="pt-1" onPress={() => router.back()}>
+      <TouchableOpacity className="pt-1" onPress={handleBack}>
         <BackIcons />
       </TouchableOpacity>
 

@@ -1,17 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-} from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, useLocalSearchParams, useRouter } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import api from '@/utils/api/api';
 import { formatPrice } from '@/utils/format-currency/currency';
+import {
+  searchHistory,
+  SearchHistoryItem,
+} from '@/utils/storage/searchHistory';
 //components
 import SearchHeader from '@/components/ui/e-commerce/search/search-header';
 import ProductCard from '@/components/ui/e-commerce/card-product';
@@ -20,6 +17,7 @@ import CardSearchStore from '@/components/ui/e-commerce/search/list-search-store
 import FilterChip from '@/components/ui/e-commerce/search/filter-chip';
 //icons
 import ChevronUpDown from '@/assets/icons/e-commerce/chevron-up-down-icon';
+import { X, Clock } from 'lucide-react-native';
 
 const ListSearchProduct = () => {
   const [activeTab, setActiveTab] = useState('Related');
@@ -29,6 +27,36 @@ const ListSearchProduct = () => {
     ? paramQuery[0]
     : paramQuery || '';
   const [query, setQuery] = useState(queryString);
+  const [history, setHistory] = useState<SearchHistoryItem[]>([]);
+
+  // Load search history on mount and when navigating back
+  useEffect(() => {
+    loadHistory();
+  }, [queryString]);
+
+  const loadHistory = async () => {
+    const items = await searchHistory.getHistory();
+    setHistory(items);
+  };
+
+  const handleHistoryItemPress = async (historyQuery: string) => {
+    setQuery(historyQuery);
+    await searchHistory.addToHistory(historyQuery);
+    await loadHistory();
+  };
+
+  const handleRemoveHistoryItem = async (historyQuery: string) => {
+    await searchHistory.removeFromHistory(historyQuery);
+    await loadHistory();
+  };
+
+  const handleClearHistory = async () => {
+    await searchHistory.clearHistory();
+    setHistory([]);
+  };
+
+  // Show history only when there's no active search query
+  const showHistory = history.length > 0 && !query.trim();
 
   const fetchListProduct = async ({ pageParam }: { pageParam?: string }) => {
     const endpoint = pageParam || '/ecommerce/products/';
@@ -85,7 +113,11 @@ const ListSearchProduct = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <SearchHeader query={query} setQuery={setQuery} />
+      <SearchHeader
+        query={query}
+        setQuery={setQuery}
+        onBack={() => router.replace('/e-commerce/search')}
+      />
       <AddressSelector
         address="Mambaus Solihin"
         onSelect={() => {
@@ -93,8 +125,44 @@ const ListSearchProduct = () => {
         }}
       />
 
+      {/* Search History */}
+      {showHistory && (
+        <View className="px-4 py-3 bg-white">
+          <View className="flex-row justify-between items-center mb-3">
+            <Text className="text-[15px] font-semibold text-gray-800">
+              Search History
+            </Text>
+            <TouchableOpacity onPress={handleClearHistory}>
+              <Text className="text-[13px] text-red-500">Clear All</Text>
+            </TouchableOpacity>
+          </View>
+          <View className="flex-row flex-wrap">
+            {history.map((item, index) => (
+              <View
+                key={`history-${index}`}
+                className="flex-row items-center bg-gray-100 rounded-full px-3 py-2 mr-2 mb-2"
+              >
+                <Clock size={14} color="#787878" />
+                <TouchableOpacity
+                  onPress={() => handleHistoryItemPress(item.query)}
+                  className="ml-2"
+                >
+                  <Text className="text-[13px] text-gray-700">{item.query}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => handleRemoveHistoryItem(item.query)}
+                  className="ml-2"
+                >
+                  <X size={14} color="#787878" />
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        </View>
+      )}
+
       <View
-        style={{ borderBottomWidth: 1, borderColor: '#E9E9E9', marginTop: 16 }}
+        style={{ borderBottomWidth: 1, borderColor: '#E9E9E9', marginTop: showHistory ? 0 : 16 }}
       >
         <ScrollView
           horizontal
@@ -151,16 +219,7 @@ const ListSearchProduct = () => {
       >
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {filters.map((item, index) => (
-            <FilterChip
-              key={index}
-              label={item}
-              isFilter={item === 'Filter'}
-              onPress={() => {
-                if (item !== 'Filter') {
-                  console.log('Filter item selected:', item);
-                }
-              }}
-            />
+            <FilterChip key={index} label={item} />
           ))}
         </ScrollView>
       </View>

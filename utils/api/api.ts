@@ -25,14 +25,8 @@ const REFRESH_TOKEN_KEY = 'refresh_token';
 
 const getAccessToken = async (): Promise<string | null> => {
   try {
-    const isStorageAvailable = await crossPlatformStorage.isAvailable();
-    if (!isStorageAvailable) {
-      console.warn('Storage is not available');
-      return null;
-    }
     return await crossPlatformStorage.getItem(TOKEN_KEY);
   } catch (error) {
-    console.error('Error getting access token:', error);
     return null;
   }
 };
@@ -41,7 +35,6 @@ const getRefreshToken = async (): Promise<string | null> => {
   try {
     return await crossPlatformStorage.getItem(REFRESH_TOKEN_KEY);
   } catch (error) {
-    console.error('Error getting refresh token:', error);
     return null;
   }
 };
@@ -54,7 +47,7 @@ const setTokens = async (
     await crossPlatformStorage.setItem(TOKEN_KEY, accessToken);
     await crossPlatformStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
   } catch (error) {
-    console.error('Error setting tokens:', error);
+    // Silently fail to avoid UI disruption
   }
 };
 
@@ -63,7 +56,7 @@ const clearTokens = async (): Promise<void> => {
     await crossPlatformStorage.deleteItem(TOKEN_KEY);
     await crossPlatformStorage.deleteItem(REFRESH_TOKEN_KEY);
   } catch (error) {
-    console.error('Error clearing tokens:', error);
+    // Silently fail to avoid UI disruption
   }
 };
 
@@ -82,7 +75,6 @@ const refreshAccessToken = async (): Promise<string | null> => {
     }
     return null;
   } catch (error) {
-    console.error('Error refreshing token:', error);
     await clearTokens();
     return null;
   }
