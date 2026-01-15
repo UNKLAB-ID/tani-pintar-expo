@@ -1,39 +1,31 @@
-import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  FlatList,
-} from 'react-native';
-
+import { View, Text, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import TrashIcon from '@/assets/icons/e-commerce/trash-icons';
 import EditAddressIcon from '@/assets/icons/profile/edit-icon';
 import HomeAddressIcon from '@/assets/icons/profile/home-address';
+import { Check } from 'lucide-react-native';
 
-const addresses = [
-  {
-    id: 1,
-    label: 'Home',
-    name: 'Mambaus Baus',
-    phone: '0851876318390',
-    address:
-      'Jln. Pangeran Diponegoro, Blok A, no 19. Ahmad Yani, RT 002/009, Kel. Duri Kosambi, Kec. Cengkareng, Kota Jakarta Barat, DKI Jakarta, Code 1588',
-    isDefault: true,
-  },
-  {
-    id: 2,
-    label: 'Home',
-    name: 'Alter',
-    phone: '08517261237819',
-    address:
-      'Menara Kadin Indonesia Lt. 15 Jl. HR. Rasuna Said Blok X-5, Kav 2–3 Jakarta 12950, Code 1555',
-    isDefault: false,
-  },
-];
-const AddressCard = ({ item }: { item: (typeof addresses)[0] }) => {
+interface AddressItem {
+  id: number;
+  label: string;
+  name: string;
+  phone: string;
+  address: string;
+  isDefault: boolean;
+}
+
+interface AddressCardProps {
+  item: AddressItem;
+  onSetDefault?: () => void;
+  onDelete?: () => void;
+}
+
+const AddressCard: React.FC<AddressCardProps> = ({
+  item,
+  onSetDefault,
+  onDelete,
+}) => {
   return (
     <View
       className="bg-white mx-5 mb-4 border-gray-200 shadow-md shadow-gray-300 p-4 relative"
@@ -77,17 +69,36 @@ const AddressCard = ({ item }: { item: (typeof addresses)[0] }) => {
         {item.address}
       </Text>
 
-      {/* Aksi Edit & Hapus */}
+      {/* Aksi */}
       <View className="flex-row items-center mt-3 pt-2 border-t border-gray-200">
-        <TouchableOpacity className="flex-row items-center mr-4">
+        {/* Delete Button */}
+        <TouchableOpacity
+          className="flex-row items-center mr-4"
+          onPress={onDelete}
+        >
           <TrashIcon width={18} height={18} />
           <Text className="text-[#AAAAAA] text-sm ml-1">Delete</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="flex-row items-center">
+        {/* Edit Button */}
+        <TouchableOpacity
+          className="flex-row items-center mr-4"
+          onPress={() => router.push(`/profile/address/edit-address?id=${item.id}`)}
+        >
           <EditAddressIcon width={20} height={20} />
           <Text className="text-[#4CAF50] text-sm ml-1">Edit</Text>
         </TouchableOpacity>
+
+        {/* Set as Default Button */}
+        {!item.isDefault && (
+          <TouchableOpacity
+            className="flex-row items-center ml-auto"
+            onPress={onSetDefault}
+          >
+            <Check size={16} color="#3B82F6" />
+            <Text className="text-[#3B82F6] text-sm ml-1">Set Default</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

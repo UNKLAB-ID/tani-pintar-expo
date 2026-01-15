@@ -13,14 +13,16 @@ import { MapPin, Check } from 'lucide-react-native';
 import { useState, useEffect } from 'react';
 import ModalLocationPicker from '@/components/ui/profile/modal-location';
 
-type LocationType = {
-  province?: string;
-  city?: string;
-  district?: string;
-  postalCode?: string;
+type LocationData = {
+  provinceId: number;
+  provinceName: string;
+  cityId: number;
+  cityName: string;
+  districtId: number;
+  districtName: string;
 };
 
-type SelectedLocation = {
+type MapLocation = {
   latitude: number;
   longitude: number;
   address?: string;
@@ -29,12 +31,11 @@ type SelectedLocation = {
 const AddAddress = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [location, setLocation] = useState<LocationType | null>(null);
+  const [location, setLocation] = useState<LocationData | null>(null);
   const [unit, setUnit] = useState('');
   const [isDefault, setIsDefault] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
-  const [selectedLocation, setSelectedLocation] =
-    useState<SelectedLocation | null>(null);
+  const [mapLocation, setMapLocation] = useState<MapLocation | null>(null);
   const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
@@ -88,7 +89,7 @@ const AddAddress = () => {
         {/* Location Picker */}
         <View>
           <Text className="text-sm font-medium mb-1">
-            Province / City / District / Postal Code{' '}
+            Province / City / District{' '}
             <Text className="text-red-500">*</Text>
           </Text>
           <TouchableOpacity
@@ -97,7 +98,7 @@ const AddAddress = () => {
           >
             <Text className="text-black text-sm">
               {location
-                ? `${location.province}, ${location.city}, ${location.district}, ${location.postalCode}`
+                ? `${location.provinceName}, ${location.cityName}, ${location.districtName}`
                 : 'Pilih lokasi'}
             </Text>
           </TouchableOpacity>
@@ -157,7 +158,7 @@ const AddAddress = () => {
       <ModalLocationPicker
         visible={showLocationModal}
         onClose={() => setShowLocationModal(false)}
-        onSelect={(val: LocationType) => {
+        onSelect={(val: LocationData) => {
           setLocation(val);
           setShowLocationModal(false);
         }}
