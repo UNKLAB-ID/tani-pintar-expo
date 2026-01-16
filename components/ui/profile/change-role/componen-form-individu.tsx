@@ -31,11 +31,10 @@ const ComponentFormIndividuChangeRole: React.FC<
   const {
     control,
     handleSubmit,
-    watch,
     setError,
     reset,
     resetField,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({
     defaultValues: vendorData,
     mode: 'onChange',
@@ -44,9 +43,6 @@ const ComponentFormIndividuChangeRole: React.FC<
   useEffect(() => {
     reset(vendorData);
   }, [togglePerusahaanAtauIndividu]);
-
-  const allValues = watch();
-  const isFormEmpty = Object.values(allValues).every(v => !v);
 
   const isFileAsset = (
     val: any
@@ -64,19 +60,36 @@ const ComponentFormIndividuChangeRole: React.FC<
         ? '/vendors/create/company/'
         : '/vendors/create/individual/';
 
+      // Use vendorData from zustand for address fields since they're stored there
+      const province = data.province || vendorData.province;
+      const city = data.city || vendorData.city;
+      const district = data.district || vendorData.district;
+
+      // Format coordinates to meet API requirements
+      // latitude: max 6 decimal places, longitude: max 9 digits total
+      const formattedLat = latAddress ? Number(latAddress).toFixed(6) : null;
+      const formattedLong = longAddress ? Number(longAddress).toFixed(6) : null;
+
+      console.log('Submitting vendor registration:', {
+        endpoint,
+        isCompany,
+        data,
+        vendorData,
+        latAddress: formattedLat,
+        longAddress: formattedLong,
+      });
+
       if (isCompany) {
         // Company registration fields
-        // Required: name, business_number, business_nib_file, phone_number, province, city, district, latitude, longitude, address_detail, postal_code
-        // Optional: npwp_number, npwp_file
         if (data.name) formData.append('name', data.name);
         if (data.business_number)
           formData.append('business_number', String(data.business_number));
         if (data.phone_number) formData.append('phone_number', data.phone_number);
-        if (data.province) formData.append('province', String(data.province));
-        if (data.city) formData.append('city', String(data.city));
-        if (data.district) formData.append('district', String(data.district));
-        if (latAddress) formData.append('latitude', String(latAddress));
-        if (longAddress) formData.append('longitude', String(longAddress));
+        if (province) formData.append('province', String(province));
+        if (city) formData.append('city', String(city));
+        if (district) formData.append('district', String(district));
+        if (formattedLat) formData.append('latitude', formattedLat);
+        if (formattedLong) formData.append('longitude', formattedLong);
         if (data.address_detail)
           formData.append('address_detail', data.address_detail);
         if (data.postal_code) formData.append('postal_code', data.postal_code);
@@ -92,21 +105,16 @@ const ComponentFormIndividuChangeRole: React.FC<
             type: data.business_nib.mimeType || 'application/pdf',
           } as any);
         }
-
-        // Optional: npwp_file (using the second business_nib upload for NPWP)
-        // Note: The form has a second file upload for NPWP when company is selected
       } else {
         // Individual registration fields
-        // Required: full_name, phone_number, id_card_photo, name, province, city, district, latitude, longitude, address_detail, postal_code
-        // Optional: logo
-        if (data.name) formData.append('full_name', data.name); // full_name = nama lengkap
+        if (data.name) formData.append('full_name', data.name);
         if (data.phone_number) formData.append('phone_number', data.phone_number);
-        if (data.business_name) formData.append('name', data.business_name); // name = nama toko
-        if (data.province) formData.append('province', String(data.province));
-        if (data.city) formData.append('city', String(data.city));
-        if (data.district) formData.append('district', String(data.district));
-        if (latAddress) formData.append('latitude', String(latAddress));
-        if (longAddress) formData.append('longitude', String(longAddress));
+        if (data.business_name) formData.append('name', data.business_name);
+        if (province) formData.append('province', String(province));
+        if (city) formData.append('city', String(city));
+        if (district) formData.append('district', String(district));
+        if (formattedLat) formData.append('latitude', formattedLat);
+        if (formattedLong) formData.append('longitude', formattedLong);
         if (data.address_detail)
           formData.append('address_detail', data.address_detail);
         if (data.postal_code) formData.append('postal_code', data.postal_code);
@@ -130,12 +138,16 @@ const ComponentFormIndividuChangeRole: React.FC<
         }
       }
 
-      return api.post(endpoint, formData, {
+      const response = await api.post(endpoint, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+
+      console.log('API Response:', response);
+      return response;
     },
 
     onSuccess: res => {
+      console.log('onSuccess called with:', res);
       if (res.success) {
         // Update vendor status in auth store
         setVendorStatus({
@@ -151,18 +163,18 @@ const ComponentFormIndividuChangeRole: React.FC<
           },
         ]);
       } else if (res.error) {
-        Object.keys(res.error).forEach(field => {
-          setError(field as keyof typeof errors, {
-            type: 'server',
-            message: res.error[field][0],
-          });
-        });
+        console.log('Server validation errors:', res.error);
+        const errorMessages = Object.entries(res.error)
+          .map(([field, messages]) => `${field}: ${(messages as string[]).join(', ')}`)
+          .join('\n');
+        Alert.alert('Validasi Gagal', errorMessages || 'Terjadi kesalahan validasi.');
       } else {
         Alert.alert('Registrasi Gagal', res.message || 'Terjadi kesalahan.');
       }
     },
 
     onError: (error: any) => {
+      console.log('onError called with:', error);
       Alert.alert(
         'Registrasi Gagal',
         error.message || 'Terjadi error saat registrasi.'
@@ -414,7 +426,6 @@ const ComponentFormIndividuChangeRole: React.FC<
       <Controller
         control={control}
         name="address"
-        rules={{ required: 'Address is required' }}
         render={({ fieldState: { error } }) => (
           <>
             <Text style={{ fontSize: 14, fontWeight: '600', marginTop: 16 }}>
@@ -607,10 +618,10 @@ const ComponentFormIndividuChangeRole: React.FC<
 
       {/* Tombol submit */}
       <TouchableOpacity
-        disabled={!isValid || isFormEmpty}
+        disabled={mutate.isPending}
         onPress={handleSubmit(handleRegsiterSumbit)}
         style={{
-          backgroundColor: !isValid || isFormEmpty ? '#F4F4F4' : '#169953',
+          backgroundColor: mutate.isPending ? '#F4F4F4' : '#169953',
           paddingVertical: 14,
           borderRadius: 12,
           marginBottom: 30,
@@ -619,13 +630,13 @@ const ComponentFormIndividuChangeRole: React.FC<
       >
         <Text
           style={{
-            color: !isValid || isFormEmpty ? '#AAAAAA' : '#FFFFFF',
+            color: mutate.isPending ? '#AAAAAA' : '#FFFFFF',
             textAlign: 'center',
             fontWeight: '600',
             fontSize: 16,
           }}
         >
-          Selesai
+          {mutate.isPending ? 'Memproses...' : 'Selesai'}
         </Text>
       </TouchableOpacity>
     </View>
