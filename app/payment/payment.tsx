@@ -3,8 +3,8 @@ import {
   Text,
   TouchableOpacity,
   View,
-  StatusBar,
   Dimensions,
+  StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
@@ -38,15 +38,10 @@ const TaniPay = () => {
 
   const historyToShow = transactionHistoryResponse.data.slice(0, 4);
   return (
-    <>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="#169953"
-        translucent
-      />
-      <SafeAreaView edges={['top']} className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <StatusBar barStyle="light-content" backgroundColor="#169953" />
         <View className="flex-row p-4 bg-primary items-center">
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() => router.push('/profile')}>
             <BackIcons width={24} height={24} color="#fff" />
           </TouchableOpacity>
           <Text className="text-white text-[16px] font-semibold ml-3">
@@ -248,8 +243,6 @@ const TaniPay = () => {
               shadowRadius: 4,
               elevation: 1,
               minHeight: screenHeight * 0.25,
-              width: 370,
-              height: 310,
             }}
           >
             {historyToShow.length === 0 ? (
@@ -280,8 +273,7 @@ const TaniPay = () => {
           visible={isShowModal}
           onClose={() => setShowModal(false)}
         />
-      </SafeAreaView>
-    </>
+    </SafeAreaView>
   );
 };
 

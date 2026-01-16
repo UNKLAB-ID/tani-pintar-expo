@@ -1,8 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, View, Text, TouchableOpacity, Alert } from 'react-native';
-import { Calendar } from 'react-native-calendars';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
 import BackIcons from '@/assets/icons/global/back-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+// Konfigurasi bahasa Indonesia untuk calendar
+LocaleConfig.locales['id'] = {
+  monthNames: [
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember',
+  ],
+  monthNamesShort: [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'Mei',
+    'Jun',
+    'Jul',
+    'Agu',
+    'Sep',
+    'Okt',
+    'Nov',
+    'Des',
+  ],
+  dayNames: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
+  dayNamesShort: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+  today: 'Hari ini',
+};
+LocaleConfig.defaultLocale = 'id';
 
 interface ModalKalenderProps {
   forms: any;
@@ -26,6 +62,41 @@ const ModalKalenderTani: React.FC<ModalKalenderProps> = ({
   const todayStr = today.toISOString().split('T')[0];
   const todayMonth = todayStr.slice(0, 7);
   const [currentMonth, setCurrentMonth] = useState(todayMonth);
+  const [headerDate, setHeaderDate] = useState(today);
+
+  // Nama hari dan bulan dalam bahasa Indonesia
+  const hariList = [
+    'Minggu',
+    'Senin',
+    'Selasa',
+    'Rabu',
+    'Kamis',
+    'Jumat',
+    'Sabtu',
+  ];
+  const bulanList = [
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember',
+  ];
+
+  // Format header calendar dalam bahasa Indonesia (Hari, Tanggal Bulan Tahun)
+  const formatHeaderIndo = () => {
+    const hari = hariList[headerDate.getDay()];
+    const tanggal = headerDate.getDate();
+    const bulan = bulanList[headerDate.getMonth()];
+    const tahun = headerDate.getFullYear();
+    return `${hari}, ${tanggal} ${bulan} ${tahun}`;
+  };
 
   useEffect(() => {
     if (modalKalender) {
@@ -57,10 +128,13 @@ const ModalKalenderTani: React.FC<ModalKalenderProps> = ({
           current.setDate(current.getDate() + 1);
         }
         setSelectedDates(marked);
+        // Update header ke start_date
+        setHeaderDate(start);
       } else {
         // Kalau belum ada tanggal, reset selectedDates dan currentMonth ke default
         setSelectedDates({});
         setCurrentMonth(todayMonth);
+        setHeaderDate(today);
       }
     }
   }, [modalKalender, forms, todayMonth]);
@@ -81,6 +155,7 @@ const ModalKalenderTani: React.FC<ModalKalenderProps> = ({
 
       forms.setValue('start_date', newStartDate);
       forms.setValue('end_date', newEndDate);
+      setHeaderDate(selectedDate);
 
       // tandai periode
       let marked: any = {};
@@ -113,6 +188,7 @@ const ModalKalenderTani: React.FC<ModalKalenderProps> = ({
 
       newEndDate = day.dateString;
       forms.setValue('end_date', newEndDate);
+      setHeaderDate(selectedDate);
 
       // tandai periode
       let marked: any = {};
@@ -140,12 +216,11 @@ const ModalKalenderTani: React.FC<ModalKalenderProps> = ({
     // Kalau bulan baru >= bulan hari ini, update currentMonth
     if (newMonth >= todayMonth) {
       setCurrentMonth(newMonth);
+      // Update header ke tanggal 1 bulan baru
+      setHeaderDate(new Date(month.year, month.month - 1, 1));
     }
     // Kalau kurang dari bulan hari ini, abaikan (tidak ganti bulan)
   };
-
-  // Disable arrow kiri jika sedang di bulan hari ini (tidak bisa mundur ke bulan sebelumnya)
-  const disableArrowLeft = currentMonth === todayMonth;
 
   return (
     <Modal
@@ -220,10 +295,13 @@ const ModalKalenderTani: React.FC<ModalKalenderProps> = ({
               todayTextColor: '#169953',
               arrowColor: '#169953',
             }}
-            minDate={todayStr}
             current={currentMonth}
             onMonthChange={handleMonthChange}
-            disableArrowLeft={disableArrowLeft}
+            renderHeader={() => (
+              <Text style={{ fontSize: 16, fontWeight: '600' }}>
+                {formatHeaderIndo()}
+              </Text>
+            )}
           />
 
           {/* Action Buttons */}
