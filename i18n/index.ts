@@ -161,8 +161,8 @@ const translations = {
     typeMessagePlaceholder: 'Ketik pesan...',
 
     // User roles
-    farmer: 'Petani',
-    vendor: 'Penjual',
+    farmer: 'Tani',
+    vendor: 'Vendor',
     agent: 'Agen',
 
     // Common
@@ -290,7 +290,7 @@ const translations = {
     confirm: 'Confirm',
 
     // E-commerce
-    searchPlaceholder: 'Find what you\'re looking for...',
+    searchPlaceholder: "Find what you're looking for...",
     topUpMinimum: 'Top up minimum...',
     limitUpTo: 'Limit up to Rp20...',
     voucherDiscount: 'Voucher Discount',
@@ -369,8 +369,7 @@ const translations = {
     leave: 'Leave',
     stay: 'Stay',
     goodsNotArrived: 'The goods have not arrived or are lost',
-    goodsNotArrivedDesc:
-      'The item is delayed, undelivered, or lost in transit',
+    goodsNotArrivedDesc: 'The item is delayed, undelivered, or lost in transit',
     damagedGoods: 'Damaged goods',
     damagedGoodsDesc: 'Package not received due to delivery issues',
     notAsDescribed: 'Not as described',
@@ -498,7 +497,8 @@ export const useTranslate = () => {
   // Set locale on every render
   i18n.locale = language;
 
-  return (key: string, options?: Record<string, unknown>) => i18n.t(key, options);
+  return (key: string, options?: Record<string, unknown>) =>
+    i18n.t(key, options);
 };
 
 export { i18n, translations };

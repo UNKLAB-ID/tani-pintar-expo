@@ -12,6 +12,7 @@ import { useUserLocation } from '@/store/location/location';
 import api from '@/utils/api/api';
 import { useMutation } from '@tanstack/react-query';
 import { useRegisterRoleStore } from '@/store/auth/register-role';
+import { useAuthStore } from '@/store/auth/role';
 import AlertlatLongAddressIcons from '@/assets/icons/profile/alert-lat-long-address-icons';
 import FileUpladIcons from '@/assets/icons/global/file-upload-icons';
 import { Colors } from '@/constants/Colors';
@@ -26,6 +27,7 @@ const ComponentFormIndividuChangeRole: React.FC<
 > = ({ togglePerusahaanAtauIndividu, setToggleModalAddress }) => {
   const { latAddress, longAddress } = useUserLocation();
   const { setField, resetForm, ...vendorData } = useRegisterRoleStore();
+  const { setVendorStatus } = useAuthStore();
   const {
     control,
     handleSubmit,
@@ -55,77 +57,114 @@ const ComponentFormIndividuChangeRole: React.FC<
   const mutate = useMutation({
     mutationFn: async (data: any) => {
       const formData = new FormData();
+      const isCompany = togglePerusahaanAtauIndividu;
 
-      // String fields
-      if (data.vendor_type) formData.append('vendor_type', data.vendor_type); // 1
-      if (data.phone_number) formData.append('phone_number', data.phone_number); // 2
-      if (data.address) formData.append('address', data.address); // 3
-      if (data.full_name) formData.append('full_name', data.full_name); // 4
-      if (data.business_name)
-        formData.append('business_name', data.business_name); // 5
-      if (data.npwp) formData.append('npwp', data.npwp); // 6
-      if (data.latitude) formData.append('latitude', data.latitude); // 7
-      if (data.longitude) formData.append('longitude', data.longitude);
-      if (data.address_detail)
-        formData.append('address_detail', data.address_detail); // 8
-      if (data.postal_code) formData.append('postal_code', data.postal_code); // 9
-      if (data.name) formData.append('name', data.name); // 10
+      // Determine the correct endpoint based on vendor type
+      const endpoint = isCompany
+        ? '/vendors/create/company/'
+        : '/vendors/create/individual/';
 
-      // Number fields (ubah ke string biar aman di FormData)
-      if (data.business_number)
-        formData.append('business_number', String(data.business_number)); // 11
-      if (data.province) formData.append('province', String(data.province)); // 12
-      if (data.city) formData.append('city', String(data.city)); // 13
-      if (data.district) formData.append('district', String(data.district)); // 14
+      if (isCompany) {
+        // Company registration fields
+        // Required: name, business_number, business_nib_file, phone_number, province, city, district, latitude, longitude, address_detail, postal_code
+        // Optional: npwp_number, npwp_file
+        if (data.name) formData.append('name', data.name);
+        if (data.business_number)
+          formData.append('business_number', String(data.business_number));
+        if (data.phone_number) formData.append('phone_number', data.phone_number);
+        if (data.province) formData.append('province', String(data.province));
+        if (data.city) formData.append('city', String(data.city));
+        if (data.district) formData.append('district', String(data.district));
+        if (latAddress) formData.append('latitude', String(latAddress));
+        if (longAddress) formData.append('longitude', String(longAddress));
+        if (data.address_detail)
+          formData.append('address_detail', data.address_detail);
+        if (data.postal_code) formData.append('postal_code', data.postal_code);
 
-      // File fields
-      if (data.logo && isFileAsset(data.logo)) {
-        formData.append('logo', {
-          uri: data.logo.uri,
-          name: data.logo.fileName || 'logo.jpg',
-          type: data.logo.mimeType || 'image/jpeg',
-        } as any); // 15
+        // Optional NPWP fields
+        if (data.npwp) formData.append('npwp_number', data.npwp);
+
+        // File: business_nib_file
+        if (data.business_nib && isFileAsset(data.business_nib)) {
+          formData.append('business_nib_file', {
+            uri: data.business_nib.uri,
+            name: data.business_nib.fileName || 'business_nib.pdf',
+            type: data.business_nib.mimeType || 'application/pdf',
+          } as any);
+        }
+
+        // Optional: npwp_file (using the second business_nib upload for NPWP)
+        // Note: The form has a second file upload for NPWP when company is selected
+      } else {
+        // Individual registration fields
+        // Required: full_name, phone_number, id_card_photo, name, province, city, district, latitude, longitude, address_detail, postal_code
+        // Optional: logo
+        if (data.name) formData.append('full_name', data.name); // full_name = nama lengkap
+        if (data.phone_number) formData.append('phone_number', data.phone_number);
+        if (data.business_name) formData.append('name', data.business_name); // name = nama toko
+        if (data.province) formData.append('province', String(data.province));
+        if (data.city) formData.append('city', String(data.city));
+        if (data.district) formData.append('district', String(data.district));
+        if (latAddress) formData.append('latitude', String(latAddress));
+        if (longAddress) formData.append('longitude', String(longAddress));
+        if (data.address_detail)
+          formData.append('address_detail', data.address_detail);
+        if (data.postal_code) formData.append('postal_code', data.postal_code);
+
+        // File: id_card_photo
+        if (data.id_card_photo && isFileAsset(data.id_card_photo)) {
+          formData.append('id_card_photo', {
+            uri: data.id_card_photo.uri,
+            name: data.id_card_photo.fileName || 'id_card_photo.jpg',
+            type: data.id_card_photo.mimeType || 'image/jpeg',
+          } as any);
+        }
+
+        // Optional: logo
+        if (data.logo && isFileAsset(data.logo)) {
+          formData.append('logo', {
+            uri: data.logo.uri,
+            name: data.logo.fileName || 'logo.jpg',
+            type: data.logo.mimeType || 'image/jpeg',
+          } as any);
+        }
       }
 
-      if (data.id_card_photo && isFileAsset(data.id_card_photo)) {
-        formData.append('id_card_photo', {
-          uri: data.id_card_photo.uri,
-          name: data.id_card_photo.fileName || 'id_card_photo.jpg',
-          type: data.id_card_photo.mimeType || 'image/jpeg',
-        } as any); // 16
-      }
-
-      if (data.business_nib && isFileAsset(data.business_nib)) {
-        formData.append('business_nib', {
-          uri: data.business_nib.uri,
-          name: data.business_nib.fileName || 'business_nib.jpg',
-          type: data.business_nib.mimeType || 'image/jpeg',
-        } as any); // 17
-      }
-
-      return api.post('/vendors/', formData, {
+      return api.post(endpoint, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     },
 
-    onSuccess: (res, variables) => {
+    onSuccess: res => {
       if (res.success) {
-        router.replace(`/otp?back=register&phone=${variables.phone_number}`);
+        // Update vendor status in auth store
+        setVendorStatus({
+          isRegistered: true,
+          vendorType: togglePerusahaanAtauIndividu ? 'company' : 'individual',
+          vendorId: res.data?.id || res.data?.uuid || null,
+        });
+
+        Alert.alert('Registrasi Berhasil', 'Akun vendor Anda telah terdaftar.', [
+          {
+            text: 'OK',
+            onPress: () => router.replace('/(tabs)/ecommerce'),
+          },
+        ]);
       } else if (res.error) {
         Object.keys(res.error).forEach(field => {
           setError(field as keyof typeof errors, {
             type: 'server',
-            message: res.error[field][0], // ambil pesan error pertama
+            message: res.error[field][0],
           });
         });
       } else {
-        Alert.alert('Register Failed', res.message);
+        Alert.alert('Registrasi Gagal', res.message || 'Terjadi kesalahan.');
       }
     },
 
     onError: (error: any) => {
       Alert.alert(
-        'Registration Failed',
+        'Registrasi Gagal',
         error.message || 'Terjadi error saat registrasi.'
       );
     },
