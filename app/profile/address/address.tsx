@@ -15,6 +15,7 @@ import { Search } from 'lucide-react-native';
 import AddressCard from '@/components/ui/profile/addres-card';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/utils/api/api';
+import { useTranslate } from '@/i18n';
 
 interface Address {
   id: number;
@@ -51,6 +52,7 @@ const deleteAddress = async (addressId: number): Promise<void> => {
 };
 
 const AddressScreen = () => {
+  const t = useTranslate();
   const [searchQuery, setSearchQuery] = useState('');
   const queryClient = useQueryClient();
 
@@ -110,7 +112,7 @@ const AddressScreen = () => {
         <TouchableOpacity onPress={() => router.back()}>
           <BackIcons width={24} height={24} fill="#000" />
         </TouchableOpacity>
-        <Text className="text-[16px] font-semibold ml-2">Address</Text>
+        <Text className="text-[16px] font-semibold ml-2">{t('address')}</Text>
         <View className="flex-1" />
         <TouchableOpacity
           onPress={() => router.push('/profile/address/add-address')}

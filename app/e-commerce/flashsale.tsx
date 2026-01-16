@@ -14,6 +14,7 @@ import { router, useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/utils/api/api';
 import { formatPrice } from '@/utils/format-currency/currency';
+import { useTranslate } from '@/i18n';
 //icons
 import ShareSquareIcons from '@/assets/icons/e-commerce/share-icons';
 import BackIcons from '@/assets/icons/global/back-icons';
@@ -54,6 +55,7 @@ const handleBackHome = () => {
 };
 
 const FlashSaleScreen = () => {
+  const t = useTranslate();
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
   const [remainingTime, setRemainingTime] = useState(INITIAL_TIME);
@@ -73,7 +75,7 @@ const FlashSaleScreen = () => {
 
   // Build categories with "All Category" option
   const categories: Category[] = [
-    { id: 0, name: 'All Category' },
+    { id: 0, name: t('allCategory') },
     ...(categoriesData || []),
   ];
 
@@ -155,7 +157,7 @@ const FlashSaleScreen = () => {
           </TouchableOpacity>
           <InputSearchFlashSale
             coloricon="#AAA"
-            placeholder="Search for discounted items"
+            placeholder={t('searchDiscountedItems')}
             className="bg-white px-[12px] h-[40px] flex-1 rounded-md"
             iconPosition="right"
             value={searchQuery}
@@ -186,7 +188,7 @@ const FlashSaleScreen = () => {
             {/* Title & Countdown */}
             <View className="flex-row items-center justify-between mb-2">
               <Text className="text-[16px] font-semibold text-black">
-                Ended In
+                {t('endedIn')}
               </Text>
               <View className="bg-red-600 px-3 py-1 rounded-full">
                 <Text className="text-white font-bold text-sm">
@@ -208,7 +210,9 @@ const FlashSaleScreen = () => {
                 categories.map((cat: Category, index: number) => (
                   <TouchableOpacity
                     key={index}
-                    onPress={() => setActiveCategory(cat.id === 0 ? null : cat.id)}
+                    onPress={() =>
+                      setActiveCategory(cat.id === 0 ? null : cat.id)
+                    }
                     className={`h-[40px] p-16 px-5 py-1 rounded-full mr-2 border ${
                       (activeCategory === null && cat.id === 0) ||
                       activeCategory === cat.id
@@ -244,9 +248,7 @@ const FlashSaleScreen = () => {
                 renderItem={({ item }) => (
                   <View className="mb-4">
                     <FlashSaleTabCard
-                      image={
-                        item.image ? { uri: item.image } : fallbackImage
-                      }
+                      image={item.image ? { uri: item.image } : fallbackImage}
                       name={item.name}
                       discount={getProductDiscount(item)}
                       price={getProductPrice(item)}
@@ -261,7 +263,9 @@ const FlashSaleScreen = () => {
               />
             ) : (
               <View className="flex-1 items-center justify-center py-10">
-                <Text className="text-gray-500">No flash sale products found</Text>
+                <Text className="text-gray-500">
+                  {t('noFlashSaleProducts')}
+                </Text>
               </View>
             )}
           </ScrollView>

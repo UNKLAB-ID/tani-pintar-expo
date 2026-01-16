@@ -14,11 +14,10 @@ class CrossPlatformStorage {
       return this.cachedAvailability;
     }
     try {
-      const available = (
+      const available =
         typeof window !== 'undefined' &&
         window.localStorage !== undefined &&
-        window.localStorage !== null
-      );
+        window.localStorage !== null;
       this.cachedAvailability = available;
       return available;
     } catch {
