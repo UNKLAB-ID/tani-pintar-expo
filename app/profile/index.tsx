@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  StatusBar,
-} from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import React, { useState } from 'react';
+import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { router } from 'expo-router';
 import api from '@/utils/api/api';
 import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useQuery } from '@tanstack/react-query';
 //icons
 import { Ionicons, Entypo } from '@expo/vector-icons';
@@ -48,6 +42,7 @@ const fetchProfileById = async (): Promise<ProfileResponse> => {
 const ProfileScreen = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const insets = useSafeAreaInsets();
 
   const {
     data: dataProfile,
@@ -60,41 +55,49 @@ const ProfileScreen = () => {
   if (!dataProfile) return null;
 
   return (
-    <View>
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="dark-content"
-      />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <SafeAreaView className=" bg-[#5AD598] flex-1" edges={['top']}>
+    <View style={{ flex: 1, backgroundColor: '#65DD9C' }}>
+      <StatusBar style="light" />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ backgroundColor: '#f8f8f8' }}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <LinearGradient
+          colors={['#65DD9C', '#58E5D5']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={{ paddingTop: insets.top + 20, paddingBottom: 24 }}
+        >
           {/* Header */}
-          <View className="bg-[#5AD598] pb-6 px-5 mt-8">
-            <View className="flex-row items-center">
-              <Image
-                source={
-                  profileImage
-                    ? { uri: profileImage }
-                    : dataProfile?.profile_picture_url
-                      ? { uri: dataProfile.profile_picture_url }
-                      : require('@/assets/images/profile-default.png')
-                }
-                className="w-16 h-16 rounded-full mr-4"
-              />
-              <View>
-                <Text className="text-white text-lg font-bold">
-                  {dataProfile?.full_name ?? 'Guest'}
-                </Text>
-                <Text className="text-white text-sm">{dataProfile?.email}</Text>
+          <View className="px-5 pt-4">
+              <View className="flex-row items-center">
+                <Image
+                  source={
+                    profileImage
+                      ? { uri: profileImage }
+                      : dataProfile?.profile_picture_url
+                        ? { uri: dataProfile.profile_picture_url }
+                        : require('@/assets/images/profile-default.png')
+                  }
+                  className="w-16 h-16 rounded-full mr-4"
+                />
+                <View>
+                  <Text className="text-white text-lg font-bold">
+                    {dataProfile?.full_name ?? 'Guest'}
+                  </Text>
+                  <Text className="text-white text-sm">
+                    {dataProfile?.email}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  className="ml-auto"
+                  onPress={() => router.push('/profile/edit-profile')}
+                >
+                  <SettingProfileIcon width={24} height={24} />
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                className="ml-auto"
-                onPress={() => router.push('/profile/edit-profile')}
-              >
-                <SettingProfileIcon width={24} height={24} />
-              </TouchableOpacity>
             </View>
-          </View>
+          </LinearGradient>
 
           <View
             className="px-5 py-4  bg-white "
@@ -306,11 +309,10 @@ const ProfileScreen = () => {
             </View>
           </View>
 
-          <ChangeUserModal
-            visible={isModalVisible}
-            onClose={() => setModalVisible(false)}
-          />
-        </SafeAreaView>
+        <ChangeUserModal
+          visible={isModalVisible}
+          onClose={() => setModalVisible(false)}
+        />
       </ScrollView>
     </View>
   );
