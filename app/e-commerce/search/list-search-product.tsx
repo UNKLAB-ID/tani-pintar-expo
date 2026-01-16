@@ -9,6 +9,7 @@ import {
   searchHistory,
   SearchHistoryItem,
 } from '@/utils/storage/searchHistory';
+import { useTranslate } from '@/i18n';
 //components
 import SearchHeader from '@/components/ui/e-commerce/search/search-header';
 import ProductCard from '@/components/ui/e-commerce/card-product';
@@ -147,7 +148,9 @@ const ListSearchProduct = () => {
                   onPress={() => handleHistoryItemPress(item.query)}
                   className="ml-2"
                 >
-                  <Text className="text-[13px] text-gray-700">{item.query}</Text>
+                  <Text className="text-[13px] text-gray-700">
+                    {item.query}
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => handleRemoveHistoryItem(item.query)}
@@ -162,7 +165,11 @@ const ListSearchProduct = () => {
       )}
 
       <View
-        style={{ borderBottomWidth: 1, borderColor: '#E9E9E9', marginTop: showHistory ? 0 : 16 }}
+        style={{
+          borderBottomWidth: 1,
+          borderColor: '#E9E9E9',
+          marginTop: showHistory ? 0 : 16,
+        }}
       >
         <ScrollView
           horizontal

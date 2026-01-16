@@ -13,7 +13,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import BackIcons from '@/assets/icons/global/back-icons';
-import { EllipsisVertical, Paperclip, X, SendHorizonal } from 'lucide-react-native';
+import {
+  EllipsisVertical,
+  Paperclip,
+  X,
+  SendHorizonal,
+} from 'lucide-react-native';
 import ProductChatCard, {
   ProductChatData,
 } from '@/components/ui/message/product-chat-card';

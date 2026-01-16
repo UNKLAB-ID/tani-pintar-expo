@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ImageSourcePropType,
+} from 'react-native';
 import LoveIcons from '@/assets/icons/global/love-icons';
 
 export interface ProductChatData {
@@ -57,7 +63,9 @@ const ProductChatCard: React.FC<ProductChatCardProps> = ({
       <View className="flex-row">
         <Image
           source={product.image}
-          className={isAttachment ? 'w-14 h-14 rounded-lg' : 'w-20 h-20 rounded-lg'}
+          className={
+            isAttachment ? 'w-14 h-14 rounded-lg' : 'w-20 h-20 rounded-lg'
+          }
           resizeMode="cover"
         />
         <View className="flex-1 ml-3 justify-center">
@@ -65,7 +73,9 @@ const ProductChatCard: React.FC<ProductChatCardProps> = ({
             {product.name}
           </Text>
           {product.unit && (
-            <Text className="text-gray-500 text-[12px] mt-1">{product.unit}</Text>
+            <Text className="text-gray-500 text-[12px] mt-1">
+              {product.unit}
+            </Text>
           )}
           <Text
             className={`font-semibold text-[14px] mt-1 ${isAttachment ? 'text-primary' : 'text-black'}`}

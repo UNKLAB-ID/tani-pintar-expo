@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { formatPrice } from '@/utils/format-currency/currency';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/utils/api/api';
+import { useTranslate } from '@/i18n';
 //icons
 import BackIcons from '@/assets/icons/global/back-icons';
 import LoveIcons from '@/assets/icons/global/love-icons';
@@ -68,6 +69,7 @@ interface ItemQuantities {
 }
 
 const CartScreen = () => {
+  const t = useTranslate();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [itemQuantities, setItemQuantities] = useState<ItemQuantities>({});
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -83,10 +85,7 @@ const CartScreen = () => {
     return response.data;
   };
 
-  const {
-    data: listCart,
-    isLoading,
-  } = useQuery({
+  const { data: listCart, isLoading } = useQuery({
     queryKey: ['listCart'],
     queryFn: fetchListCart,
     refetchOnWindowFocus: false,
@@ -150,7 +149,10 @@ const CartScreen = () => {
     const isSelected = selectedItems.includes(item.id);
     const price = getItemPrice(item);
     const unitOfMeasure = item.product.prices?.[0]?.unit_of_measure?.name || '';
-    const sellerName = item.product.user?.profile?.full_name || item.product.user?.username || 'Tani Pintar';
+    const sellerName =
+      item.product.user?.profile?.full_name ||
+      item.product.user?.username ||
+      'Tani Pintar';
     const sellerImage = item.product.user?.profile?.profile_picture_url;
 
     return (
@@ -224,7 +226,7 @@ const CartScreen = () => {
               </View>
             </View>
             <Text className="text-[12px] text-[#bcbcbc] mt-1">
-              {unitOfMeasure || 'Per item'}
+              {unitOfMeasure || t('perItem')}
             </Text>
 
             {/* Harga */}
@@ -252,7 +254,7 @@ const CartScreen = () => {
               </View>
             </View>
             <Text className="text-[12px] text-[#bcbcbc] mt-1">
-              Stock: {item.product.available_stock}
+              {t('stock')}: {item.product.available_stock}
             </Text>
           </View>
         </View>
@@ -284,7 +286,7 @@ const CartScreen = () => {
           <TouchableOpacity onPress={() => router.replace('/(tabs)/ecommerce')}>
             <BackIcons width={24} height={24} />
           </TouchableOpacity>
-          <Text className="text-xl font-semibold">Cart</Text>
+          <Text className="text-xl font-semibold">{t('cart')}</Text>
           <TouchableOpacity onPress={handleWhistlist}>
             <LoveIcons width={24} height={24} color={'#000000'} />
           </TouchableOpacity>
@@ -302,12 +304,9 @@ const CartScreen = () => {
               className="w-[250px] h-[250px] mt-10"
               resizeMode="contain"
             />
-            <Text className="text-[16px] font-semibold">
-              Oops, your cart is still empty!
-            </Text>
+            <Text className="text-[16px] font-semibold">{t('emptyCart')}</Text>
             <Text className="text-[14px] text-gray-500 text-center mt-2 px-6">
-              Come on, hurry up and find your favorite {'\n'} products before
-              they run out!
+              {t('emptyCartDesc')}
             </Text>
             <View className="mt-6 w-full">
               <RecomendationCard />
@@ -326,12 +325,11 @@ const CartScreen = () => {
                   style={{ height: 40 }}
                 >
                   <Text className="text-[12px] text-[#7d7d7d] font-medium">
-                    {selectedItems.length} selected product
-                    {selectedItems.length > 1 ? 's' : ''}
+                    {selectedItems.length} {t('selectedProducts')}
                   </Text>
                   <TouchableOpacity onPress={() => setDeleteModalVisible(true)}>
                     <Text className="text-sm text-[#0AAD55] font-semibold">
-                      Wipe
+                      {t('wipe')}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -354,7 +352,9 @@ const CartScreen = () => {
           }}
           onConfirm={() => {
             if (itemToDelete) {
-              setCartData(prev => prev.filter(item => item.id !== itemToDelete));
+              setCartData(prev =>
+                prev.filter(item => item.id !== itemToDelete)
+              );
               setSelectedItems(prev => prev.filter(id => id !== itemToDelete));
             } else {
               setCartData(prev =>

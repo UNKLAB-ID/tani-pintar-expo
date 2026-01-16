@@ -116,19 +116,28 @@ const fetchCities = async (
 
   if (data.results) {
     // Filter cities by province_id on the client side
-    const filteredResults = data.results.filter((city: City) => city.province.id === provinceId);
+    const filteredResults = data.results.filter(
+      (city: City) => city.province.id === provinceId
+    );
 
     return {
       count: filteredResults.length,
       next: data.next,
       previous: data.previous,
-      results: filteredResults
+      results: filteredResults,
     };
   }
 
   if (Array.isArray(data)) {
-    const filteredResults = data.filter((city: City) => city.province.id === provinceId);
-    return { count: filteredResults.length, next: null, previous: null, results: filteredResults };
+    const filteredResults = data.filter(
+      (city: City) => city.province.id === provinceId
+    );
+    return {
+      count: filteredResults.length,
+      next: null,
+      previous: null,
+      results: filteredResults,
+    };
   }
 
   return { count: 0, next: null, previous: null, results: [] };
@@ -149,19 +158,28 @@ const fetchDistricts = async (
 
   if (data.results) {
     // Filter districts by city_id on the client side
-    const filteredResults = data.results.filter((district: District) => district.city.id === cityId);
+    const filteredResults = data.results.filter(
+      (district: District) => district.city.id === cityId
+    );
 
     return {
       count: filteredResults.length,
       next: data.next,
       previous: data.previous,
-      results: filteredResults
+      results: filteredResults,
     };
   }
 
   if (Array.isArray(data)) {
-    const filteredResults = data.filter((district: District) => district.city.id === cityId);
-    return { count: filteredResults.length, next: null, previous: null, results: filteredResults };
+    const filteredResults = data.filter(
+      (district: District) => district.city.id === cityId
+    );
+    return {
+      count: filteredResults.length,
+      next: null,
+      previous: null,
+      results: filteredResults,
+    };
   }
 
   return { count: 0, next: null, previous: null, results: [] };
@@ -172,7 +190,9 @@ const ModalLocationPicker: React.FC<ModalLocationPickerProps> = ({
   onClose,
   onSelect,
 }) => {
-  const [step, setStep] = useState<'province' | 'city' | 'district'>('province');
+  const [step, setStep] = useState<'province' | 'city' | 'district'>(
+    'province'
+  );
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<{
     provinceId: number | null;
@@ -249,7 +269,6 @@ const ModalLocationPicker: React.FC<ModalLocationPickerProps> = ({
     },
     initialPageParam: 1,
   });
-
 
   // Fetch districts with infinite scroll
   const {
@@ -338,17 +357,23 @@ const ModalLocationPicker: React.FC<ModalLocationPickerProps> = ({
     try {
       switch (step) {
         case 'province':
-          return provincesData?.pages?.flatMap(
-            (page: ApiResponse<Province>) => page?.results || []
-          ) || [];
+          return (
+            provincesData?.pages?.flatMap(
+              (page: ApiResponse<Province>) => page?.results || []
+            ) || []
+          );
         case 'city':
-          return citiesData?.pages?.flatMap(
-            (page: ApiResponse<City>) => page?.results || []
-          ) || [];
+          return (
+            citiesData?.pages?.flatMap(
+              (page: ApiResponse<City>) => page?.results || []
+            ) || []
+          );
         case 'district':
-          return districtsData?.pages?.flatMap(
-            (page: ApiResponse<District>) => page?.results || []
-          ) || [];
+          return (
+            districtsData?.pages?.flatMap(
+              (page: ApiResponse<District>) => page?.results || []
+            ) || []
+          );
         default:
           return [];
       }
@@ -381,13 +406,18 @@ const ModalLocationPicker: React.FC<ModalLocationPickerProps> = ({
       fetchNextProvinces();
     } else if (step === 'city' && hasNextCities && !isFetchingNextCities) {
       fetchNextCities();
-    } else if (step === 'district' && hasNextDistricts && !isFetchingNextDistricts) {
+    } else if (
+      step === 'district' &&
+      hasNextDistricts &&
+      !isFetchingNextDistricts
+    ) {
       fetchNextDistricts();
     }
   };
 
   // Check if fetching next page
-  const isFetchingMore = isFetchingNextProvinces || isFetchingNextCities || isFetchingNextDistricts;
+  const isFetchingMore =
+    isFetchingNextProvinces || isFetchingNextCities || isFetchingNextDistricts;
 
   // Render footer for load more
   const renderFooter = () => {

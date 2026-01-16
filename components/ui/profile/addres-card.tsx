@@ -83,7 +83,9 @@ const AddressCard: React.FC<AddressCardProps> = ({
         {/* Edit Button */}
         <TouchableOpacity
           className="flex-row items-center mr-4"
-          onPress={() => router.push(`/profile/address/edit-address?id=${item.id}`)}
+          onPress={() =>
+            router.push(`/profile/address/edit-address?id=${item.id}`)
+          }
         >
           <EditAddressIcon width={20} height={20} />
           <Text className="text-[#4CAF50] text-sm ml-1">Edit</Text>
