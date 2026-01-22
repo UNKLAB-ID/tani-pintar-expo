@@ -6,7 +6,7 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CartIcons from '@/assets/icons/e-commerce/cart-icons';
 import BackIcons from '@/assets/icons/global/back-icons';
@@ -44,7 +44,15 @@ const datadummy = [
 ];
 
 const WishlistScreen = () => {
-  const handleBack = () => router.push('/(tabs)/ecommerce');
+  const { source } = useLocalSearchParams<{ source?: string }>();
+
+  const handleBack = () => {
+    if (source === 'profile') {
+      router.replace('/(tabs)/profile');
+    } else {
+      router.replace('/(tabs)/ecommerce');
+    }
+  };
   const handleBackCart = () => router.push('/e-commerce/cart');
 
   return (

@@ -84,7 +84,8 @@ const ComponentFormIndividuChangeRole: React.FC<
         if (data.name) formData.append('name', data.name);
         if (data.business_number)
           formData.append('business_number', String(data.business_number));
-        if (data.phone_number) formData.append('phone_number', data.phone_number);
+        if (data.phone_number)
+          formData.append('phone_number', data.phone_number);
         if (province) formData.append('province', String(province));
         if (city) formData.append('city', String(city));
         if (district) formData.append('district', String(district));
@@ -108,7 +109,8 @@ const ComponentFormIndividuChangeRole: React.FC<
       } else {
         // Individual registration fields
         if (data.name) formData.append('full_name', data.name);
-        if (data.phone_number) formData.append('phone_number', data.phone_number);
+        if (data.phone_number)
+          formData.append('phone_number', data.phone_number);
         if (data.business_name) formData.append('name', data.business_name);
         if (province) formData.append('province', String(province));
         if (city) formData.append('city', String(city));
@@ -156,18 +158,28 @@ const ComponentFormIndividuChangeRole: React.FC<
           vendorId: res.data?.id || res.data?.uuid || null,
         });
 
-        Alert.alert('Registrasi Berhasil', 'Akun vendor Anda telah terdaftar.', [
-          {
-            text: 'OK',
-            onPress: () => router.replace('/(tabs)/ecommerce'),
-          },
-        ]);
+        Alert.alert(
+          'Registrasi Berhasil',
+          'Akun vendor Anda telah terdaftar.',
+          [
+            {
+              text: 'OK',
+              onPress: () => router.replace('/(tabs)/ecommerce'),
+            },
+          ]
+        );
       } else if (res.error) {
         console.log('Server validation errors:', res.error);
         const errorMessages = Object.entries(res.error)
-          .map(([field, messages]) => `${field}: ${(messages as string[]).join(', ')}`)
+          .map(
+            ([field, messages]) =>
+              `${field}: ${(messages as string[]).join(', ')}`
+          )
           .join('\n');
-        Alert.alert('Validasi Gagal', errorMessages || 'Terjadi kesalahan validasi.');
+        Alert.alert(
+          'Validasi Gagal',
+          errorMessages || 'Terjadi kesalahan validasi.'
+        );
       } else {
         Alert.alert('Registrasi Gagal', res.message || 'Terjadi kesalahan.');
       }

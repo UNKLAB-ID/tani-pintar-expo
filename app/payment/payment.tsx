@@ -78,7 +78,9 @@ const TaniPay = () => {
           {/* Title */}
           <View className="flex-row items-center mb-1">
             <CashbackIcon width={24} height={24} />
-            <Text className="ml-1 text-[16px] font-medium">{t('cashback')}</Text>
+            <Text className="ml-1 text-[16px] font-medium">
+              {t('cashback')}
+            </Text>
           </View>
 
           {/* Amount + Info Icon in one row */}
@@ -128,86 +130,82 @@ const TaniPay = () => {
         </View>
       </View>
       {/* Other Menu */}
-      {/* <View className="relative px-4 mt-6 ">
-          <Text className="font-semibold mb-2">Other Menu</Text>
-          <View className="flex-row justify-between">
-           
-            <View className="items-center">
-              <View
-                className="items-center w-[70px] py-2 bg-white "
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#E5E5E5',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.08,
-                  shadowRadius: 4,
-                  elevation: 1,
-                }}
-              >
-                <PhoneIcon width={28} height={28} />
-              </View>
-              <Text className="text-center mt-1 text-xs">Phone Credit</Text>
+      <View className="relative px-4 mt-6 ">
+        <Text className="font-semibold mb-2">Other Menu</Text>
+        <View className="flex-row justify-between">
+          <View className="items-center">
+            <View
+              className="items-center w-[70px] py-2 bg-white "
+              style={{
+                borderWidth: 1,
+                borderColor: '#E5E5E5',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.08,
+                shadowRadius: 4,
+                elevation: 1,
+              }}
+            >
+              <PhoneIcon width={28} height={28} />
             </View>
-
-         
-            <View className="items-center">
-              <View
-                className="items-center w-[70px] py-2 bg-white "
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#E5E5E5',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.08,
-                  shadowRadius: 4,
-                  elevation: 1,
-                }}
-              >
-                <PLNicon width={24} height={24} />
-              </View>
-              <Text className="text-center mt-1 text-xs">PLN Electricity</Text>
-            </View>
-
-         
-            <View className="items-center">
-              <View
-                className="items-center w-[70px] py-2 bg-white "
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#E5E5E5',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.08,
-                  shadowRadius: 4,
-                  elevation: 1,
-                }}
-              >
-                <PDAMicon width={24} height={24} />
-              </View>
-              <Text className="text-center mt-1 text-xs">PDAM</Text>
-            </View>
-
-           
-            <View className="items-center">
-              <View
-                className="items-center w-[70px] py-2 bg-white "
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#E5E5E5',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.08,
-                  shadowRadius: 4,
-                  elevation: 1,
-                }}
-              >
-                <DataPackageIcon width={24} height={24} />
-              </View>
-              <Text className="text-center mt-1 text-xs">Data Package</Text>
-            </View>
+            <Text className="text-center mt-1 text-xs">Phone Credit</Text>
           </View>
-        </View> */}
+
+          <View className="items-center">
+            <View
+              className="items-center w-[70px] py-2 bg-white "
+              style={{
+                borderWidth: 1,
+                borderColor: '#E5E5E5',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.08,
+                shadowRadius: 4,
+                elevation: 1,
+              }}
+            >
+              <PLNicon width={24} height={24} />
+            </View>
+            <Text className="text-center mt-1 text-xs">PLN Electricity</Text>
+          </View>
+
+          <View className="items-center">
+            <View
+              className="items-center w-[70px] py-2 bg-white "
+              style={{
+                borderWidth: 1,
+                borderColor: '#E5E5E5',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.08,
+                shadowRadius: 4,
+                elevation: 1,
+              }}
+            >
+              <PDAMicon width={24} height={24} />
+            </View>
+            <Text className="text-center mt-1 text-xs">PDAM</Text>
+          </View>
+
+          <View className="items-center">
+            <View
+              className="items-center w-[70px] py-2 bg-white "
+              style={{
+                borderWidth: 1,
+                borderColor: '#E5E5E5',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.08,
+                shadowRadius: 4,
+                elevation: 1,
+              }}
+            >
+              <DataPackageIcon width={24} height={24} />
+            </View>
+            <Text className="text-center mt-1 text-xs">Data Package</Text>
+          </View>
+        </View>
+      </View>
       {/* Promo Banner */}
       <View className="p-4">
         <Text className="text-[14px] font-semibold">Promo</Text>
@@ -248,9 +246,7 @@ const TaniPay = () => {
           {historyToShow.length === 0 ? (
             <View className=" flex-1 justify-center items-center">
               <PoutingIcon width={24} height={24} />
-              <Text style={{ marginTop: 8, color: '#999' }}>
-                {t('noData')}
-              </Text>
+              <Text style={{ marginTop: 8, color: '#999' }}>{t('noData')}</Text>
             </View>
           ) : (
             historyToShow.map(item => (

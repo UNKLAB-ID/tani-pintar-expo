@@ -225,16 +225,18 @@ const RateProduct = () => {
         <DescriptionInput value={experience} onChangeText={setExperience} />
       </ScrollView>
       {/* Submit */}
-      <View className="bg-white p-2 ">
-        <TouchableOpacity
-          onPress={handlesubmit}
-          className="bg-green-600 py-2 rounded-xl mb-2"
-        >
-          <Text className="text-white text-center font-semibold text-[16px]">
-            Submit
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <SafeAreaView edges={['bottom']} className="bg-white">
+        <View className="px-4 py-2">
+          <TouchableOpacity
+            onPress={handlesubmit}
+            className="bg-green-600 py-3 rounded-xl"
+          >
+            <Text className="text-white text-center font-semibold text-[16px]">
+              Submit
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
       <ModalLeaveReview
         visible={modalLeave}
         onClose={() => setModalLeave(false)}

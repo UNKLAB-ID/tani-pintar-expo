@@ -77,7 +77,7 @@ const CartScreen = () => {
   const [cartData, setCartData] = useState<ApiCartItem[]>([]);
 
   const handleWhistlist = () => {
-    router.push('/e-commerce/wishlist');
+    router.push({ pathname: '/e-commerce/wishlist', params: { source: 'ecommerce' } });
   };
 
   const fetchListCart = async () => {

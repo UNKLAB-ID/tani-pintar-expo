@@ -57,7 +57,11 @@ const OrderScreen = () => {
     <SafeAreaView edges={['top', 'left', 'right']} className=" bg-white">
       {/* Header */}
       <View className="flex-row items-center p-4">
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity
+          onPress={() => {
+            router.replace('/profile');
+          }}
+        >
           <BackIcons width={24} height={24} fill="#000" />
         </TouchableOpacity>
         <Text className="text-black text-[16px] font-bold ml-3">My Order</Text>

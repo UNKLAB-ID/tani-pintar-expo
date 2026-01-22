@@ -199,7 +199,7 @@ const CheckoutScreen = () => {
         translucent={false}
       />
       <SafeAreaView
-        edges={['top', 'right', 'left', 'bottom']}
+        edges={['top', 'right', 'left']}
         className="bg-[#F8F8F8] flex-1 "
       >
         {/* Header */}
@@ -211,7 +211,7 @@ const CheckoutScreen = () => {
             <Text className="font-semibold text-[18px]">Checkout</Text>
           </View>
         </View>
-        <ScrollView contentContainerStyle={{ paddingBottom: 50, flexGrow: 1 }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: 10, flexGrow: 1 }}>
           {/* Shipping Address */}
           {selectedAddress && (
             <View className="bg-white mt-3 px-4 py-3 rounded-md mx-3">
@@ -366,35 +366,34 @@ const CheckoutScreen = () => {
 
         {/* Total & Pay Button */}
         {summary && summary.grandTotal > 0 && (
-          <View
-            className="bg-white flex-row justify-between items-center px-4 py-3 rounded-t-2xl"
+          <SafeAreaView
+            edges={['bottom']}
+            className="bg-white rounded-t-2xl"
             style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
               shadowColor: '#000',
               shadowOffset: { width: 0, height: -2 },
               shadowOpacity: 0.1,
               shadowRadius: 4,
-              elevation: 10, // Android
+              elevation: 10,
             }}
           >
-            <View>
-              <Text className="text-[14px] text-[#9E9E9E]">Total Bill</Text>
-              <Text className="text-[14px] text-[#00A86B] font-semibold">
-                Rp{summary.grandTotal.toLocaleString()}
-              </Text>
+            <View className="flex-row justify-between items-center px-4 py-3">
+              <View>
+                <Text className="text-[14px] text-[#9E9E9E]">Total Bill</Text>
+                <Text className="text-[14px] text-[#00A86B] font-semibold">
+                  Rp{summary.grandTotal.toLocaleString()}
+                </Text>
+              </View>
+              <TouchableOpacity
+                className="bg-[#00A86B] px-6 py-2 rounded-xl"
+                onPress={() => router.push('/e-commerce/checkout/success')}
+              >
+                <Text className="text-white font-semibold text-[14px]">
+                  Pay Now
+                </Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              className="bg-[#00A86B] px-6 py-2 rounded-xl"
-              onPress={() => router.push('/e-commerce/checkout/success')}
-            >
-              <Text className="text-white font-semibold text-[14px]">
-                Pay Now
-              </Text>
-            </TouchableOpacity>
-          </View>
+          </SafeAreaView>
         )}
       </SafeAreaView>
     </>
