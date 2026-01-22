@@ -29,9 +29,7 @@ import LocationInfo from '@/components/ui/e-commerce/location-info';
 import MessageIcons from '@/assets/icons/global/message-icons';
 import CartIcons from '@/assets/icons/e-commerce/cart-icons';
 import ArrowRightIcons from '@/assets/icons/e-commerce/arrow-right-icons';
-import VoucherIcons from '@/assets/icons/global/voucher-icons';
-import Wallet2Icons from '@/assets/icons/global/wallet2-icons';
-import WalletIcons from '@/assets/icons/global/wallet-icons';
+import WalletVoucherSection from '@/components/ui/e-commerce/wallet-voucher-section';
 
 const { width } = Dimensions.get('window');
 
@@ -50,12 +48,44 @@ const userAddress = {
   postalCode: '10110',
   country: 'Indonesia',
 };
+type CategoryRoute =
+  | '/e-commerce/category/topup'
+  | '/e-commerce/category/sprayer'
+  | '/e-commerce/category/herbal'
+  | '/e-commerce/category/vegetable';
 
-const mainCategoryData = [
-  { id: 1, icon: 'TopUpIcons', label: 'Top Up\n& Bayar' },
-  { id: 2, icon: 'TopUpIcons', label: 'Alat\nPenyemprot' },
-  { id: 3, icon: 'TopUpIcons', label: 'Obat\nHerbal' },
-  { id: 4, icon: 'TopUpIcons', label: 'Jenis\nSayuran' },
+interface MainCategoryItem {
+  id: number;
+  icon: string;
+  label: string;
+  route: CategoryRoute;
+}
+
+const mainCategoryData: MainCategoryItem[] = [
+  {
+    id: 1,
+    icon: 'TopUpIcons',
+    label: 'Top Up\n& Bayar',
+    route: '/e-commerce/category/topup',
+  },
+  {
+    id: 2,
+    icon: 'TopUpIcons',
+    label: 'Alat\nPenyemprot',
+    route: '/e-commerce/category/sprayer',
+  },
+  {
+    id: 3,
+    icon: 'TopUpIcons',
+    label: 'Obat\nHerbal',
+    route: '/e-commerce/category/herbal',
+  },
+  {
+    id: 4,
+    icon: 'TopUpIcons',
+    label: 'Jenis\nSayuran',
+    route: '/e-commerce/category/vegetable',
+  },
 ];
 
 const banners = [
@@ -171,7 +201,10 @@ const EcommerceIndex = () => {
         backgroundColor="#ffffff"
         translucent={false}
       />
-      <SafeAreaView edges={['right', 'left']} className="flex-1 bg-white">
+      <SafeAreaView
+        edges={['top', 'right', 'left']}
+        className="flex-1 bg-white"
+      >
         <FlatList
           data={allProducts}
           keyExtractor={(item, index) => item.uuid || index.toString()}
@@ -264,60 +297,17 @@ const EcommerceIndex = () => {
               </View>
 
               {/* Wallet & Voucher Section */}
-              <View className="px-5 mt-5">
-                <View className="flex-row w-full bg-[#F0F0F0] justify-between rounded-xl py-4 px-4">
-                  <View className="w-1/3 items-start">
-                    <View className="flex-row items-center mb-1 mt-1">
-                      <WalletIcons width={16} height={16} />
-                      <Text className="text-[12px] font-medium text-black ml-1">
-                        TaniPay
-                      </Text>
-                    </View>
-                    <Text className="text-[12px] font-bold text-black">
-                      Rp20.000
-                    </Text>
-                    <Text className="text-[10px] text-gray-500">
-                      Topup minimum...
-                    </Text>
-                  </View>
-
-                  <View className="w-1/3">
-                    <View className="flex-row items-center mb-1 mt-1">
-                      <Wallet2Icons width={16} height={16} />
-                      <Text className="text-[12px] font-medium text-black ml-1">
-                        TaniPinjam
-                      </Text>
-                    </View>
-                    <Text className="text-[12px] font-bold text-[#28a745]">
-                      ActivateNow
-                    </Text>
-                    <Text className="text-[10px] text-gray-500">
-                      Limit up to Rp20...
-                    </Text>
-                  </View>
-
-                  <View className="w-1/3">
-                    <View className="flex-row items-center mb-1 mt-1">
-                      <VoucherIcons width={16} height={16} />
-                      <Text className="text-[12px] font-medium text-black ml-1">
-                        Voucher
-                      </Text>
-                    </View>
-                    <Text className="text-[12px] font-bold text-black">
-                      Voucher Discount
-                    </Text>
-                    <Text className="text-[10px] text-[#28a745]">
-                      Free Delivery Service
-                    </Text>
-                  </View>
-                </View>
-              </View>
+              <WalletVoucherSection />
 
               {/* Main Category */}
               <View className="mt-6 px-5">
                 <View className="flex-row justify-between items-center space-x-4">
                   {mainCategoryData.map(item => (
-                    <MainCategoryCard key={item.id} item={item} />
+                    <MainCategoryCard
+                      key={item.id}
+                      item={item}
+                      onPress={() => router.push(item.route as never)}
+                    />
                   ))}
                 </View>
               </View>

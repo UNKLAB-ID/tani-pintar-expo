@@ -231,38 +231,40 @@ const RefundDetail = () => {
           </View>
         </ScrollView>
         {/* Submit Button */}
-        <View className="bg-white p-4 border-t border-gray-200">
-          <View className="flex-row items-center justify-between">
-            {/* Total Return */}
-            <TouchableOpacity onPress={() => setModalEstimateVisible(true)}>
-              <Text className="text-gray-600 text-sm">Total Return</Text>
-              <Text className="text-black font-semibold mt-1">Rp152.000</Text>
-            </TouchableOpacity>
+        <SafeAreaView edges={['bottom']} className="bg-white">
+          <View className="p-4 border-t border-gray-200">
+            <View className="flex-row items-center justify-between">
+              {/* Total Return */}
+              <TouchableOpacity onPress={() => setModalEstimateVisible(true)}>
+                <Text className="text-gray-600 text-sm">Total Return</Text>
+                <Text className="text-black font-semibold mt-1">Rp152.000</Text>
+              </TouchableOpacity>
 
-            {/* Submit Button */}
-            <TouchableOpacity
-              disabled={
-                description.length < 25 ||
-                !problem ||
-                !solution ||
-                photos.length === 0
-              }
-              className={`px-5 py-3 rounded-xl ${
-                description.length < 25 ||
-                !problem ||
-                !solution ||
-                photos.length === 0
-                  ? 'bg-gray-300'
-                  : 'bg-primary'
-              }`}
-              onPress={handleSubmit}
-            >
-              <Text className="text-white font-semibold">
-                Submit a Return/Refund
-              </Text>
-            </TouchableOpacity>
+              {/* Submit Button */}
+              <TouchableOpacity
+                disabled={
+                  description.length < 25 ||
+                  !problem ||
+                  !solution ||
+                  photos.length === 0
+                }
+                className={`px-5 py-3 rounded-xl ${
+                  description.length < 25 ||
+                  !problem ||
+                  !solution ||
+                  photos.length === 0
+                    ? 'bg-gray-300'
+                    : 'bg-primary'
+                }`}
+                onPress={handleSubmit}
+              >
+                <Text className="text-white font-semibold">
+                  Submit a Return/Refund
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </SafeAreaView>
       </KeyboardAvoidingView>
       <ModalSelectSolution
         visible={selectedSolutionVisible}

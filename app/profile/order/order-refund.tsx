@@ -45,7 +45,7 @@ const OrderRefund = () => {
   };
   return (
     <SafeAreaView
-      edges={['top', 'left', 'right']}
+      edges={['top', 'left', 'right', 'bottom']}
       className=" bg-[#f8f8f8] flex-1"
     >
       <View className="flex-row items-center p-4 bg-white border-b border-gray-200">

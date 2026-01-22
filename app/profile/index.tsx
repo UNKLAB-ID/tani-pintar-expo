@@ -224,7 +224,7 @@ const ProfileScreen = () => {
               <Entypo name="chevron-right" size={20} color="#6F6F6F" />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => router.push('/e-commerce/wishlist')}
+              onPress={() => router.push({ pathname: '/e-commerce/wishlist', params: { source: 'profile' } })}
               className="flex-row items-center justify-between py-3 "
             >
               <View className="flex-row items-center">
