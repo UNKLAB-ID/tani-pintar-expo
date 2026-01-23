@@ -23,28 +23,33 @@ import { formatPrice } from '@/utils/format-currency/currency';
 
 import ReceiptIcon from '@/assets/icons/e-commerce/receipt-main-category-icon';
 import PulsaCategoryIcon from '@/assets/icons/e-commerce/pulsa-phone-icon';
+import DataPackageCategoryIcon from '@/assets/icons/e-commerce/data-package-icon';
+import PDAMCategoryIcon from '@/assets/icons/e-commerce/pdam-category-icon';
+import PLNCategoryIcon from '@/assets/icons/e-commerce/pln-category-icon';
+import BPJSCategoryIcon from '@/assets/icons/e-commerce/bpjs-category-icon';
+import EwalletCategoryIcon from '@/assets/icons/e-commerce/ewallet-category-icon';
+import EmoneyCategoryIcon from '@/assets/icons/e-commerce/emoney-category-icon';
+import EducationCategoryIcon from '@/assets/icons/e-commerce/education-category-icon';
+import PbbCategoryIcon from '@/assets/icons/e-commerce/pbb-category-icon';
+import TvInternetCategoryIcon from '@/assets/icons/e-commerce/tv-net-category-icon';
 
-/* =======================
-   TYPES
-======================= */
 interface ServiceItem {
   id: number;
   label: string;
   Icon: ComponentType<{ width?: number; height?: number }>;
 }
 
-/* =======================
-   DATA
-======================= */
 const services: ServiceItem[] = [
   { id: 1, label: 'Pulsa', Icon: PulsaCategoryIcon },
-  { id: 2, label: 'Data Package', Icon: PulsaCategoryIcon },
-  { id: 3, label: 'PDAM', Icon: PulsaCategoryIcon },
-  { id: 4, label: 'PLN', Icon: PulsaCategoryIcon },
-  { id: 5, label: 'BPJS', Icon: PulsaCategoryIcon },
-  { id: 6, label: 'E-Wallet', Icon: PulsaCategoryIcon },
-  { id: 7, label: 'Electronic Money', Icon: PulsaCategoryIcon },
-  { id: 8, label: 'Education', Icon: PulsaCategoryIcon },
+  { id: 2, label: 'Data Package', Icon: DataPackageCategoryIcon },
+  { id: 3, label: 'PDAM', Icon: PDAMCategoryIcon },
+  { id: 4, label: 'PLN', Icon: PLNCategoryIcon },
+  { id: 5, label: 'BPJS', Icon: BPJSCategoryIcon },
+  { id: 6, label: 'E-Wallet', Icon: EwalletCategoryIcon },
+  { id: 7, label: 'Electronic Money', Icon: EmoneyCategoryIcon },
+  { id: 8, label: 'Education', Icon: EducationCategoryIcon },
+  { id: 9, label: 'PBB', Icon: PbbCategoryIcon },
+  { id: 10, label: 'Cable TV & Internet Bills', Icon: TvInternetCategoryIcon },
 ];
 
 const banners = [
@@ -117,9 +122,6 @@ export default function TopUpMainCategory() {
     }
   }, [hasNextPage, isFetchingNextPage]);
 
-  /* =======================
-     RENDER
-  ======================= */
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* HEADER */}
@@ -183,18 +185,16 @@ export default function TopUpMainCategory() {
                   setActiveBanner(index);
                 }}
                 renderItem={({ item }) => (
-                  <View style={{ width }}>
-                    <View className="px-4">
-                      <Image
-                        source={item.image}
-                        style={{
-                          width: '100%',
-                          height: 130,
-                          borderRadius: 16,
-                        }}
-                        resizeMode="cover"
-                      />
-                    </View>
+                  <View style={{ width }} className="px-4">
+                    <Image
+                      source={item.image}
+                      style={{
+                        width: '100%',
+                        height: 130,
+                        borderRadius: 16,
+                      }}
+                      resizeMode="cover"
+                    />
                   </View>
                 )}
               />
@@ -216,13 +216,15 @@ export default function TopUpMainCategory() {
 
             {/* SERVICES GRID */}
             <View className="mt-6">
-              <View className="flex-row flex-wrap justify-between">
+              <View className="flex-row flex-wrap">
                 {services.map(({ id, label, Icon }) => (
-                  <View key={id} className="w-[22%] items-center mb-4">
-                    <View className="w-12 h-12 rounded-full bg-green-100 items-center justify-center mb-1">
-                      <Icon />
+                  <View key={id} className="w-[20%] items-center mb-5">
+                    <View className="w-12 h-12 items-center justify-center mb-1 overflow-visible">
+                      <Icon width={30} height={30} />
                     </View>
-                    <Text className="text-xs text-center">{label}</Text>
+                    <Text className="text-xs text-center leading-4">
+                      {label}
+                    </Text>
                   </View>
                 ))}
               </View>
