@@ -8,7 +8,7 @@ import Svg, {
   SvgProps,
 } from 'react-native-svg';
 const TelkomselIcon = (props: SvgProps) => (
-  <Svg width={24} height={24} fill="none" {...props}>
+  <Svg width={100} height={47} fill="none" {...props}>
     <Path fill="url(#a)" d="M0 0h68v32H0z" />
     <Defs>
       <Pattern

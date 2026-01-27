@@ -8,6 +8,7 @@ import {
   detectOperator,
   OperatorKey,
 } from '@/utils/detect-operator/detectOperator';
+import { useEcommerceStore } from '@/store/e-commerce/ecommerce';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -105,6 +106,7 @@ const dataPackageData = [
 /* ================== SCREEN ================== */
 
 export default function TopUpPulsaScreen() {
+  const { setTopUpData } = useEcommerceStore();
   const [phone, setPhone] = useState('');
   const [operator, setOperator] = useState<OperatorKey | null>(null);
   const [activeTab, setActiveTab] = useState<PulsaTab>('PULSA');
@@ -185,7 +187,7 @@ export default function TopUpPulsaScreen() {
                 columnWrapperStyle={{ gap: 12 }}
                 contentContainerStyle={{
                   paddingHorizontal: 16,
-                  paddingBottom: 140,
+                  paddingBottom: 180,
                   marginTop: 8,
                 }}
                 renderItem={({ item }) => (
@@ -241,20 +243,47 @@ export default function TopUpPulsaScreen() {
 
           {/* PAYMENT BAR */}
           {showPayment && (
-            <View className="absolute bottom-0 left-0 right-0 bg-white px-4 py-3 flex-row justify-between border-t">
-              <View>
-                <Text className="text-xs text-gray-500">Total Payment</Text>
-                <Text className="text-lg font-semibold">
-                  Rp{totalPrice.toLocaleString()}
-                </Text>
-              </View>
+            <SafeAreaView edges={['bottom']} className="bg-white">
+              <View className="bg-white px-4 py-3 flex-row justify-between">
+                <View>
+                  <Text className="text-xs text-gray-500">Total Payment</Text>
+                  <Text className="text-lg font-semibold">
+                    Rp{totalPrice.toLocaleString()}
+                  </Text>
+                </View>
 
-              <SafeAreaView edges={['bottom']}>
-                <TouchableOpacity className="bg-primary px-6 py-3 rounded-full">
+                <TouchableOpacity
+                  onPress={() => {
+                    // Save topup data to store
+                    if (activeTab === 'PULSA' && selectedPulsa) {
+                      setTopUpData({
+                        phoneNumber: phone,
+                        operator,
+                        nominal: selectedPulsa.nominal,
+                        price: selectedPulsa.price,
+                        originalPrice: selectedPulsa.originalPrice,
+                        period: selectedPulsa.period,
+                        promo: selectedPulsa.promo,
+                        type: 'PULSA',
+                      });
+                    } else if (activeTab === 'DATA' && selectedData) {
+                      setTopUpData({
+                        phoneNumber: phone,
+                        operator,
+                        nominal: 0,
+                        price: selectedData.price,
+                        period: selectedData.description,
+                        type: 'DATA',
+                      });
+                    }
+                    router.push('/payment/topup/pulsa/payment-pulsa');
+                  }}
+                  className="bg-primary px-6 py-3 rounded-full"
+                >
                   <Text className="text-white font-medium">Continue Pay</Text>
                 </TouchableOpacity>
-              </SafeAreaView>
-            </View>
+              </View>
+            </SafeAreaView>
           )}
         </View>
       </SafeAreaView>

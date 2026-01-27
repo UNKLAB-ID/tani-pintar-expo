@@ -18,6 +18,7 @@ import VoucherCard from '@/components/ui/e-commerce/checkout/voucher-card';
 import ShippingOptionCard from '@/components/ui/e-commerce/checkout/card-shipping-options';
 import { useEcommerceStore } from '@/store/e-commerce/ecommerce';
 import NoteTriggerButton from '@/components/ui/e-commerce/checkout/note-trigger-button';
+import PaymentMethodSection from '@/components/ui/component-globals/payment-method-section';
 
 type Address = {
   id: number;
@@ -285,37 +286,10 @@ const CheckoutScreen = () => {
 
           {/* Payment Method */}
           {selectedPayment && (
-            <View className="bg-white mt-3 px-4 py-3 rounded-md mx-3">
-              <View className="flex-row justify-between items-center pb-3 border-b border-[#E5E5E5] mb-3">
-                <Text className="text-[14px] font-semibold text-[#1F1F1F]">
-                  Payment Method
-                </Text>
-                <TouchableOpacity
-                  onPress={() => router.push('/e-commerce/checkout/payment')}
-                >
-                  <Text className="text-[13px] text-[#00A86B] font-medium">
-                    See all
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View className="flex-row items-center space-x-2">
-                <Image
-                  source={selectedPayment.logo}
-                  resizeMode="contain"
-                  className="w-[40px] h-[28px]"
-                />
-                <View className="ml-3">
-                  <Text className="text-[14px] text-[#1F1F1F] font-semibold">
-                    {selectedPayment.label}
-                  </Text>
-                  {selectedPayment.description && (
-                    <Text className="text-[12px] text-[#9E9E9E]">
-                      {selectedPayment.description}
-                    </Text>
-                  )}
-                </View>
-              </View>
-            </View>
+            <PaymentMethodSection
+              payment={selectedPayment}
+              onPressSeeAll={() => router.push('/e-commerce/checkout/payment')}
+            />
           )}
 
           {/* Payment Details */}

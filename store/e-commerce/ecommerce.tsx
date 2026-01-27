@@ -1,5 +1,6 @@
 import { ImageSourcePropType } from 'react-native';
 import { create } from 'zustand';
+import { OperatorKey } from '@/utils/detect-operator/detectOperator';
 
 type ShippingOption = {
   id: number;
@@ -26,6 +27,17 @@ type VoucherItem = {
   type: 'shipping' | 'discount';
 };
 
+type TopUpData = {
+  phoneNumber: string;
+  operator: OperatorKey | null;
+  nominal: number;
+  price: number;
+  originalPrice?: number;
+  period?: string;
+  promo?: string;
+  type: 'PULSA' | 'DATA';
+};
+
 type EcommerceStore = {
   // SHIPPING
   selectedShipping: ShippingOption | null;
@@ -41,6 +53,11 @@ type EcommerceStore = {
   selectedPayment: PaymentMethod;
   setPaymentOption: (payment: PaymentMethod) => void;
   resetPaymentOption: () => void;
+
+  // TOP UP
+  topUpData: TopUpData | null;
+  setTopUpData: (data: TopUpData) => void;
+  clearTopUpData: () => void;
 };
 
 export const useEcommerceStore = create<EcommerceStore>(set => ({
@@ -106,4 +123,9 @@ export const useEcommerceStore = create<EcommerceStore>(set => ({
         description: 'Virtual Account BCA',
       },
     }),
+
+  // Top Up
+  topUpData: null,
+  setTopUpData: data => set({ topUpData: data }),
+  clearTopUpData: () => set({ topUpData: null }),
 }));

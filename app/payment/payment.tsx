@@ -199,7 +199,10 @@ const TaniPay = () => {
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity className="items-center">
+              <TouchableOpacity
+                onPress={() => router.push('/payment/topup/pdam')}
+                className="items-center"
+              >
                 <View
                   className="items-center w-[70px] py-2 bg-white "
                   style={{
