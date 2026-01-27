@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { TopUpMethodCard } from '@/components/ui/payment/card-topup-method';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

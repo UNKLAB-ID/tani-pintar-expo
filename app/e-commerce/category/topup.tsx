@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { Href, useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import type { ComponentType } from 'react';
@@ -37,13 +37,19 @@ interface ServiceItem {
   id: number;
   label: string;
   Icon: ComponentType<{ width?: number; height?: number }>;
+  Route?: Href;
 }
 
 const services: ServiceItem[] = [
-  { id: 1, label: 'Pulsa', Icon: PulsaCategoryIcon },
+  {
+    id: 1,
+    label: 'Pulsa',
+    Icon: PulsaCategoryIcon,
+    Route: '/payment/topup/pulsa',
+  },
   { id: 2, label: 'Data Package', Icon: DataPackageCategoryIcon },
   { id: 3, label: 'PDAM', Icon: PDAMCategoryIcon },
-  { id: 4, label: 'PLN', Icon: PLNCategoryIcon },
+  { id: 4, label: 'PLN', Icon: PLNCategoryIcon, Route: '/payment/topup/pln' },
   { id: 5, label: 'BPJS', Icon: BPJSCategoryIcon },
   { id: 6, label: 'E-Wallet', Icon: EwalletCategoryIcon },
   { id: 7, label: 'Electronic Money', Icon: EmoneyCategoryIcon },
@@ -120,7 +126,7 @@ export default function TopUpMainCategory() {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [hasNextPage, isFetchingNextPage]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -217,15 +223,23 @@ export default function TopUpMainCategory() {
             {/* SERVICES GRID */}
             <View className="mt-6">
               <View className="flex-row flex-wrap">
-                {services.map(({ id, label, Icon }) => (
-                  <View key={id} className="w-[20%] items-center mb-5">
+                {services.map(({ id, label, Icon, Route }) => (
+                  <TouchableOpacity
+                    key={id}
+                    className="w-[20%] items-center mb-5"
+                    onPress={() => {
+                      if (Route) {
+                        router.push(Route);
+                      }
+                    }}
+                  >
                     <View className="w-12 h-12 items-center justify-center mb-1 overflow-visible">
                       <Icon width={30} height={30} />
                     </View>
                     <Text className="text-xs text-center leading-4">
                       {label}
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             </View>
