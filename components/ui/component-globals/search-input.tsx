@@ -13,8 +13,8 @@ interface SearchInputProps extends TextInputProps {
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
-  containerStyle?: ViewStyle; // bisa custom container
-  inputStyle?: TextStyle; // bisa custom input
+  containerStyle?: ViewStyle;
+  inputStyle?: TextStyle;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
