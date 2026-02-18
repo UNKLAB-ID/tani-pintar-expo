@@ -12,30 +12,36 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MapPin, Check } from 'lucide-react-native';
 import { useState, useEffect } from 'react';
 import ModalLocationPicker from '@/components/ui/profile/modal-location';
+import { Controller, useForm } from 'react-hook-form';
+import { useUserLocation } from '@/store/location/location';
+import { useRegisterRoleStore } from '@/store/auth/register-role';
 
-type LocationType = {
-  province?: string;
-  city?: string;
-  district?: string;
-  postalCode?: string;
-};
-
-type SelectedLocation = {
-  latitude: number;
-  longitude: number;
-  address?: string;
+type LocationData = {
+  provinceId: number;
+  provinceName: string;
+  cityId: number;
+  cityName: string;
+  districtId: number;
+  districtName: string;
 };
 
 const AddAddress = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [location, setLocation] = useState<LocationType | null>(null);
+  const [location, setLocation] = useState<LocationData | null>(null);
   const [unit, setUnit] = useState('');
   const [isDefault, setIsDefault] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
-  const [selectedLocation, setSelectedLocation] =
-    useState<SelectedLocation | null>(null);
+  const { latAddress, longAddress } = useUserLocation();
+  const { setField, resetForm, ...vendorData } = useRegisterRoleStore();
   const [isFormValid, setIsFormValid] = useState(false);
+  const {
+    control,
+    formState: { errors, isValid },
+  } = useForm({
+    defaultValues: vendorData,
+    mode: 'onChange',
+  });
 
   useEffect(() => {
     const allFilled = name && phone && location && unit;
@@ -88,8 +94,7 @@ const AddAddress = () => {
         {/* Location Picker */}
         <View>
           <Text className="text-sm font-medium mb-1">
-            Province / City / District / Postal Code{' '}
-            <Text className="text-red-500">*</Text>
+            Province / City / District <Text className="text-red-500">*</Text>
           </Text>
           <TouchableOpacity
             onPress={() => setShowLocationModal(true)}
@@ -97,7 +102,7 @@ const AddAddress = () => {
           >
             <Text className="text-black text-sm">
               {location
-                ? `${location.province}, ${location.city}, ${location.district}, ${location.postalCode}`
+                ? `${location.provinceName}, ${location.cityName}, ${location.districtName}`
                 : 'Pilih lokasi'}
             </Text>
           </TouchableOpacity>
@@ -114,22 +119,58 @@ const AddAddress = () => {
           />
         </View>
 
-        {/* Pin Map */}
-        <View>
-          <Text className="text-sm font-medium mb-1">
-            Pin Address <Text className="text-red-500">*</Text>
-          </Text>
-          <Pressable className="flex-row items-center justify-between border border-green-500 rounded-md px-3 py-3">
-            <View className="flex-row items-center space-x-2">
-              <MapPin size={16} color="#10B981" />
-              <Text className="text-sm text-green-600">Select by map</Text>
-            </View>
-          </Pressable>
-          <Text className="text-xs text-red-500 mt-1">
-            ❗ Fill in the address first to set the location on the map
-            accurately
-          </Text>
-        </View>
+        {/* Pin Address */}
+        <Controller
+          control={control}
+          name="latitude"
+          render={() => {
+            const isPinned = latAddress && longAddress;
+
+            return (
+              <View style={{ marginTop: 16 }}>
+                <Text className="text-sm font-medium mb-1">
+                  Pin Address <Text className="text-red-500">*</Text>
+                </Text>
+
+                <Pressable
+                  onPress={() => router.push('/profile/pin-lat-long-address')}
+                  className={`flex-row items-center justify-between rounded-md px-3 py-3 ${
+                    isPinned
+                      ? 'border border-green-500'
+                      : 'border border-gray-300'
+                  }`}
+                >
+                  <View className="flex-row items-center space-x-2">
+                    <MapPin
+                      size={16}
+                      color={isPinned ? '#10B981' : '#9CA3AF'}
+                    />
+                    <Text
+                      className={`text-sm ${
+                        isPinned ? 'text-green-600' : 'text-gray-400'
+                      }`}
+                    >
+                      {isPinned ? 'Location pinned' : 'Select by map'}
+                    </Text>
+                  </View>
+
+                  {isPinned && (
+                    <Text className="text-xs text-green-600 font-medium">
+                      ✓ Pinned
+                    </Text>
+                  )}
+                </Pressable>
+
+                {!isPinned && (
+                  <Text className="text-xs text-red-500 mt-1">
+                    ❗ Fill in the address first to set the location on the map
+                    accurately
+                  </Text>
+                )}
+              </View>
+            );
+          }}
+        />
 
         {/* Default Checkbox */}
         <TouchableOpacity
@@ -157,7 +198,7 @@ const AddAddress = () => {
       <ModalLocationPicker
         visible={showLocationModal}
         onClose={() => setShowLocationModal(false)}
-        onSelect={(val: LocationType) => {
+        onSelect={(val: LocationData) => {
           setLocation(val);
           setShowLocationModal(false);
         }}

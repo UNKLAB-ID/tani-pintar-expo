@@ -7,15 +7,21 @@ import { Platform } from 'react-native';
  */
 class CrossPlatformStorage {
   private isWeb = Platform.OS === 'web';
+  private cachedAvailability: boolean | null = null;
 
   private isLocalStorageAvailable(): boolean {
+    if (this.cachedAvailability !== null) {
+      return this.cachedAvailability;
+    }
     try {
-      return (
+      const available =
         typeof window !== 'undefined' &&
         window.localStorage !== undefined &&
-        window.localStorage !== null
-      );
+        window.localStorage !== null;
+      this.cachedAvailability = available;
+      return available;
     } catch {
+      this.cachedAvailability = false;
       return false;
     }
   }
@@ -27,14 +33,12 @@ class CrossPlatformStorage {
         if (this.isLocalStorageAvailable()) {
           return localStorage.getItem(key);
         }
-        console.warn('localStorage is not available');
         return null;
       } else {
         // Mobile: Use SecureStore
         return await SecureStore.getItemAsync(key);
       }
     } catch (error) {
-      console.error(`Error getting item ${key}:`, error);
       return null;
     }
   }
@@ -48,15 +52,13 @@ class CrossPlatformStorage {
         // Web: Use localStorage
         if (this.isLocalStorageAvailable()) {
           localStorage.setItem(key, stringValue);
-        } else {
-          console.warn('localStorage is not available, unable to store item');
         }
       } else {
         // Mobile: Use SecureStore
         await SecureStore.setItemAsync(key, stringValue);
       }
     } catch (error) {
-      console.error(`Error setting item ${key}:`, error);
+      // Silently fail to avoid UI disruption
     }
   }
 
@@ -72,7 +74,7 @@ class CrossPlatformStorage {
         await SecureStore.deleteItemAsync(key);
       }
     } catch (error) {
-      console.error(`Error deleting item ${key}:`, error);
+      // Silently fail to avoid UI disruption
     }
   }
 
@@ -97,7 +99,7 @@ class CrossPlatformStorage {
         await this.deleteItem('refresh_token');
       }
     } catch (error) {
-      console.error('Error clearing storage:', error);
+      // Silently fail to avoid UI disruption
     }
   }
 

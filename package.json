@@ -47,6 +47,7 @@
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.4",
     "expo-web-browser": "~14.2.0",
+    "i18n-js": "^4.5.1",
     "lucide-react-native": "^0.515.0",
     "moment": "^2.30.1",
     "nativewind": "^4.1.23",

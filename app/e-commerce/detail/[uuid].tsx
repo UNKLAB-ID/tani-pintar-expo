@@ -147,9 +147,10 @@ const ProductDetailScreen = () => {
   const handleCheckout = () => {
     router.push('/e-commerce/checkout');
   };
-  console.log('🟢 mappedProduct:', mappedProduct);
   useEffect(() => {
-    console.log('🔎 detailProduct dari API:', detailProduct);
+    if (detailProduct?.variants?.length > 0) {
+      setSelectedVariant(detailProduct.variants[0]?.name || '');
+    }
   }, [detailProduct]);
 
   if (isLoading) {
@@ -181,7 +182,10 @@ const ProductDetailScreen = () => {
       >
         {/* Header */}
         <View className="flex-row bg-white items-center justify-between px-3 pb-5 pt-4">
-          <TouchableOpacity className="ml-4" onPress={() => router.back()}>
+          <TouchableOpacity
+            className="ml-4"
+            onPress={() => router.replace('/e-commerce')}
+          >
             <BackIcons width={20} height={20} color="#7D7D7D" />
           </TouchableOpacity>
 

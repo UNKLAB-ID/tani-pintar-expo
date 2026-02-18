@@ -26,6 +26,10 @@ const CONTACTS = [
 ];
 
 const EwalletScreen = () => {
+  const { walletType, walletName } = useLocalSearchParams<{
+    walletType: string;
+    walletName: string;
+  }>();
   const [search, setSearch] = useState('');
 
   // Group contacts by first letter
@@ -72,8 +76,8 @@ const EwalletScreen = () => {
           }}
         >
           <TransferHeader
-            title="E-Wallet Transfer"
-            subtitle="Select the e-wallet you want to transfer to"
+            title={`${walletName || 'E-Wallet'} Transfer`}
+            subtitle={`Send money to ${walletName || 'E-Wallet'} account`}
             onBack={() => router.back()}
           />
         </View>
@@ -97,7 +101,7 @@ const EwalletScreen = () => {
                 phone={item.phone}
                 image={item.image}
                 initials={item.initials}
-                walletType="linkaja"
+                walletType={walletType as 'tanipay' | 'dana' | 'linkaja'}
                 onPress={() =>
                   router.push({
                     pathname: '/payment/sendmoney/send-to-tanipay',
@@ -106,7 +110,7 @@ const EwalletScreen = () => {
                       phone: item.phone,
                       initials: item.initials || '',
                       image: item.image || '',
-                      walletType: 'linkaja',
+                      walletType: walletType || 'tanipay',
                     },
                   })
                 }

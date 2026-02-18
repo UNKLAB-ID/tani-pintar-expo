@@ -12,6 +12,7 @@ import { useUserLocation } from '@/store/location/location';
 import api from '@/utils/api/api';
 import { useMutation } from '@tanstack/react-query';
 import { useRegisterRoleStore } from '@/store/auth/register-role';
+import { useAuthStore } from '@/store/auth/role';
 import AlertlatLongAddressIcons from '@/assets/icons/profile/alert-lat-long-address-icons';
 import FileUpladIcons from '@/assets/icons/global/file-upload-icons';
 import { Colors } from '@/constants/Colors';
@@ -26,14 +27,14 @@ const ComponentFormIndividuChangeRole: React.FC<
 > = ({ togglePerusahaanAtauIndividu, setToggleModalAddress }) => {
   const { latAddress, longAddress } = useUserLocation();
   const { setField, resetForm, ...vendorData } = useRegisterRoleStore();
+  const { setVendorStatus } = useAuthStore();
   const {
     control,
     handleSubmit,
-    watch,
     setError,
     reset,
     resetField,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({
     defaultValues: vendorData,
     mode: 'onChange',
@@ -42,9 +43,6 @@ const ComponentFormIndividuChangeRole: React.FC<
   useEffect(() => {
     reset(vendorData);
   }, [togglePerusahaanAtauIndividu]);
-
-  const allValues = watch();
-  const isFormEmpty = Object.values(allValues).every(v => !v);
 
   const isFileAsset = (
     val: any
@@ -55,77 +53,142 @@ const ComponentFormIndividuChangeRole: React.FC<
   const mutate = useMutation({
     mutationFn: async (data: any) => {
       const formData = new FormData();
+      const isCompany = togglePerusahaanAtauIndividu;
 
-      // String fields
-      if (data.vendor_type) formData.append('vendor_type', data.vendor_type); // 1
-      if (data.phone_number) formData.append('phone_number', data.phone_number); // 2
-      if (data.address) formData.append('address', data.address); // 3
-      if (data.full_name) formData.append('full_name', data.full_name); // 4
-      if (data.business_name)
-        formData.append('business_name', data.business_name); // 5
-      if (data.npwp) formData.append('npwp', data.npwp); // 6
-      if (data.latitude) formData.append('latitude', data.latitude); // 7
-      if (data.longitude) formData.append('longitude', data.longitude);
-      if (data.address_detail)
-        formData.append('address_detail', data.address_detail); // 8
-      if (data.postal_code) formData.append('postal_code', data.postal_code); // 9
-      if (data.name) formData.append('name', data.name); // 10
+      // Determine the correct endpoint based on vendor type
+      const endpoint = isCompany
+        ? '/vendors/create/company/'
+        : '/vendors/create/individual/';
 
-      // Number fields (ubah ke string biar aman di FormData)
-      if (data.business_number)
-        formData.append('business_number', String(data.business_number)); // 11
-      if (data.province) formData.append('province', String(data.province)); // 12
-      if (data.city) formData.append('city', String(data.city)); // 13
-      if (data.district) formData.append('district', String(data.district)); // 14
+      // Use vendorData from zustand for address fields since they're stored there
+      const province = data.province || vendorData.province;
+      const city = data.city || vendorData.city;
+      const district = data.district || vendorData.district;
 
-      // File fields
-      if (data.logo && isFileAsset(data.logo)) {
-        formData.append('logo', {
-          uri: data.logo.uri,
-          name: data.logo.fileName || 'logo.jpg',
-          type: data.logo.mimeType || 'image/jpeg',
-        } as any); // 15
+      // Format coordinates to meet API requirements
+      // latitude: max 6 decimal places, longitude: max 9 digits total
+      const formattedLat = latAddress ? Number(latAddress).toFixed(6) : null;
+      const formattedLong = longAddress ? Number(longAddress).toFixed(6) : null;
+
+      console.log('Submitting vendor registration:', {
+        endpoint,
+        isCompany,
+        data,
+        vendorData,
+        latAddress: formattedLat,
+        longAddress: formattedLong,
+      });
+
+      if (isCompany) {
+        // Company registration fields
+        if (data.name) formData.append('name', data.name);
+        if (data.business_number)
+          formData.append('business_number', String(data.business_number));
+        if (data.phone_number)
+          formData.append('phone_number', data.phone_number);
+        if (province) formData.append('province', String(province));
+        if (city) formData.append('city', String(city));
+        if (district) formData.append('district', String(district));
+        if (formattedLat) formData.append('latitude', formattedLat);
+        if (formattedLong) formData.append('longitude', formattedLong);
+        if (data.address_detail)
+          formData.append('address_detail', data.address_detail);
+        if (data.postal_code) formData.append('postal_code', data.postal_code);
+
+        // Optional NPWP fields
+        if (data.npwp) formData.append('npwp_number', data.npwp);
+
+        // File: business_nib_file
+        if (data.business_nib && isFileAsset(data.business_nib)) {
+          formData.append('business_nib_file', {
+            uri: data.business_nib.uri,
+            name: data.business_nib.fileName || 'business_nib.pdf',
+            type: data.business_nib.mimeType || 'application/pdf',
+          } as any);
+        }
+      } else {
+        // Individual registration fields
+        if (data.name) formData.append('full_name', data.name);
+        if (data.phone_number)
+          formData.append('phone_number', data.phone_number);
+        if (data.business_name) formData.append('name', data.business_name);
+        if (province) formData.append('province', String(province));
+        if (city) formData.append('city', String(city));
+        if (district) formData.append('district', String(district));
+        if (formattedLat) formData.append('latitude', formattedLat);
+        if (formattedLong) formData.append('longitude', formattedLong);
+        if (data.address_detail)
+          formData.append('address_detail', data.address_detail);
+        if (data.postal_code) formData.append('postal_code', data.postal_code);
+
+        // File: id_card_photo
+        if (data.id_card_photo && isFileAsset(data.id_card_photo)) {
+          formData.append('id_card_photo', {
+            uri: data.id_card_photo.uri,
+            name: data.id_card_photo.fileName || 'id_card_photo.jpg',
+            type: data.id_card_photo.mimeType || 'image/jpeg',
+          } as any);
+        }
+
+        // Optional: logo
+        if (data.logo && isFileAsset(data.logo)) {
+          formData.append('logo', {
+            uri: data.logo.uri,
+            name: data.logo.fileName || 'logo.jpg',
+            type: data.logo.mimeType || 'image/jpeg',
+          } as any);
+        }
       }
 
-      if (data.id_card_photo && isFileAsset(data.id_card_photo)) {
-        formData.append('id_card_photo', {
-          uri: data.id_card_photo.uri,
-          name: data.id_card_photo.fileName || 'id_card_photo.jpg',
-          type: data.id_card_photo.mimeType || 'image/jpeg',
-        } as any); // 16
-      }
-
-      if (data.business_nib && isFileAsset(data.business_nib)) {
-        formData.append('business_nib', {
-          uri: data.business_nib.uri,
-          name: data.business_nib.fileName || 'business_nib.jpg',
-          type: data.business_nib.mimeType || 'image/jpeg',
-        } as any); // 17
-      }
-
-      return api.post('/vendors/', formData, {
+      const response = await api.post(endpoint, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+
+      console.log('API Response:', response);
+      return response;
     },
 
-    onSuccess: (res, variables) => {
+    onSuccess: res => {
+      console.log('onSuccess called with:', res);
       if (res.success) {
-        router.replace(`/otp?back=register&phone=${variables.phone_number}`);
-      } else if (res.error) {
-        Object.keys(res.error).forEach(field => {
-          setError(field as keyof typeof errors, {
-            type: 'server',
-            message: res.error[field][0], // ambil pesan error pertama
-          });
+        // Update vendor status in auth store
+        setVendorStatus({
+          isRegistered: true,
+          vendorType: togglePerusahaanAtauIndividu ? 'company' : 'individual',
+          vendorId: res.data?.id || res.data?.uuid || null,
         });
+
+        Alert.alert(
+          'Registrasi Berhasil',
+          'Akun vendor Anda telah terdaftar.',
+          [
+            {
+              text: 'OK',
+              onPress: () => router.replace('/(tabs)/ecommerce'),
+            },
+          ]
+        );
+      } else if (res.error) {
+        console.log('Server validation errors:', res.error);
+        const errorMessages = Object.entries(res.error)
+          .map(
+            ([field, messages]) =>
+              `${field}: ${(messages as string[]).join(', ')}`
+          )
+          .join('\n');
+        Alert.alert(
+          'Validasi Gagal',
+          errorMessages || 'Terjadi kesalahan validasi.'
+        );
       } else {
-        Alert.alert('Register Failed', res.message);
+        Alert.alert('Registrasi Gagal', res.message || 'Terjadi kesalahan.');
       }
     },
 
     onError: (error: any) => {
+      console.log('onError called with:', error);
       Alert.alert(
-        'Registration Failed',
+        'Registrasi Gagal',
         error.message || 'Terjadi error saat registrasi.'
       );
     },
@@ -375,7 +438,6 @@ const ComponentFormIndividuChangeRole: React.FC<
       <Controller
         control={control}
         name="address"
-        rules={{ required: 'Address is required' }}
         render={({ fieldState: { error } }) => (
           <>
             <Text style={{ fontSize: 14, fontWeight: '600', marginTop: 16 }}>
@@ -568,10 +630,10 @@ const ComponentFormIndividuChangeRole: React.FC<
 
       {/* Tombol submit */}
       <TouchableOpacity
-        disabled={!isValid || isFormEmpty}
+        disabled={mutate.isPending}
         onPress={handleSubmit(handleRegsiterSumbit)}
         style={{
-          backgroundColor: !isValid || isFormEmpty ? '#F4F4F4' : '#169953',
+          backgroundColor: mutate.isPending ? '#F4F4F4' : '#169953',
           paddingVertical: 14,
           borderRadius: 12,
           marginBottom: 30,
@@ -580,13 +642,13 @@ const ComponentFormIndividuChangeRole: React.FC<
       >
         <Text
           style={{
-            color: !isValid || isFormEmpty ? '#AAAAAA' : '#FFFFFF',
+            color: mutate.isPending ? '#AAAAAA' : '#FFFFFF',
             textAlign: 'center',
             fontWeight: '600',
             fontSize: 16,
           }}
         >
-          Selesai
+          {mutate.isPending ? 'Memproses...' : 'Selesai'}
         </Text>
       </TouchableOpacity>
     </View>

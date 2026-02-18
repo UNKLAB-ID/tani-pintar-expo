@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import api from '@/utils/api/api';
+import { AuthService } from '@/utils/auth/AuthService';
 //icons
 import BackIcons from '@/assets/icons/global/back-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -62,41 +63,6 @@ const EditProfileScreen = () => {
       name.slice(0, 2) + '*'.repeat(Math.max(name.length - 2, 0));
     return `${maskedName}@${domain}`;
   };
-
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const dummyData: User = {
-  //         full_name: 'Mambaus Baus',
-  //         email: newEmail ? String(newEmail) : 'baus@gmail.com',
-  //         phone: newPhone ? String(newPhone) : '+62 812-3456-7890',
-  //         avatar: 'https://i.pravatar.cc/100',
-  //         gender: 'Male',
-  //         birthDate: 'Not yet determined',
-  //       };
-
-  //       setTimeout(() => {
-  //         setUser(dummyData);
-  //         setEditedName(dummyData.full_name);
-  //         setEditedGender(dummyData.gender);
-  //         setLoading(false);
-  //       }, 800);
-  //     } catch (err) {
-  //       console.error('Failed to fetch user', err);
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchUser();
-  // }, [newEmail, newPhone]);
-
-  //   if (loading || !user) {
-  //     return (
-  //       <View className="flex-1 justify-center items-center">
-  //         <ActivityIndicator size="large" color="#5AD598" />
-  //       </View>
-  //     );
-  // }
 
   const handleNameSave = (newName: string) => {
     setEditedName(newName);
@@ -290,9 +256,16 @@ const EditProfileScreen = () => {
       <ModalLogout
         visible={showLogoutModal}
         onCancel={() => setShowLogoutModal(false)}
-        onConfirm={() => {
+        onConfirm={async () => {
           setShowLogoutModal(false);
-          // Lakukan logout logic di sini
+          try {
+            await AuthService.logout();
+            router.replace('/login');
+          } catch (error) {
+            console.error('Logout error:', error);
+            // Tetap redirect ke login meskipun ada error
+            router.replace('/login');
+          }
         }}
       />
     </SafeAreaView>

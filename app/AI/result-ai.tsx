@@ -12,6 +12,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BackIcons from '@/assets/icons/global/back-icons';
 import { useAiStore } from '@/store/ai-store/ai-store';
+import RecommendedProductSection from '@/components/ui/ai/RecommendedProductSection';
 
 const ResultScreen = () => {
   const router = useRouter();
@@ -157,6 +158,7 @@ const ResultScreen = () => {
           )}
         </View>
       </ScrollView>
+      <RecommendedProductSection />
     </SafeAreaView>
   );
 };

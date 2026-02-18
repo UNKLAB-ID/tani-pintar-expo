@@ -6,13 +6,14 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  ImageSourcePropType,
   StatusBar,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { formatPrice } from '@/utils/format-currency/currency';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/utils/api/api';
+import { useTranslate } from '@/i18n';
 //icons
 import BackIcons from '@/assets/icons/global/back-icons';
 import LoveIcons from '@/assets/icons/global/love-icons';
@@ -24,76 +25,59 @@ import RecomendationCard from '@/components/ui/e-commerce/card-recomendation';
 import ModalDelete from '@/components/ui/e-commerce/cart/modal-delete';
 import ModalCheckout from '@/components/ui/e-commerce/cart/modal-checkout';
 
-interface CartItem {
+// API Cart Item interface based on response
+interface ApiCartItem {
   id: string;
-  image: ImageSourcePropType;
-  name: string;
-  price: string;
-  discount: string;
-  stock: number;
-  variants?: { size: string }[];
+  user: {
+    id: number;
+    username: string;
+    profile: {
+      id: number;
+      full_name: string;
+      profile_picture_url: string;
+    };
+  };
+  product: {
+    uuid: string;
+    user: {
+      id: number;
+      username: string;
+      profile: {
+        full_name: string;
+        profile_picture_url: string;
+      };
+    };
+    name: string;
+    image: string;
+    available_stock: number;
+    prices: {
+      id: string;
+      unit_of_measure: {
+        id: string;
+        name: string;
+      };
+      price: string;
+    }[];
+  };
+  quantity: number;
+  created_at: string;
+  updated_at: string;
 }
 
 interface ItemQuantities {
   [key: string]: number;
 }
 
-type GetDiscountedPrice = (priceString: string, discount: string) => number;
-
-const getDiscountedPrice: GetDiscountedPrice = (priceString, discount) => {
-  const priceNumber = parseInt(priceString.replace(/[^\d]/g, ''), 10);
-  const discountAmount = (priceNumber * parseInt(discount, 10)) / 100;
-  return Math.round(priceNumber - discountAmount);
-};
-
-export const otherProducts: CartItem[] = [
-  {
-    id: '1',
-    image: require('@/assets/images/trash/image25.png'),
-    name: 'H&L Semprotan S...',
-    price: 'Rp36.000',
-    discount: '20',
-    stock: 100,
-    variants: [{ size: '50 ml' }],
-  },
-  {
-    id: '2',
-    image: require('@/assets/images/trash/image18.png'),
-    name: 'Electric Sprayer...',
-    price: 'Rp250.000',
-    discount: '17',
-    stock: 100,
-    variants: [{ size: '100 ml' }],
-  },
-];
-
-const storeList = [
-  {
-    id: 1,
-    name: 'H&L Official',
-    location: 'Kota Tangerang',
-    rating: 4.6,
-    totalReview: 500,
-    image: require('@/assets/images/trash/bottle.png'),
-  },
-];
-
 const CartScreen = () => {
+  const t = useTranslate();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [itemQuantities, setItemQuantities] = useState<ItemQuantities>(
-    otherProducts.reduce((acc, product) => {
-      acc[product.id] = 1;
-      return acc;
-    }, {} as ItemQuantities)
-  );
-
+  const [itemQuantities, setItemQuantities] = useState<ItemQuantities>({});
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
-  const [cartData, setCartData] = useState<any[]>([]);
-  // const [cartData, setCartData] = useState(otherProducts);
+  const [cartData, setCartData] = useState<ApiCartItem[]>([]);
 
   const handleWhistlist = () => {
-    router.push('/e-commerce/wishlist');
+    router.push({ pathname: '/e-commerce/wishlist', params: { source: 'ecommerce' } });
   };
 
   const fetchListCart = async () => {
@@ -101,12 +85,7 @@ const CartScreen = () => {
     return response.data;
   };
 
-  const {
-    data: listCart,
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({
+  const { data: listCart, isLoading } = useQuery({
     queryKey: ['listCart'],
     queryFn: fetchListCart,
     refetchOnWindowFocus: false,
@@ -114,8 +93,13 @@ const CartScreen = () => {
 
   useEffect(() => {
     if (listCart?.results) {
-      console.log(listCart.results);
       setCartData(listCart.results);
+      // Initialize quantities from API data
+      const quantities: ItemQuantities = {};
+      listCart.results.forEach((item: ApiCartItem) => {
+        quantities[item.id] = item.quantity || 1;
+      });
+      setItemQuantities(quantities);
     }
   }, [listCart]);
 
@@ -125,22 +109,27 @@ const CartScreen = () => {
     );
   };
 
+  const getItemPrice = (item: ApiCartItem): number => {
+    const priceStr = item.product.prices?.[0]?.price || '0';
+    return Math.abs(parseFloat(priceStr));
+  };
+
   const calculateSubtotal = () => {
     return selectedItems.reduce((total, itemId) => {
       const item = cartData.find(i => i.id === itemId);
       if (!item) return total;
 
       const quantity = itemQuantities[item.id] || 1;
-      const discountedPrice = getDiscountedPrice(item.price, item.discount);
+      const price = getItemPrice(item);
 
-      return total + discountedPrice * quantity;
+      return total + price * quantity;
     }, 0);
   };
 
   const increaseQuantity = (itemId: string) => {
     const item = cartData.find(i => i.id === itemId);
-    const currentQty = itemQuantities[itemId] || 0;
-    const maxQty = item?.stock ?? 99;
+    const currentQty = itemQuantities[itemId] || 1;
+    const maxQty = item?.product.available_stock ?? 99;
     if (currentQty >= maxQty) return;
 
     setItemQuantities(prev => ({
@@ -149,19 +138,22 @@ const CartScreen = () => {
     }));
   };
 
-  const renderItem = ({ item }: { item: CartItem }) => {
+  const decreaseQuantity = (itemId: string) => {
+    setItemQuantities(prev => ({
+      ...prev,
+      [itemId]: Math.max((prev[itemId] || 1) - 1, 1),
+    }));
+  };
+
+  const renderItem = ({ item }: { item: ApiCartItem }) => {
     const isSelected = selectedItems.includes(item.id);
-
-    interface ItemQuantities {
-      [key: string]: number;
-    }
-
-    const decreaseQuantity = (itemId: string) => {
-      setItemQuantities((prev: ItemQuantities) => ({
-        ...prev,
-        [itemId]: Math.max((prev[itemId] || 0) - 1, 0),
-      }));
-    };
+    const price = getItemPrice(item);
+    const unitOfMeasure = item.product.prices?.[0]?.unit_of_measure?.name || '';
+    const sellerName =
+      item.product.user?.profile?.full_name ||
+      item.product.user?.username ||
+      'Tani Pintar';
+    const sellerImage = item.product.user?.profile?.profile_picture_url;
 
     return (
       <View className="bg-white px-3 ">
@@ -179,20 +171,32 @@ const CartScreen = () => {
               )}
             </View>
           </TouchableOpacity>
-          <Image
-            source={storeList[0]?.image}
-            className="w-6 h-6 rounded-full"
-            resizeMode="contain"
-          />
-          <Text className="text-[12px] font-semibold text-black">
-            {storeList[0]?.name ?? 'Unknown Store'}
+          {sellerImage ? (
+            <Image
+              source={{ uri: sellerImage }}
+              className="w-6 h-6 rounded-full"
+              resizeMode="contain"
+            />
+          ) : (
+            <View className="w-6 h-6 rounded-full bg-gray-300 items-center justify-center">
+              <Text className="text-[10px] text-gray-600">
+                {sellerName.charAt(0).toUpperCase()}
+              </Text>
+            </View>
+          )}
+          <Text className="text-[12px] font-semibold text-black ml-2">
+            {sellerName}
           </Text>
         </View>
         {/* Konten Produk */}
         <View className="flex-row items-start">
           {/* Gambar Produk */}
           <Image
-            source={item.image}
+            source={
+              item.product.image
+                ? { uri: item.product.image }
+                : require('@/assets/images/trash/image18.png')
+            }
             className="w-[100px] h-[94px] rounded-xl"
             resizeMode="contain"
           />
@@ -204,7 +208,7 @@ const CartScreen = () => {
                 className="text-[12px] font-semibold flex-1"
                 numberOfLines={1}
               >
-                {item.name}
+                {item.product.name}
               </Text>
               <View className="flex-row space-x-3">
                 <TouchableOpacity style={{ marginLeft: 10 }}>
@@ -213,8 +217,8 @@ const CartScreen = () => {
                 <TouchableOpacity
                   style={{ marginLeft: 20 }}
                   onPress={() => {
-                    setItemToDelete(item.id); // <-- tangkap item yang akan dihapus
-                    setDeleteModalVisible(true); // munculkan modal
+                    setItemToDelete(item.id);
+                    setDeleteModalVisible(true);
                   }}
                 >
                   <TrashIcons width={20} height={20} color="#C8C8C8" />
@@ -222,7 +226,7 @@ const CartScreen = () => {
               </View>
             </View>
             <Text className="text-[12px] text-[#bcbcbc] mt-1">
-              {item.variants?.[0]?.size || 'No size available'}
+              {unitOfMeasure || t('perItem')}
             </Text>
 
             {/* Harga */}
@@ -231,7 +235,7 @@ const CartScreen = () => {
               style={{ marginTop: 4 }}
             >
               <Text className="text-[12px] font-bold text-black mr-2">
-                {formatPrice(getDiscountedPrice(item.price, item.discount))}
+                {formatPrice(price)}
               </Text>
               <View className="flex-row items-center ">
                 <TouchableOpacity
@@ -249,8 +253,8 @@ const CartScreen = () => {
                 </TouchableOpacity>
               </View>
             </View>
-            <Text className="text-[12px] line-through text-[#bcbcbc] ">
-              {item.price}
+            <Text className="text-[12px] text-[#bcbcbc] mt-1">
+              {t('stock')}: {item.product.available_stock}
             </Text>
           </View>
         </View>
@@ -263,6 +267,83 @@ const CartScreen = () => {
             marginBottom: 12,
           }}
         />
+      </View>
+    );
+  };
+
+  return (
+    <>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="#ffffff"
+        translucent={false}
+      />
+      <SafeAreaView
+        edges={['top', 'right', 'left', 'bottom']}
+        className="flex-1 bg-[#F8F8F8]"
+      >
+        <View className="flex-row justify-between bg-white items-center p-4 ">
+          <TouchableOpacity onPress={() => router.replace('/(tabs)/ecommerce')}>
+            <BackIcons width={24} height={24} />
+          </TouchableOpacity>
+          <Text className="text-xl font-semibold">{t('cart')}</Text>
+          <TouchableOpacity onPress={handleWhistlist}>
+            <LoveIcons width={24} height={24} color={'#000000'} />
+          </TouchableOpacity>
+        </View>
+
+        {/* Loading State */}
+        {isLoading ? (
+          <View className="flex-1 items-center justify-center">
+            <ActivityIndicator size="large" color="#169953" />
+          </View>
+        ) : cartData.length === 0 ? (
+          <View className="flex-1 bg-[#f8f8f8]  mt-4 items-center">
+            <Image
+              source={require('@/assets/images/Empty-Cart.png')}
+              className="w-[250px] h-[250px] mt-10"
+              resizeMode="contain"
+            />
+            <Text className="text-[16px] font-semibold">{t('emptyCart')}</Text>
+            <Text className="text-[14px] text-gray-500 text-center mt-2 px-6">
+              {t('emptyCartDesc')}
+            </Text>
+            <View className="mt-6 w-full">
+              <RecomendationCard />
+            </View>
+          </View>
+        ) : (
+          <FlatList
+            data={cartData}
+            keyExtractor={item => item.id}
+            renderItem={renderItem}
+            contentContainerStyle={{ paddingVertical: 16 }}
+            ListHeaderComponent={
+              selectedItems.length > 0 ? (
+                <View
+                  className="flex-row items-center justify-between bg-[#fff] px-4 border-b border-[#E0E0E0]"
+                  style={{ height: 40 }}
+                >
+                  <Text className="text-[12px] text-[#7d7d7d] font-medium">
+                    {selectedItems.length} {t('selectedProducts')}
+                  </Text>
+                  <TouchableOpacity onPress={() => setDeleteModalVisible(true)}>
+                    <Text className="text-sm text-[#0AAD55] font-semibold">
+                      {t('wipe')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : null
+            }
+            ListFooterComponent={
+              <View className="mt-4">
+                <RecomendationCard />
+              </View>
+            }
+          />
+        )}
+
+        {/* Delete Modal */}
         <ModalDelete
           isVisible={isDeleteModalVisible}
           onClose={() => {
@@ -286,81 +367,6 @@ const CartScreen = () => {
           }}
           selectedCount={itemToDelete ? 1 : selectedItems.length}
         />
-      </View>
-    );
-  };
-
-  return (
-    <>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="#ffffff"
-        translucent={false}
-      />
-      <SafeAreaView
-        edges={['top', 'right', 'left', 'bottom']}
-        className="flex-1 bg-[#F8F8F8]"
-      >
-        <View className="flex-row justify-between bg-white items-center p-4 ">
-          <TouchableOpacity onPress={() => router.back()}>
-            <BackIcons width={24} height={24} />
-          </TouchableOpacity>
-          <Text className="text-xl font-semibold">Cart</Text>
-          <TouchableOpacity onPress={handleWhistlist}>
-            <LoveIcons width={24} height={24} color={'#000000'} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Cart items will be displayed here */}
-        {cartData.length === 0 ? (
-          <View className="flex-1 bg-[#f8f8f8]  mt-4 items-center">
-            <Image
-              source={require('@/assets/images/Empty-Cart.png')}
-              className="w-[250px] h-[250px] mt-10"
-              resizeMode="contain"
-            />
-            <Text className="text-[16px] font-semibold">
-              Oops, your cart is still empty!
-            </Text>
-            <Text className="text-[14px] text-gray-500 text-center mt-2 px-6">
-              Come on, hurry up and find your favorite {'\n'} products before
-              they run out!
-            </Text>
-            <View className="mt-6 w-full">
-              <RecomendationCard />
-            </View>
-          </View>
-        ) : (
-          <FlatList
-            data={cartData}
-            keyExtractor={item => item.id}
-            renderItem={renderItem}
-            contentContainerStyle={{ paddingVertical: 16 }}
-            ListHeaderComponent={
-              selectedItems.length > 0 ? (
-                <View
-                  className="flex-row items-center justify-between bg-[#fff] px-4 border-b border-[#E0E0E0]"
-                  style={{ height: 40 }}
-                >
-                  <Text className="text-[12px] text-[#7d7d7d] font-medium">
-                    {selectedItems.length} selected product
-                    {selectedItems.length > 1 ? 's' : ''}
-                  </Text>
-                  <TouchableOpacity onPress={() => setDeleteModalVisible(true)}>
-                    <Text className="text-sm text-[#0AAD55] font-semibold">
-                      Wipe
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              ) : null
-            }
-            ListFooterComponent={
-              <View className="mt-4">
-                <RecomendationCard />
-              </View>
-            }
-          />
-        )}
 
         {/* Checkout Button */}
         <ModalCheckout

@@ -86,7 +86,7 @@ const TrackingDetails: FC = () => {
         </Text>
       </View>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{ paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
         className="px-4 pt-6"
       >
@@ -171,14 +171,18 @@ const TrackingDetails: FC = () => {
       </ScrollView>
 
       {/* Live Tracking Button */}
-      <TouchableOpacity
-        onPress={() => router.push('/profile/order/live-tracking')}
-        className="absolute bottom-4 left-4 right-4 bg-primary py-3 rounded-xl"
-      >
-        <Text className="text-white font-semibold text-center text-base">
-          Live Tracking
-        </Text>
-      </TouchableOpacity>
+      <SafeAreaView edges={['bottom']} className="bg-white">
+        <View className="px-4 py-2">
+          <TouchableOpacity
+            onPress={() => router.push('/profile/order/live-tracking')}
+            className="bg-primary py-3 rounded-xl"
+          >
+            <Text className="text-white font-semibold text-center text-base">
+              Live Tracking
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     </SafeAreaView>
   );
 };

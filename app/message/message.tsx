@@ -101,7 +101,12 @@ const MessageEcommerce = () => {
           className="mt-4"
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => router.push('/message/display-message')}
+              onPress={() =>
+                router.push({
+                  pathname: '/message/reply-messege',
+                  params: { storeName: item.store },
+                })
+              }
               className="flex-row items-start px-4 mt-3"
             >
               <Image

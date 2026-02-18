@@ -1,68 +1,97 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+  ImageSourcePropType,
+} from 'react-native';
 import StarIcons from '@/assets/icons/e-commerce/stars-icons';
 import Location2Icons from '@/assets/icons/e-commerce/locations2-icons';
 import ButtonPlusPrimaryIcons from '@/assets/icons/e-commerce/button-plus-primary-icons';
 import { formatPrice } from '@/utils/format-currency/currency';
 import { router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-const products = [
-  {
-    id: '1',
-    name: 'Insektisida dan Akarisida',
-    price: 32200,
-    originalPrice: 35000,
-    discount: 8,
-    rating: 4.5,
-    location: 'Yogyakarta',
-    image: require('@/assets/images/trash/image18.png'),
-  },
-  {
-    id: '2',
-    name: 'BELI 3 GRATIS 1 Pupuk Buah',
-    price: 16000,
-    originalPrice: 20000,
-    discount: 20,
-    rating: 4.6,
-    location: 'Sumedang',
-    image: require('@/assets/images/trash/image25.png'),
-  },
-  {
-    id: '3',
-    name: 'Fungisida Quilt 200SC',
-    price: 82237,
-    originalPrice: 96750,
-    discount: 15,
-    rating: 4.9,
-    location: 'Sumenep',
-    image: require('@/assets/images/trash/image18.png'),
-  },
-  {
-    id: '4',
-    name: 'Simodis 100EC Insektisida',
-    price: 152000,
-    originalPrice: 160000,
-    discount: 5,
-    rating: 4.6,
-    location: 'Bandung',
-    image: require('@/assets/images/trash/image25.png'),
-  },
-];
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useQuery } from '@tanstack/react-query';
+import api from '@/utils/api/api';
+
+interface Product {
+  uuid: string;
+  name: string;
+  image?: ImageSourcePropType;
+  prices?: { price: number }[];
+  discount?: number;
+  rating?: number;
+  lokasi?: { name: string };
+}
+
+interface RecommendedProduct {
+  id: string;
+  name: string;
+  price: number;
+  originalPrice: number;
+  discount: number;
+  rating: number;
+  location: string;
+  image: ImageSourcePropType;
+}
 
 interface RecomendationCardProps {
-  products?: typeof products;
+  products?: RecommendedProduct[];
   title?: string;
   className?: string;
+  useApi?: boolean;
 }
 
 const RecomendationCard: React.FC<RecomendationCardProps> = ({
-  products: propProducts = products,
+  products: propProducts,
   title = 'Recommended Product',
   className = '',
+  useApi = true,
 }) => {
+  // Fetch recommended products from API
+  const { data: apiProducts, isLoading } = useQuery({
+    queryKey: ['recommendedProductsCard'],
+    queryFn: async () => {
+      const res = await api.get('/ecommerce/products/?page_size=4');
+      if (res.success && res.data?.results) {
+        return res.data.results.map((item: Product) => ({
+          id: item.uuid,
+          name: item.name,
+          price: item.prices?.[0]?.price || 0,
+          originalPrice: item.prices?.[0]?.price
+            ? Math.round(item.prices[0].price * 1.1)
+            : 0,
+          discount: item.discount || 10,
+          rating: item.rating || 4.5,
+          location: item.lokasi?.name || 'Indonesia',
+          image: item.image
+            ? { uri: item.image }
+            : require('../../../assets/images/trash/image18.png'),
+        }));
+      }
+      return [];
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    enabled: useApi && !propProducts,
+  });
+
+  // Use propProducts if provided, otherwise use API data
+  const displayProducts =
+    propProducts && propProducts.length > 0 ? propProducts : apiProducts || [];
+
   const handleLoadMore = () => {
     router.push('/e-commerce');
   };
+
+  const handleProductPress = (productId: string) => {
+    router.push({
+      pathname: '/e-commerce/detail/[uuid]',
+      params: { uuid: productId },
+    });
+  };
+
   return (
     <SafeAreaView edges={['bottom']}>
       <View
@@ -76,62 +105,73 @@ const RecomendationCard: React.FC<RecomendationCardProps> = ({
           {title}
         </Text>
 
-        <View className="flex-row flex-wrap mx-3 justify-between">
-          {propProducts.slice(0, 4).map(product => (
-            <View key={product.id} className=" mb-2 bg-white rounded-lg">
-              <Image
-                source={product.image}
-                className="w-[171px] h-[160px] rounded-xl"
-                resizeMode="contain"
-              />
-              <Text className="text-[16px] font-medium mt-1 text-black">
-                {product.name.length > 23
-                  ? product.name.slice(0, 20) + '...'
-                  : product.name}
-              </Text>
-
-              <Text className="text-[20px] text-black font-semibold mt-1">
-                {formatPrice(product.price)}
-              </Text>
-
-              <View className="flex-row items-center space-x-2 mt-1">
-                <Text className="text-[16px] line-through text-[#bcbcbc]">
-                  {formatPrice(product.originalPrice)}
+        {isLoading && useApi && !propProducts ? (
+          <View className="py-8 items-center">
+            <ActivityIndicator size="large" color="#169953" />
+          </View>
+        ) : (
+          <View className="flex-row flex-wrap mx-3 justify-between">
+            {displayProducts.slice(0, 4).map((product: RecommendedProduct) => (
+              <TouchableOpacity
+                key={product.id}
+                className="mb-2 bg-white rounded-lg"
+                onPress={() => handleProductPress(product.id)}
+                activeOpacity={0.7}
+              >
+                <Image
+                  source={product.image}
+                  className="w-[171px] h-[160px] rounded-xl"
+                  resizeMode="contain"
+                />
+                <Text className="text-[16px] font-medium mt-1 text-black">
+                  {product.name.length > 23
+                    ? product.name.slice(0, 20) + '...'
+                    : product.name}
                 </Text>
-                <View
-                  className="bg-red-600  rounded-xl"
-                  style={{ marginLeft: 10, paddingHorizontal: 8 }}
-                >
-                  <Text className="text-white text-[16px] font-semibold">
-                    {product.discount} %
+
+                <Text className="text-[20px] text-black font-semibold mt-1">
+                  {formatPrice(product.price)}
+                </Text>
+
+                <View className="flex-row items-center space-x-2 mt-1">
+                  <Text className="text-[16px] line-through text-[#bcbcbc]">
+                    {formatPrice(product.originalPrice)}
                   </Text>
-                </View>
-              </View>
-
-              <View className="flex-row items-center mt-1">
-                <StarIcons width={12} height={12} />
-                <Text className="ml-1 text-[12px] text-[#555]">
-                  {product.rating} / 5.0
-                </Text>
-              </View>
-              <Text className="text-[11px] text-[#6f6f6f] mt-1">
-                <Location2Icons width={12.44} height={12.44} />{' '}
-                {product.location}
-              </Text>
-
-              <TouchableOpacity className="border-2 border-primary rounded-xl mt-2 items-center">
-                <View className="flex-row items-center ">
-                  <View className="mt-3">
-                    <ButtonPlusPrimaryIcons width={24} height={24} />
+                  <View
+                    className="bg-red-600  rounded-xl"
+                    style={{ marginLeft: 10, paddingHorizontal: 8 }}
+                  >
+                    <Text className="text-white text-[16px] font-semibold">
+                      {product.discount} %
+                    </Text>
                   </View>
-                  <Text className="text-primary font-semibold text-[16px]">
-                    Add to Cart
+                </View>
+
+                <View className="flex-row items-center mt-1">
+                  <StarIcons width={12} height={12} />
+                  <Text className="ml-1 text-[12px] text-[#555]">
+                    {product.rating} / 5.0
                   </Text>
                 </View>
+                <Text className="text-[11px] text-[#6f6f6f] mt-1">
+                  <Location2Icons width={12.44} height={12.44} />{' '}
+                  {product.location}
+                </Text>
+
+                <TouchableOpacity className="border-2 border-primary rounded-xl mt-2 items-center">
+                  <View className="flex-row items-center ">
+                    <View className="mt-3">
+                      <ButtonPlusPrimaryIcons width={24} height={24} />
+                    </View>
+                    <Text className="text-primary font-semibold text-[16px]">
+                      Add to Cart
+                    </Text>
+                  </View>
+                </TouchableOpacity>
               </TouchableOpacity>
-            </View>
-          ))}
-        </View>
+            ))}
+          </View>
+        )}
 
         <View className="items-center mt-4 ">
           <TouchableOpacity
