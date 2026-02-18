@@ -73,8 +73,14 @@ const ChangeUserModal: React.FC<ChangeUserModalProps> = ({
 
     switch (selectedRole) {
       case 'vendor':
-        // router.push('/profile/register-role-user');
-        router.push("/(tabs)/ai");
+        if (isVendorRegistered) {
+          // Already registered, go to vendor dashboard
+          router.push('/(tabs)/ecommerce');
+        } else {
+          // Not registered, go to registration
+          resetForm();
+          router.push('/profile/register-role-user');
+        }
         break;
       case 'agent':
         router.push('/(tabs)/sosmed');
