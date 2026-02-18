@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      EXPO_PUBLIC_API_URL: ${{ secrets.EXPO_PUBLIC_API_URL }}
+      EXPO_PUBLIC_MAPBOX_API_URL: ${{ secrets.EXPO_PUBLIC_MAPBOX_API_URL }}
+      EXPO_PUBLIC_TOKEN_MAPBOX: ${{ secrets.EXPO_PUBLIC_TOKEN_MAPBOX }}
 
     steps:
       - name: Checkout repository
@@ -32,15 +36,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Setup Expo
-        uses: expo/expo-github-action@v8
-        with:
-          expo-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Prebuild Android
-        run: npx expo prebuild --platform android --clean
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew
