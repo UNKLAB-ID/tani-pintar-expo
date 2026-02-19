@@ -44,7 +44,6 @@ export default function PDAMTopUp() {
           style={{
             backgroundColor: '#FFFFFF',
             marginHorizontal: 16,
-            marginTop: 180,
             borderRadius: 16,
             padding: 16,
             shadowColor: '#000',
