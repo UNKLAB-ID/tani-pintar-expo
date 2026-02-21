@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
-import OTPTextInput from 'react-native-otp-textinput';
-import { View, StyleSheet } from 'react-native';
+import React from 'react';
+import { OtpInput } from 'react-native-otp-entry';
+import { View } from 'react-native';
 import { Colors } from '@/constants/Colors';
 
 interface OTPInputProps {
@@ -11,38 +11,28 @@ interface OTPInputProps {
 }
 
 const OTPInput: React.FC<OTPInputProps> = ({
-  value,
   onChange,
   numberOfDigits = 4,
   color = Colors.color.primary,
 }) => {
-  const otpRef = useRef<OTPTextInput>(null);
-
   return (
     <View>
-      <OTPTextInput
-        ref={otpRef}
-        inputCount={numberOfDigits}
-        handleTextChange={onChange}
-        defaultValue={value}
-        textInputStyle={styles.input}
-        tintColor={color}
+      <OtpInput
+        numberOfDigits={numberOfDigits}
+        onTextChange={onChange}
+        focusColor={color}
+        theme={{
+          pinCodeContainerStyle: {
+            borderRadius: 10,
+            width: 77.5,
+            height: 48,
+            borderWidth: 1,
+            marginHorizontal: 1,
+          },
+        }}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  input: {
-    borderRadius: 10,
-    width: 77.5,
-    height: 48,
-    borderBottomWidth: 1,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderTopWidth: 1,
-    marginHorizontal: 1,
-  },
-});
 
 export default OTPInput;

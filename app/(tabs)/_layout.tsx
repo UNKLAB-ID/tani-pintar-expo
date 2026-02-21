@@ -95,9 +95,10 @@ export default function Layout() {
               <Text
                 style={{
                   color,
-                  fontSize: 11.55,
+                  fontSize: route.name === 'ecommerce' ? 11.5 : 11.55,
                   fontWeight: focused ? 'bold' : 'normal',
                 }}
+                numberOfLines={1}
               >
                 {label}
               </Text>
