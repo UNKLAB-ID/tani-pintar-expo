@@ -94,6 +94,9 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0.0"
+        
+        // Inject environment variables as BuildConfig fields
+        buildConfigField "String", "API_URL", "\"${System.getenv('EXPO_PUBLIC_API_URL') ?: 'https://dev.api.taniverse.id'}\""
     }
     signingConfigs {
         debug {
